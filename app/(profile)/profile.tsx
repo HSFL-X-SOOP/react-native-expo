@@ -1,8 +1,11 @@
 import { ThemedView } from '@/components/ThemedView';
 import { Link } from 'expo-router';
+import { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 export default function ProfileScreen() {
+  const [current, setCurrent] = useState('Home');
+
   return (
     <ThemedView style={styles.titleContainer}>
       <Text>Profile</Text>

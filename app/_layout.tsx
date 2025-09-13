@@ -1,12 +1,16 @@
+import { TabBarNative } from '@/components/navigation/native/tabbar';
+import { NavbarWeb } from '@/components/navigation/web/navbar';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
+import { Platform } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import 'react-native-reanimated';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+    const [current, setCurrent] = useState('Home');
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -18,13 +22,7 @@ export default function RootLayout() {
 
   return (
     <PaperProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(profile)" options={{ headerShown: false }} />
-        <Stack.Screen name="(about)" options={{ headerShown: false }} />
-        {/* <Stack.Screen name="(auth)" options={{ headerShown: false }} /> */}
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      {Platform.OS === 'web' ? <NavbarWeb /> : <TabBarNative />}
       <StatusBar style="auto" />
     </PaperProvider>
   );
