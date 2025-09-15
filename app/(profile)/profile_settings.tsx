@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 export default function ProfileSettingsScreen() {
   return (
+
     <ThemedView style={styles.titleContainer}>
       <Link href="/(profile)/profile"><Text>Profile</Text></Link>
     </ThemedView>

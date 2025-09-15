@@ -1,14 +1,13 @@
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Stack } from 'expo-router';
 import React from 'react';
+import { Platform } from 'react-native';
 export default function AuthLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Stack>
-        <Stack.Screen name="about" options={{ title: "About", headerShown: true }} />
-        <Stack.Screen name="api" options={{ title: "API", headerShown: true }} />
-        <Stack.Screen name="sensors" options={{ title: "Sensors", headerShown: true }} />
-    </Stack>
+    <Stack screenOptions={{
+      headerShown: Platform.OS !== 'web', 
+    }}/>
   );
 }

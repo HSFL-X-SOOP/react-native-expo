@@ -32,7 +32,7 @@ export default function TabLayout() {
         }}
         />
             <Tabs.Screen
-        name="profile_tab"
+        name="profile"
         options={{
           // href: null,
           title: 'Profile',

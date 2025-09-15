@@ -23,6 +23,7 @@ export default function RootLayout() {
   return (
     <PaperProvider>
       {Platform.OS === 'web' ? <NavbarWeb /> : <TabBarNative />}
+
       <StatusBar style="auto" />
     </PaperProvider>
   );
