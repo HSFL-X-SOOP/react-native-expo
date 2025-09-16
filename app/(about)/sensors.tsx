@@ -1,21 +1,17 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 export default function SensorsScreen() {
   return (
-    <Text>Sensors</Text>
-    
+    <View style={styles.container}>
+      <Text>Sensoren</Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  container: {
+    flex: 1, // This makes the view expand to fill the parent
+    alignItems: 'center',     // Optional: center content horizontally
+    backgroundColor: '#242020ff'
   },
 });

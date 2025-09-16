@@ -1,27 +1,22 @@
-import { ThemedView } from '@/components/ThemedView';
 import { Link } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 export default function LoginScreen() {
   return (
-        <ThemedView style={styles.titleContainer}>
+        <View style={styles.container}>
+          <Text>Login</Text>
           <Link href="/(auth)/register"><Text>Register</Text></Link>
-        </ThemedView>
+        </View>
     
   );
 }
 
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'column',
-    gap: 8,
-    marginTop: 100
+  container: {
+    flex: 1, // This makes the view expand to fill the parent
+    justifyContent: 'center', // Optional: center content vertically
+    alignItems: 'center',     // Optional: center content horizontally
+    backgroundColor: '#242020ff',
   },
 });

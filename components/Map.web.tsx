@@ -28,14 +28,14 @@ export default async function WebMap() {
   ), [content]);
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Map
       initialViewState={{
         longitude: 9.26,
         latitude: 54.47926,
         zoom: 7
       }}
-      style={{width: 1600, height: 1200}}
+      //style={{width: 1600, height: 1200}}
       // mapStyle="https://demotiles.maplibre.org/style.json"
       mapStyle={require('../assets/images/style.txt')}
 

@@ -22,8 +22,8 @@ export default function AndroidMap() {
 
 
   return (
-    <View style={styles.titleContainer}>
-      <MapView style={{ flex: 1, height: 800}} 
+    <View style={{flex: 1}}>
+      <MapView style={{ flex: 1}} 
       // mapStyle="https://tiles.openfreemap.org/styles/positron"
       mapStyle={require('../assets/images/style.json')}
       >

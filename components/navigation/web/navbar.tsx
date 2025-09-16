@@ -9,7 +9,7 @@ export function NavbarWeb() {
   const handlePress = () => setExpanded(!expanded);
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Appbar.Header style={ styles.navbar }>
         <View>
           <Link href="/map">

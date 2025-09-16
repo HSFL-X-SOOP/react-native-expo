@@ -2,7 +2,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Stack } from 'expo-router';
 import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
-export default function AuthLayout() {
+export default function MapLayout() {
   const colorScheme = useColorScheme();
 
   return (
@@ -18,8 +18,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1, // Fills the whole screen
     backgroundColor: '#2c3538ff', // Light blue background
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   text: {
     color: '#000',
