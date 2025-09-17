@@ -7,7 +7,8 @@ import {
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import MapFilterButton from './map/MapFilterButton';
 import WebMarker from './map/MapSensorMarker.web';
 import { MapSensorMeasurements } from './map/MapSensorMeasurements';
 export default async function WebMap() {
@@ -52,8 +53,31 @@ export default async function WebMap() {
         </Popup>
       )}
       </Map>
+      <MapFilterButton />
     </View>);
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject, // Fill the screen
+  },
+  button: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    backgroundColor: '#2c3538ff',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 100,
+    zIndex: 10, // Ensure it's above the map
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+});
 
 

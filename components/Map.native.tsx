@@ -3,8 +3,8 @@ import { SensorModule } from "@/data/sensor";
 import { Camera, MapView } from "@maplibre/maplibre-react-native";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import MapFilterButton from "./map/MapFilterButton";
 import AndroidMarker from "./map/MapSensorMarker.native";
-import { ThemedText } from "./ThemedText";
 export default function AndroidMap() {
     const [content, setContent] = useState<SensorModule[]>([])
     useEffect(() => {
@@ -30,7 +30,7 @@ export default function AndroidMap() {
       <Camera zoomLevel={7} centerCoordinate={[9.26, 54.47926]}/>
       {pins}
       </MapView>
-      <ThemedText type="title"></ThemedText>
+      <MapFilterButton />
     </View>
   )
     
