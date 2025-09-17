@@ -1,5 +1,6 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { Text } from 'react-native-paper';
+import { styles } from './_layout';
 export default function APIScreen() {
   return (
     <View style={styles.container}>
@@ -8,11 +9,3 @@ export default function APIScreen() {
     
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1, // This makes the view expand to fill the parent
-    alignItems: 'center',     // Optional: center content horizontally
-    backgroundColor: '#242020ff'
-  },
-});

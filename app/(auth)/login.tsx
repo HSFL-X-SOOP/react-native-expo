@@ -1,22 +1,28 @@
 import { Link } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
+import { styles } from './_layout';
 export default function LoginScreen() {
   return (
-        <View style={styles.container}>
-          <Text>Login</Text>
-          <Link href="/(auth)/register"><Text>Register</Text></Link>
-        </View>
+    <View style={styles.container}>
+      <View style={style.container}>
+
+      <Text style={{fontSize: 28}}>Login</Text>
+      <Link href="/(auth)/register"><Text>Register</Text></Link>
+      </View>
+    </View>
     
   );
 }
 
-
-const styles = StyleSheet.create({
+export const style = StyleSheet.create({
   container: {
-    flex: 1, // This makes the view expand to fill the parent
-    justifyContent: 'center', // Optional: center content vertically
-    alignItems: 'center',     // Optional: center content horizontally
-    backgroundColor: '#242020ff',
+    height: 800,
+    width: 600,
+    backgroundColor: '#2c3538ff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 20
   },
 });

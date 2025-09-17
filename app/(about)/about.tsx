@@ -1,6 +1,7 @@
 import { Link } from 'expo-router';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import { Text } from 'react-native-paper';
+import { styles } from './_layout';
 export default function AboutScreen() {
   return (
     <SafeAreaView style={styles.container}>
@@ -11,17 +12,9 @@ export default function AboutScreen() {
             <Text>API</Text>
         </Link>
         <Link href="/(about)/sensors">
-            <Text>Sensors</Text>
+            <Text>Sensoren</Text>
         </Link>
     </SafeAreaView>
     
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1, // This makes the view expand to fill the parent
-    alignItems: 'center',     // Optional: center content horizontally
-    backgroundColor: '#242020ff'
-  },
-});
