@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dimensions, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Button, Icon, MD3Colors, Portal, Surface, Text } from "react-native-paper";
+import { Button, Checkbox, Icon, MD3Colors, Portal, Surface, Text } from "react-native-paper";
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -9,6 +9,12 @@ export default function MapFilterButton() {
 
   const openDrawer = () => setDrawerVisible(true);
   const closeDrawer = () => setDrawerVisible(false);  
+
+  const [module1Checked, setModule1Checked] = useState(true);
+  const [module2Checked, setModule2Checked] = useState(false);
+  const [module3Checked, setModule3Checked] = useState(false);
+  const [temperatureOverlaychecked, setTemperatureOverlayChecked] = useState(false);
+  const [windDirectionchecked, setWindDirectionChecked] = useState(false);
   return (
       <View>
         <TouchableOpacity style={styles.button} onPress={openDrawer}>
@@ -21,8 +27,65 @@ export default function MapFilterButton() {
             <Pressable style={styles.backdrop} onPress={closeDrawer} />
 
             <Surface style={styles.drawer}>
-              <Text style={styles.drawerTitle}>Filter</Text>
-              <Button onPress={closeDrawer}>Close</Button>
+              <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                <Button onPress={closeDrawer}>
+                  <Icon source='arrow-right-bold-circle' color={MD3Colors.error50} size={28} />
+                </Button>
+                <Text style={styles.drawerTitle}>Filtereinstellungen</Text>
+              </View>
+              <View>
+                <View style={styles.checkboxAndText}>
+                  <Checkbox.Item 
+                    label="Module 1: Water Level Temperature"
+                    status={module1Checked ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      setModule1Checked(!module1Checked);
+                    }}
+                    position="leading"
+                    />
+                </View>
+                <View style={styles.checkboxAndText}>
+                  <Checkbox.Item
+                    label="Module 2: Air Properties"
+                    status={module2Checked ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      setModule2Checked(!module2Checked);
+                    }}
+                    position="leading"
+                    />
+                </View>
+                <View style={styles.checkboxAndText}>
+                  <Checkbox.Item
+                    label="Module 3: Air Quality"
+                    status={module3Checked ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      setModule3Checked(!module3Checked);
+                    }}
+                    position="leading"
+                    />
+                </View>
+                <View style={styles.checkboxAndText}>
+                  <Checkbox.Item
+                    label="Temperatur-Overlay"
+                    status={temperatureOverlaychecked ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      setTemperatureOverlayChecked(!temperatureOverlaychecked);
+                    }}
+                    position="leading"
+                    />
+                </View>
+                <View style={styles.checkboxAndText}>
+                  <Checkbox.Item
+                    label="Windrichtung Overlay"
+                    status={windDirectionchecked ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      setWindDirectionChecked(!windDirectionchecked);
+                    }}
+                    position="leading"
+                    />
+                </View>
+              </View>
+              
             </Surface>
           </>
         )}
@@ -30,8 +93,6 @@ export default function MapFilterButton() {
       </View>
     );
 }
-
-const drawerWidth = 300;
 
 const styles = StyleSheet.create({
   container: {
@@ -60,7 +121,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
-    width: drawerWidth,
+    width: 400,
     height: '100%',
     backgroundColor: 'white',
     elevation: 4,
@@ -72,4 +133,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
   },
+  checkboxAndText: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
 });
