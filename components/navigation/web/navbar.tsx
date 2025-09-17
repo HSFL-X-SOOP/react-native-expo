@@ -7,16 +7,21 @@ export function NavbarWeb() {
   const [expanded, setExpanded] = useState(false);
   const router = useRouter();
   const handlePress = () => setExpanded(!expanded);
-  const [visible, setVisible] = useState(false);
 
+  //Menu
+  const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
+
+  //ThemeColor
+  const [themeMode, setThemeMode] = useState(false);
+  const switchThemeMode = () => setThemeMode(!themeMode);
   return (
     <View style={{flex: 1}}>
       <Appbar.Header style={ styles.navbar }>
-        <View>
+        <View style={{left: 30}}>
           <Link href="/map">
-        <Text>Marlin</Text>
+            <Text>Marlin</Text>
           </Link>
         </View>
         
@@ -24,7 +29,7 @@ export function NavbarWeb() {
 
             <Link href="/map">
             <Pressable style={styles.navs}>
-              <Icon source='map' color={MD3Colors.error50} size={20} />
+              <Icon source='map-outline' color={MD3Colors.error50} size={20} />
               <Text style={{ fontSize: 18 }}>Karte</Text>
             </Pressable>
             </Link>
@@ -34,8 +39,9 @@ export function NavbarWeb() {
             onDismiss={closeMenu}
             anchor={
             <Pressable style={styles.navs} onPress={openMenu}>
-              <Icon source='dots-vertical' color={MD3Colors.error50} size={20} />
-              <Text style={{ fontSize: 18 }}>About</Text>
+              <Icon source='information-outline' color={MD3Colors.error50} size={20} />
+              <Text style={{ fontSize: 18 }}>Über uns</Text>
+              <Icon source='chevron-down' color={MD3Colors.error50} size={20} />
             </Pressable>
             }
           >
@@ -45,18 +51,24 @@ export function NavbarWeb() {
           </Menu>
         </View>
 
-        <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
-            <Button mode='outlined' onPress={() => console.log('Pressed')}>
-              <Link href="/login">
-                <Text>Anmelden</Text>
-              </Link>
-            </Button>
+        <View style={{display: 'flex', flexDirection: 'row', gap: 30, alignItems: 'center', right: 30}}>
+            <Pressable onPress={() => console.log('Pressed')}>
+              <Icon source='white-balance-sunny' color={MD3Colors.error50} size={20} />
+            </Pressable>
+            <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
 
-            <Button mode='outlined' onPress={() => console.log('Pressed')}>
-              <Link href="/register">
-                <Text>Registrieren</Text>
-              </Link>
-            </Button>
+              <Button mode='outlined' onPress={() => console.log('Pressed')}>
+                <Link href="/login">
+                  <Text>Anmelden</Text>
+                </Link>
+              </Button>
+
+              <Button mode='outlined' onPress={() => console.log('Pressed')}>
+                <Link href="/register">
+                  <Text>Registrieren</Text>
+                </Link>
+              </Button>
+            </View>
         </View>
       </Appbar.Header>
 
@@ -71,7 +83,7 @@ export function NavbarWeb() {
 const styles = StyleSheet.create({
   navbar: {
     display: 'flex',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,

@@ -29,7 +29,7 @@ export default function MapFilterButton() {
             <Surface style={styles.drawer}>
               <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                 <Button onPress={closeDrawer}>
-                  <Icon source='arrow-right-bold-circle' color={MD3Colors.error50} size={28} />
+                  <Icon source='chevron-double-right' color={MD3Colors.error50} size={28} />
                 </Button>
                 <Text style={styles.drawerTitle}>Filtereinstellungen</Text>
               </View>
