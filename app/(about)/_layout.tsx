@@ -19,6 +19,7 @@ export default function AuthLayout() {
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
     backgroundColor: '#2c3538ff', 
     alignItems: 'center'
   },
@@ -34,5 +35,12 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold', 
     marginBottom: 8,
     marginTop: 20
+  },
+  textLg: {
+    fontSize: 17,
+    marginBottom: 16
+  },
+  scrollView: {
+    maxWidth: 768
   }
 });
