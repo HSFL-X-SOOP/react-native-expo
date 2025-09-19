@@ -1,11 +1,10 @@
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Checkbox, Divider, Icon, MD3Colors, Text, TextInput } from 'react-native-paper';
 import { styles } from './_layout';
-
 export default function LoginScreen() {
-
+  const router = useRouter();
   const [text, setText] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -68,7 +67,7 @@ export default function LoginScreen() {
               <Text style={{width: '95%'}}> Sign in with Google</Text>
             </Button>
 
-            <Button mode="outlined" style={style.buttons} onPress={() => {console.log("H")}}>
+            <Button mode="outlined" style={style.buttons} onPress={() => {router.push("/magic-link");}}>
               <Icon source="creation" color={MD3Colors.error50} size={20} />
               <Text> Sign in with Email Magic Link</Text>
             </Button>

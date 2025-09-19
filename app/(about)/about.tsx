@@ -27,13 +27,13 @@ export default function AboutScreen() {
         <Text variant="headlineLarge" style={styles.largeHeadline}>Über uns</Text>
         <Text variant="headlineMedium" style={styles.mediumHeadline}>Was bietet diese Webseite?</Text>
         <Text style={styles.textLg}>Auf dieser Webseite können aktuelle, lokale Daten zu Wetter und Meeresbedingungen abgerufen werden. Die Daten werden von Sensorkits in verschiedenen Marinas erhoben.</Text>
-        <Text style={styles.textLg}>Auf der <Link href={mapPath}><Text style={style.link}>Karte</Text></Link> werden alle Sensoren angezeigt, sowie eine Approximation der Werte an den Zwischenstellen ohne eigenen Sensor.</Text>
-        <Text style={styles.textLg}>Im <Link href={dashboardPath}><Text>Dashboard</Text></Link> werden die Daten eines Sensors dargestellt und unter <Link href={historicalDataPath}><Text>Vergangene Daten</Text></Link> wird die Historie einzelner Werte dargestellt.</Text>
-        <Text style={styles.textLg}>Zum besseren Verständnis für Laien stellen wir eine <Link href={simpleExplanationPath}><Text>einfache Erklärung der Daten</Text></Link> bereit.</Text>
-        <Text style={styles.textLg}>Außerdem stellen wir eine kostenpflichtige <Link href={apiPath}><Text>API</Text></Link> bereit, über die die Daten zur Verfügung gestellt werden.</Text>
+        <Text style={styles.textLg}>Auf der <Link href={mapPath}><Text style={styles.link}>Karte</Text></Link> werden alle Sensoren angezeigt, sowie eine Approximation der Werte an den Zwischenstellen ohne eigenen Sensor.</Text>
+        <Text style={styles.textLg}>Im <Link href={dashboardPath}><Text style={styles.link}>Dashboard</Text></Link> werden die Daten eines Sensors dargestellt und unter <Link href={historicalDataPath}><Text style={styles.link}>Vergangene Daten</Text></Link> wird die Historie einzelner Werte dargestellt.</Text>
+        <Text style={styles.textLg}>Zum besseren Verständnis für Laien stellen wir eine <Link href={simpleExplanationPath}><Text style={styles.link}>einfache Erklärung der Daten</Text></Link> bereit.</Text>
+        <Text style={styles.textLg}>Außerdem stellen wir eine kostenpflichtige <Link href={apiPath}><Text style={styles.link}>API</Text></Link> bereit, über die die Daten zur Verfügung gestellt werden.</Text>
         
         <Text variant="headlineMedium" style={styles.mediumHeadline}>Projekt MARLIN</Text>
-        <Text style={styles.textLg}>Diese Webseite ist im Rahmen des Masterprojekts <Link href={websitePath}><Text>MARLIN</Text></Link> von Studierenden im Master Angewandte Informatik erstellt worden.</Text>
+        <Text style={styles.textLg}>Diese Webseite ist im Rahmen des Masterprojekts MARLIN (<Link href={websitePath}><Text style={styles.link}>Projektwebseite</Text></Link>) von Studierenden im Master Angewandte Informatik erstellt worden.</Text>
 
         <View style={{display: 'flex', flexDirection: 'row', gap: 20}}>
           <FlatList
@@ -62,10 +62,7 @@ const style = StyleSheet.create({
   row: {
     gap: 20,
     marginBottom: 8 * 2,
-  },
-  link: {
-    color: 'green'
-  },
+  }
 });
 
 type StudentCardProps = {

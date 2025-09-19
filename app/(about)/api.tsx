@@ -6,7 +6,7 @@ export default function APIScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <Text variant="headlineLarge" style={styles.largeHeadline}>API</Text>
-        <Text style={styles.textLg}>Die Daten werden auch über eine kostenpflichtige API angeboten. Für Zugänge dazu siehe Preise</Text>
+        <Text style={styles.textLg}>Die Daten werden auch über eine kostenpflichtige API angeboten. Für Zugänge dazu siehe <Text style={styles.link}>Preise</Text></Text>
         <Text variant="headlineMedium" style={styles.mediumHeadline}>Abfragemöglichkeiten</Text>
         <Text style={styles.textLg}>Location: Auswahl des Standorts</Text>
         <Text style={styles.textLg}>Zeit: Auswahl des Zeitpunkts oder Zeitraums</Text>

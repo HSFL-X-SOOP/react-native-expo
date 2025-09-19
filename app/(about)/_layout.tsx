@@ -42,5 +42,9 @@ export const styles = StyleSheet.create({
   },
   scrollView: {
     maxWidth: 768
+  },
+  link: {
+    color: 'green',
+    fontStyle: 'italic'
   }
 });
