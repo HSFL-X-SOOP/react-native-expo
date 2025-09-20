@@ -1,14 +1,14 @@
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Stack } from 'expo-router';
 import React from 'react';
-import { StyleSheet } from 'react-native';
-export default function AuthLayout() {
+import { Platform, StyleSheet } from 'react-native';
+export default function OtherLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Stack screenOptions={{
-      headerShown: false, 
-    }}/>
+      <Stack screenOptions={{
+        headerShown: Platform.OS !== 'web', 
+      }}/>
   );
 }
 

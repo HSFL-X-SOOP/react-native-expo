@@ -59,7 +59,7 @@ export default function RegisterScreen() {
                 }}
                 position="leading"
               />
-              <Link href="/(auth)/register"><Text style={{color: 'green'}}>Terms of Service</Text></Link>
+              <Link href="/(other)/terms-of-service"><Text style={{color: 'green'}}>Terms of Service</Text></Link>
             </View>
             <Button mode="contained" buttonColor='green' style={style.buttons} onPress={() => {console.log("H")}}>
               <Text style={{color: 'black'}}>Sign up</Text>

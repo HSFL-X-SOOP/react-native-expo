@@ -1,3 +1,4 @@
+import { Link } from 'expo-router';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { Text } from 'react-native-paper';
 import { styles } from './_layout';
@@ -6,7 +7,7 @@ export default function APIScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <Text variant="headlineLarge" style={styles.largeHeadline}>API</Text>
-        <Text style={styles.textLg}>Die Daten werden auch über eine kostenpflichtige API angeboten. Für Zugänge dazu siehe <Text style={styles.link}>Preise</Text></Text>
+        <Text style={styles.textLg}>Die Daten werden auch über eine kostenpflichtige API angeboten. Für Zugänge dazu siehe <Link href="/(other)/prices"><Text style={styles.link}>Preise</Text></Link>.</Text>
         <Text variant="headlineMedium" style={styles.mediumHeadline}>Abfragemöglichkeiten</Text>
         <Text style={styles.textLg}>Location: Auswahl des Standorts</Text>
         <Text style={styles.textLg}>Zeit: Auswahl des Zeitpunkts oder Zeitraums</Text>

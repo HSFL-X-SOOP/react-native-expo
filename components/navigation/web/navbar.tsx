@@ -2,6 +2,8 @@ import { Link, Stack, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Appbar, Button, Icon, MD3Colors, Menu, Text } from 'react-native-paper';
+
+
 export function NavbarWeb() {
   const [current, setCurrent] = useState('Home');
   const [expanded, setExpanded] = useState(false);
@@ -29,7 +31,7 @@ export function NavbarWeb() {
 
             <Link href="/map">
             <Pressable style={styles.navs}>
-              <Icon source='map-outline' color={MD3Colors.error50} size={20} />
+              <Icon source='map-outline' color={'white'} size={20} />
               <Text style={{ fontSize: 18 }}>Karte</Text>
             </Pressable>
             </Link>
@@ -39,9 +41,9 @@ export function NavbarWeb() {
             onDismiss={closeMenu}
             anchor={
             <Pressable style={styles.navs} onPress={openMenu}>
-              <Icon source='information-outline' color={MD3Colors.error50} size={20} />
+              <Icon source='information-outline' color={'white'} size={20} />
               <Text style={{ fontSize: 18 }}>Über uns</Text>
-              <Icon source='chevron-down' color={MD3Colors.error50} size={20} />
+              <Icon source='chevron-down' color={'white'} size={20} />
             </Pressable>
             }
           >

@@ -1,14 +1,17 @@
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Card, Text, TextInput } from 'react-native-paper';
+import { Button, Card, HelperText, Text, TextInput } from 'react-native-paper';
 import { styles } from './_layout';
 export default function MagicLinkScreen() {
 
-  const [text, setText] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+    const hasErrors = () => {
+    return !email.includes('@');
+  };
   return (
     <View style={styles.container}>
       <Card>
@@ -20,15 +23,19 @@ export default function MagicLinkScreen() {
             </View>
 
             <View style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20}}>
-                <TextInput
-                label="Email*"
-                value={text}
-                mode='outlined'
-                style={{width: '95%'}}
-                placeholder='you@example.com'
-                onChangeText={text => setText(text)}
-                />
-                
+                <View style={{width: '100%'}}>
+                    <TextInput
+                        label="Email*"
+                        value={email}
+                        mode='outlined'
+                        style={{width: '95%'}}
+                        placeholder='you@example.com'
+                        onChangeText={text => setEmail(text)}
+                        />
+                    <HelperText type="error" visible={hasErrors()}>
+                        Email address is invalid!
+                    </HelperText>
+                </View>
                 <Button mode="contained" buttonColor={'green'} style={style.buttons} onPress={() => {console.log("H")}}>
                 <Text style={{color: 'black'}}>Send Link</Text>
                 </Button>
@@ -48,7 +55,7 @@ export default function MagicLinkScreen() {
 
 export const style = StyleSheet.create({
   container: {
-    height: 250,
+    height: 300,
     width: 400,
     display: 'flex',
     flexDirection: 'column',

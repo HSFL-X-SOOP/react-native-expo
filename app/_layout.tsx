@@ -5,7 +5,7 @@ import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { Platform, StyleSheet } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import 'react-native-reanimated';
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -36,3 +36,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#3498db',
+    accent: '#f1c40f',
+  },
+};
