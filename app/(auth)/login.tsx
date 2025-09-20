@@ -1,14 +1,42 @@
+import { useSession } from '@/context/SessionContext';
+import { useAuth } from '@/hooks/useAuth';
 import { Link, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Checkbox, Divider, Icon, MD3Colors, Text, TextInput } from 'react-native-paper';
 import { styles } from './_layout';
 export default function LoginScreen() {
   const router = useRouter();
-  const [text, setText] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+
+  const {login, loginStatus} = useAuth();
+  const {login: logUserIn, session} = useSession()
+
+
+  useEffect(() => {
+      if (session) {
+          router.push("/");
+      }
+  }, [session, router]);
+
+  const handleSubmit = async () => {
+      const res = await login({ email, password, rememberMe });
+      if (res) {
+          logUserIn({
+              accessToken: res.accessToken,
+              refreshToken: res.refreshToken,
+              loggedInSince: new Date(),
+              lastTokenRefresh: null
+          });
+          router.push("/");
+      } else {
+          //TODO: ADD ERROR BANNER
+          console.error("Login failed:", loginStatus.error);
+      }
+  };
   return (
     <View style={styles.container}>
       <Card>
@@ -22,11 +50,11 @@ export default function LoginScreen() {
           <View style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20}}>
             <TextInput
               label="Email*"
-              value={text}
+              value={email}
               mode='outlined'
               style={{width: '95%'}}
               placeholder='you@example.com'
-              onChangeText={text => setText(text)}
+              onChangeText={text => setEmail(text)}
               />
             <TextInput
               label="Password*"
@@ -50,7 +78,7 @@ export default function LoginScreen() {
               />
               <Link href="/(auth)/register"><Text style={{color: 'green'}}>Forgot password?</Text></Link>
             </View>
-            <Button mode="contained" buttonColor={'green'} style={style.buttons} onPress={() => {console.log("H")}}>
+            <Button mode="contained" buttonColor={'green'} style={style.buttons} onPress={handleSubmit}>
               <Text style={{color: 'black'}}>Sign in</Text>
               </Button>
           </View>
