@@ -1,8 +1,9 @@
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Card, Checkbox, Divider, Icon, MD3Colors, Text, TextInput } from 'react-native-paper';
+import { Button, Card, Checkbox, Divider, HelperText, Icon, MD3Colors, Text, TextInput } from 'react-native-paper';
 import { styles } from './_layout';
+
 export default function LoginScreen() {
   const router = useRouter();
   const [text, setText] = useState("");
@@ -50,7 +51,7 @@ export default function LoginScreen() {
               />
               <Link href="/(auth)/register"><Text style={{color: 'green'}}>Forgot password?</Text></Link>
             </View>
-            <Button mode="contained" buttonColor={'green'} style={style.buttons} onPress={() => {console.log("H")}}>
+            <Button mode="contained" buttonColor={'green'} style={style.buttons} onPress={handleSubmit}>
               <Text style={{color: 'black'}}>Sign in</Text>
               </Button>
           </View>
