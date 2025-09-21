@@ -55,11 +55,11 @@ export default function MagicLinkScreen() {
 
 export const style = StyleSheet.create({
   container: {
-    height: 300,
-    width: 400,
+    height: 400,
+    width: 350,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
   buttons: {

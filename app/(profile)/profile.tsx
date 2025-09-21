@@ -1,7 +1,7 @@
 import { ExternalPathString, Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Icon, MD3Colors, Portal, Surface, Text } from "react-native-paper";
+import { Button, Icon, MD3Colors, Portal, Surface, Text, TextInput } from "react-native-paper";
 import { styles as LayoutStyle } from './_layout';
 
 export default function ProfileScreen() {
@@ -16,6 +16,18 @@ export default function ProfileScreen() {
   const [module3Checked, setModule3Checked] = useState(false);
   const [temperatureOverlaychecked, setTemperatureOverlayChecked] = useState(false);
   const [windDirectionchecked, setWindDirectionChecked] = useState(false);
+
+  const [name, setName] = useState("");  
+  const [email, setEmail] = useState("");
+
+  const [showDropDown, setShowDropDown] = useState(false);
+  const [value, setValue] = useState('');
+
+  const list = [
+    { label: 'JavaScript', value: 'js' },
+    { label: 'TypeScript', value: 'ts' },
+    { label: 'Python', value: 'py' },
+  ];
 
   const menuItems = [
     {id: "menu-item-profile", title: "Profil", icon: "account-circle", color: "black", route: "/(profile)/profile"},
@@ -65,7 +77,26 @@ export default function ProfileScreen() {
           </>
         )}
       </Portal>
-      <Text>Profile Settings</Text>
+      <Text>Profile</Text>
+      <TextInput
+        label="Name"
+        value={name}
+        mode='outlined'
+        style={{width: '95%'}}
+        placeholder='Dein Name'
+        onChangeText={text => setName(text)}
+        />
+      <TextInput
+        label="Email*"
+        value={email}
+        mode='outlined'
+        style={{width: '95%'}}
+        placeholder='beispiel@domain.de'
+        onChangeText={text => setEmail(text)}
+        />
+      <Button mode="outlined" onPress={() => console.log("")}>
+        Speichern
+      </Button>
     </View>
   );
 }

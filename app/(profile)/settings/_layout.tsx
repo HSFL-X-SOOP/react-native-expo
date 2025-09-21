@@ -17,6 +17,7 @@ export default function ProfileSettingsLayout() {
       <Stack.Screen name='notifications' options={{title: 'Alarme & Benachrichtigung', headerShown: Platform.OS !== 'web'}}/>
       <Stack.Screen name='devices-and-sensors' options={{title: 'Geräte & Sensoren', headerShown: Platform.OS !== 'web'}}/>
       <Stack.Screen name='api' options={{title: 'API-Zugang', headerShown: Platform.OS !== 'web'}}/>
+      <Stack.Screen name='feedback-and-support' options={{title: 'Feedback & Support', headerShown: Platform.OS !== 'web'}}/>
     </Stack>
   );
 }
@@ -25,8 +26,6 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#2c3538ff',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   text: {
     color: '#000',

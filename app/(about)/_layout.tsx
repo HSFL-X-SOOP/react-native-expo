@@ -21,7 +21,8 @@ export const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     backgroundColor: '#2c3538ff', 
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 20
   },
   text: {
     color: '#000',

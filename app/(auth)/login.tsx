@@ -119,7 +119,7 @@ export default function LoginScreen() {
 export const style = StyleSheet.create({
   container: {
     height: 600,
-    width: 400,
+    width: 350,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-around',
