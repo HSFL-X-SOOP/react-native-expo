@@ -78,7 +78,8 @@ export function NavbarWeb() {
               {session && (
               <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
                   <Button mode='outlined' onPress={() => console.log('Pressed')}>
-                    <Link href="/(profile)/profile">
+                    <Link href="/(profile)/profile" style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10}}>
+                      <Icon source="account-circle" size={28}></Icon>
                       <Text>Profil</Text>
                     </Link>
                   </Button>
