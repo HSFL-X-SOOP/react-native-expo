@@ -1,8 +1,8 @@
+import { useSession } from '@/context/SessionContext';
 import { Link, Stack, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Appbar, Button, Icon, MD3Colors, Menu, Text } from 'react-native-paper';
-
 
 export function NavbarWeb() {
   const [current, setCurrent] = useState('Home');
@@ -18,6 +18,8 @@ export function NavbarWeb() {
   //ThemeColor
   const [themeMode, setThemeMode] = useState(false);
   const switchThemeMode = () => setThemeMode(!themeMode);
+  const {session} = useSession()
+
   return (
     <View style={{flex: 1}}>
       <Appbar.Header style={ styles.navbar }>
@@ -57,20 +59,31 @@ export function NavbarWeb() {
             <Pressable onPress={() => console.log('Pressed')}>
               <Icon source='white-balance-sunny' color={MD3Colors.error50} size={20} />
             </Pressable>
-            <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
+              {!session && (
+              <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
 
-              <Button mode='outlined' onPress={() => console.log('Pressed')}>
-                <Link href="/login">
-                  <Text>Anmelden</Text>
-                </Link>
-              </Button>
+                  <Button mode='outlined' onPress={() => console.log('Pressed')}>
+                    <Link href="/login">
+                      <Text>Anmelden</Text>
+                    </Link>
+                  </Button>
 
-              <Button mode='outlined' onPress={() => console.log('Pressed')}>
-                <Link href="/register">
-                  <Text>Registrieren</Text>
-                </Link>
-              </Button>
-            </View>
+                  <Button mode='outlined' onPress={() => console.log('Pressed')}>
+                    <Link href="/register">
+                      <Text>Registrieren</Text>
+                    </Link>
+                  </Button>
+              </View>
+              )}
+              {session && (
+              <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
+                  <Button mode='outlined' onPress={() => console.log('Pressed')}>
+                    <Link href="/(profile)/profile">
+                      <Text>Profil</Text>
+                    </Link>
+                  </Button>
+              </View>
+              )}
         </View>
       </Appbar.Header>
 

@@ -1,5 +1,6 @@
 import { TabBarNative } from '@/components/navigation/native/tabbar';
 import { NavbarWeb } from '@/components/navigation/web/navbar';
+import { AuthProvider } from '@/context/SessionContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
@@ -21,8 +22,10 @@ export default function RootLayout() {
 
   return (
     <PaperProvider>
-      {Platform.OS === 'web' ? <NavbarWeb /> : <TabBarNative />}
-      <StatusBar style="auto" />
+      <AuthProvider>
+        {Platform.OS === 'web' ? <NavbarWeb /> : <TabBarNative />}
+        <StatusBar style="auto" />
+      </AuthProvider>
     </PaperProvider>
   );
 }

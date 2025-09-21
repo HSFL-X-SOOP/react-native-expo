@@ -28,7 +28,6 @@ export default function RegisterScreen() {
       if (!agreeTermsOfService) return;
 
       const res = await register({email, password, rememberMe: false});
-      console.log(res)
       if (res) {
           login({
               accessToken: res.accessToken,

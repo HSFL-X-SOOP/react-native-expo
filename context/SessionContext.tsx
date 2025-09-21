@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const logout = () => {
         setSession(undefined);
         setStored(undefined);
-        router.push('/');
+        router.push('/map');
     };
 
     return (

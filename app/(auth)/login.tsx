@@ -32,7 +32,7 @@ export default function LoginScreen() {
               loggedInSince: new Date(),
               lastTokenRefresh: null
           });
-          router.push("/");
+          router.push("/map");
       } else {
           //TODO: ADD ERROR BANNER
           console.error("Login failed:", loginStatus.error);
@@ -42,11 +42,13 @@ export default function LoginScreen() {
     <View style={styles.container}>
       <Card>
         <Card.Content>
+          {!session && (
           <View style={style.container}>
           <View style={{marginTop: 20, alignItems: 'center'}}>
             <Text style={{marginBottom: 10, fontSize: 28}}>Sign in</Text>
             <Text style={styles.textLg}>Welcome back! Please enter your credentials.</Text>
           </View>
+
 
           <View style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20}}>
             <TextInput
@@ -106,6 +108,8 @@ export default function LoginScreen() {
             <Text>Don't have an account? <Link href="/(auth)/register" style={{color: 'green'}}>Sign up</Link></Text>
           </View>
           </View>
+          )}
+
         </Card.Content>
       </Card>
     </View>

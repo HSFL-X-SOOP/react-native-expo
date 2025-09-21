@@ -1,14 +1,58 @@
 // src/hooks/useLocalStorage.ts
-import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 
 export function useLocalStorage<T>(key: string, initialValue?: T): [T | undefined, Dispatch<SetStateAction<T | undefined>>] {
-    const stored = localStorage.getItem(key);
-    const [value, setValue] = useState<T | undefined>(stored ? JSON.parse(stored) : initialValue);
+  const [value, setValue] = useState<T | undefined>(initialValue);
 
-    useEffect(() => {
-        if (value !== undefined) localStorage.setItem(key, JSON.stringify(value));
-        else localStorage.removeItem(key);
-    }, [key, value]);
+  useEffect(() => {
+    const loadStoredValue = async () => {
+      try {
+        let storedValue: string | null = null;
 
-    return [value, setValue];
+        if (Platform.OS === 'web') {
+          storedValue = localStorage.getItem(key);
+        } else {
+          storedValue = await Storage.getItem(key);
+        }
+
+        if (storedValue !== null) {
+          setValue(JSON.parse(storedValue));
+        }
+      } catch (error) {
+        console.warn(`Error loading key "${key}" from storage`, error);
+      }
+    };
+
+    loadStoredValue();
+  }, [key]);
+
+  return [value, setValue];
 }
+
+const Storage = {
+  setItem: async (key: string, value: string) => {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value);
+    } else {
+      await AsyncStorage.setItem(key, value);
+    }
+  },
+
+  getItem: async (key: string) => {
+    if (Platform.OS === 'web') {
+      return localStorage.getItem(key);
+    } else {
+      return await AsyncStorage.getItem(key);
+    }
+  },
+
+  removeItem: async (key: string) => {
+    if (Platform.OS === 'web') {
+      localStorage.removeItem(key);
+    } else {
+      await AsyncStorage.removeItem(key);
+    }
+  }
+};
