@@ -1,15 +1,47 @@
-import { Link } from 'expo-router';
-import { useState } from 'react';
+import { useSession } from '@/context/SessionContext';
+import { useAuth } from '@/hooks/useAuth';
+import { Link, useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Checkbox, Divider, Icon, MD3Colors, Text, TextInput } from 'react-native-paper';
 import { styles } from './_layout';
 export default function RegisterScreen() {
-  const [text, setText] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreeTermsOfService, setAgreeTermsOfService] = useState(false);
+
+  const router = useRouter();
+  const {register, registerStatus} = useAuth();
+  const {login, session} = useSession();
+
+  useEffect(() => {
+      if (session) {
+          router.push("/");
+      }
+  }, [session, router]);
+
+  const handleSubmit = async () => {
+      if (password !== confirmPassword) return;
+      if (!agreeTermsOfService) return;
+
+      const res = await register({email, password, rememberMe: false});
+      console.log(res)
+      if (res) {
+          login({
+              accessToken: res.accessToken,
+              refreshToken: res.refreshToken,
+              loggedInSince: new Date(),
+              lastTokenRefresh: null
+          });
+          router.push("/");
+      } else {
+          // TODO: ADD ERROR BANNER
+          console.error("Registration failed:", registerStatus.error);
+      }
+  };
   return (
     <View style={styles.container}>
       <Card>
@@ -23,11 +55,11 @@ export default function RegisterScreen() {
           <View style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20}}>
             <TextInput
               label="Email*"
-              value={text}
+              value={email}
               mode='outlined'
               style={{width: '95%'}}
               placeholder='you@example.com'
-              onChangeText={text => setText(text)}
+              onChangeText={text => setEmail(text)}
               />
             <TextInput
               label="Password*"
@@ -61,7 +93,7 @@ export default function RegisterScreen() {
               />
               <Link href="/(other)/terms-of-service"><Text style={{color: 'green'}}>Terms of Service</Text></Link>
             </View>
-            <Button mode="contained" buttonColor='green' style={style.buttons} onPress={() => {console.log("H")}}>
+            <Button mode="contained"  buttonColor='green' style={style.buttons} onPress={handleSubmit}>
               <Text style={{color: 'black'}}>Sign up</Text>
               </Button>
           </View>
