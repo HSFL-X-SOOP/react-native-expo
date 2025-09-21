@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Card, Checkbox, Divider, HelperText, Icon, MD3Colors, Text, TextInput } from 'react-native-paper';
+import { Button, Card, Checkbox, Divider, Icon, MD3Colors, Text, TextInput } from 'react-native-paper';
 import { styles } from './_layout';
 export default function RegisterScreen() {
   const [text, setText] = useState("");

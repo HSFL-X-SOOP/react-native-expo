@@ -1,7 +1,7 @@
 import { ExternalPathString, Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Button, Icon, MD3Colors, Portal, Surface, Text } from "react-native-paper";
+import { Icon, MD3Colors, Portal, Surface, Text } from "react-native-paper";
 import { styles as LayoutStyle } from './_layout';
 
 export default function ProfileScreen() {
@@ -18,22 +18,22 @@ export default function ProfileScreen() {
   const [windDirectionchecked, setWindDirectionChecked] = useState(false);
 
   const menuItems = [
-    {title: "Profil", icon: "information-outline", color: "black", route: "/(profile)/profile"},
-    {title: "Allgemeine Daten", icon: "information-outline", color: "black", route: "/(profile)/settings/general"},
-    {title: "Boot", icon: "information-outline", color: "black", route: "/(profile)/settings/boat"},
-    {title: "Einstellungen", icon: "information-outline", color: "black", route: "/(profile)/profile_settings"},
-    {title: "Filtereinstellungen", icon: "information-outline", color: "black", route: "/(profile)/settings/filter"},
-    {title: "Alarme & Benachrichtigungen", icon: "information-outline", color: "black", route: "/(profile)/settings/notifications"},
-    {title: "Geräte & Sensoren", icon: "information-outline", color: "black", route: "/(profile)/settings/devices-and-sensors"},
-    {title: "API-Zugang", icon: "information-outline", color: "black", route: "/(profile)/settings/api"},
-    {title: "Feedback & Support", icon: "information-outline", color: "black", route: "/(profile)/profile"},
-    {title: "Kalender", icon: "information-outline", color: "black", route: "/(profile)/profile"},
+    {id: "menu-item-profile", title: "Profil", icon: "account-circle", color: "black", route: "/(profile)/profile"},
+    {id: "menu-item-general", title: "Allgemeine Daten", icon: "information-outline", color: "black", route: "/(profile)/settings/general"},
+    {id: "menu-item-boat", title: "Boot", icon: "sail-boat", color: "black", route: "/(profile)/settings/boat"},
+    {id: "menu-item-settings", title: "Einstellungen", icon: "account-cog", color: "black", route: "/(profile)/profile_settings"},
+    {id: "menu-item-filter-settings", title: "Filtereinstellungen", icon: "filter", color: "black", route: "/(profile)/settings/filter"},
+    {id: "menu-item-notification-settings", title: "Alarme & Benachrichtigungen", icon: "bell", color: "black", route: "/(profile)/settings/notifications"},
+    {id: "menu-item-devices-and-sensors", title: "Geräte & Sensoren", icon: "cellphone-link", color: "black", route: "/(profile)/settings/devices-and-sensors"},
+    {id: "menu-item-profile-api", title: "API-Zugang", icon: "access-point", color: "black", route: "/(profile)/settings/api"},
+    {id: "menu-item-profile-support", title: "Feedback & Support", icon: "face-agent", color: "black", route: "/(profile)/profile"},
+    {id: "menu-item-profile-kalender", title: "Kalender", icon: "calendar-month", color: "black", route: "/(profile)/profile"},
   ]
 
   return (
     <View style={LayoutStyle.container}>
       <TouchableOpacity style={styles.button} onPress={openDrawer}>
-        <Icon source='filter' color={MD3Colors.error50} size={28} />
+        <Icon source='cog' color={MD3Colors.error50} size={28} />
       </TouchableOpacity>
 
       <Portal>
@@ -42,22 +42,22 @@ export default function ProfileScreen() {
             <Pressable style={styles.backdrop} onPress={closeDrawer} />
 
             <Surface style={styles.drawer}>
-              <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                <Button onPress={closeDrawer}>
-                  <Icon source='chevron-double-right' color={MD3Colors.error50} size={28} />
-                </Button>
+              <View style={{display: 'flex', flexDirection: 'row'}}>
+                <Pressable onPress={closeDrawer}>
+                  <Icon source='chevron-double-right' color={'black'} size={28} />
+                </Pressable>
                 <Text style={styles.drawerTitle}>Profil</Text>
               </View>
               <View>
                 {menuItems.map(menuItem => (
-                  <View style={styles.checkboxAndText}>
-                    <Button>
+                    <Pressable style={{marginBottom: 10}} key={menuItem.id}>
                       <Link href={menuItem.route as ExternalPathString} onPress={closeDrawer}>
-                        <Icon source={menuItem.icon} color={menuItem.color} size={20} />
-                        <Text>{menuItem.title}</Text>
+                        <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10}}>
+                          <Icon source={menuItem.icon} color={menuItem.color} size={28} />
+                          <Text style={{fontSize: 18, color: 'black'}}>{menuItem.title}</Text>
+                        </View>
                       </Link>
-                    </Button>
-                  </View>
+                    </Pressable>
                 ))}
               </View>
               
@@ -65,7 +65,7 @@ export default function ProfileScreen() {
           </>
         )}
       </Portal>
-      <Link href="/(profile)/profile_settings"><Text>Profile Settings</Text></Link>
+      <Text>Profile Settings</Text>
     </View>
   );
 }
@@ -126,13 +126,15 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
   drawerTitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: 'black'
   },
   checkboxAndText: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    gap: 10
   }
 });

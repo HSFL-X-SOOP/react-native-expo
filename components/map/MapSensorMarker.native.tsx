@@ -8,6 +8,7 @@ export default function AndroidMarker(sensorModule: SensorModule, index: number)
     return (
         <PointAnnotation
         id={`marker-${index}`}
+        key={`marker-${index}`}
         coordinate={[ sensorModule.location.coordinates.lon, sensorModule.location.coordinates.lat]}
         title="Marker Title"
         selected={true}
