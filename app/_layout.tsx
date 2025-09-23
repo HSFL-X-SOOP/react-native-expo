@@ -1,51 +1,33 @@
-import { TabBarNative } from '@/components/navigation/native/tabbar';
-import { NavbarWeb } from '@/components/navigation/web/navbar';
-import { AuthProvider } from '@/context/SessionContext';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useFonts } from 'expo-font';
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { Platform, StyleSheet } from 'react-native';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import 'react-native-reanimated';
+// app/_layout.tsx (oder wo dein RootLayout liegt)
+import 'react-native-reanimated'
+import { Platform } from 'react-native'
+import { StatusBar } from 'expo-status-bar'
+import { useFonts } from 'expo-font'
+
+import { TamaguiProvider, Theme } from 'tamagui'
+import config from '@/tamagui.config'
+
+import { AuthProvider } from '@/context/SessionContext'
+import { TabBarNative } from '@/components/navigation/native/tabbar'
+import { NavbarWeb } from '@/components/navigation/web/navbar'
+import { useColorScheme } from '@/hooks/useColorScheme'
+
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-    const [current, setCurrent] = useState('Home');
+  const colorScheme = useColorScheme()
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  })
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
+  if (!loaded) return null
 
   return (
-    <PaperProvider>
-      <AuthProvider>
-        {Platform.OS === 'web' ? <NavbarWeb /> : <TabBarNative />}
-        <StatusBar style="auto" />
-      </AuthProvider>
-    </PaperProvider>
-  );
+      <TamaguiProvider config={config}>
+        <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
+          <AuthProvider>
+            {Platform.OS === 'web' ? <NavbarWeb /> : <TabBarNative />}
+            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+          </AuthProvider>
+        </Theme>
+      </TamaguiProvider>
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  text: {
-    color: '#000',
-    fontSize: 18,
-  },
-});
-
-const theme = {
-  ...DefaultTheme,
-  roundness: 2,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#3498db',
-    accent: '#f1c40f',
-  },
-};

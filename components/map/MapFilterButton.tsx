@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Dimensions, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Button, Checkbox, Icon, MD3Colors, Portal, Surface, Text } from "react-native-paper";
+import { Button, Text, XStack, YStack, Sheet, Checkbox } from 'tamagui';
+import { Filter, ChevronRight } from '@tamagui/lucide-icons';
 
 const { width: screenWidth } = Dimensions.get('window');
 
 export default function MapFilterButton() {
-  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
-  const openDrawer = () => setDrawerVisible(true);
-  const closeDrawer = () => setDrawerVisible(false);  
+  const openDrawer = () => setSheetOpen(true);
+  const closeDrawer = () => setSheetOpen(false);  
 
   const [module1Checked, setModule1Checked] = useState(true);
   const [module2Checked, setModule2Checked] = useState(false);
@@ -18,78 +19,69 @@ export default function MapFilterButton() {
   return (
       <View>
         <TouchableOpacity style={styles.button} onPress={openDrawer}>
-          <Icon source='filter' color={MD3Colors.error50} size={28} />
+          <Filter color={'$orange10'} size={28} />
         </TouchableOpacity>
 
-      <Portal>
-        {drawerVisible && (
-          <>
-            <Pressable style={styles.backdrop} onPress={closeDrawer} />
+      <Sheet
+        modal
+        open={sheetOpen}
+        onOpenChange={setSheetOpen}
+        snapPoints={[90]}
+        dismissOnSnapToBottom
+      >
+        <Sheet.Overlay />
+        <Sheet.Handle />
+        <Sheet.Frame padding="$4" backgroundColor="white">
+          <XStack alignItems="center" marginBottom="$4">
+            <Button onPress={closeDrawer} size="$3" chromeless>
+              <ChevronRight color={'$orange10'} size={28} />
+            </Button>
+            <Text fontSize="$6" fontWeight="bold">Filtereinstellungen</Text>
+          </XStack>
 
-            <Surface style={styles.drawer}>
-              <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                <Button onPress={closeDrawer}>
-                  <Icon source='chevron-double-right' color={MD3Colors.error50} size={28} />
-                </Button>
-                <Text style={styles.drawerTitle}>Filtereinstellungen</Text>
-              </View>
-              <View>
-                <View style={styles.checkboxAndText}>
-                  <Checkbox.Item 
-                    label="Module 1: Water Level Temperature"
-                    status={module1Checked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setModule1Checked(!module1Checked);
-                    }}
-                    position="leading"
-                    />
-                </View>
-                <View style={styles.checkboxAndText}>
-                  <Checkbox.Item
-                    label="Module 2: Air Properties"
-                    status={module2Checked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setModule2Checked(!module2Checked);
-                    }}
-                    position="leading"
-                    />
-                </View>
-                <View style={styles.checkboxAndText}>
-                  <Checkbox.Item
-                    label="Module 3: Air Quality"
-                    status={module3Checked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setModule3Checked(!module3Checked);
-                    }}
-                    position="leading"
-                    />
-                </View>
-                <View style={styles.checkboxAndText}>
-                  <Checkbox.Item
-                    label="Temperatur-Overlay"
-                    status={temperatureOverlaychecked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setTemperatureOverlayChecked(!temperatureOverlaychecked);
-                    }}
-                    position="leading"
-                    />
-                </View>
-                <View style={styles.checkboxAndText}>
-                  <Checkbox.Item
-                    label="Windrichtung Overlay"
-                    status={windDirectionchecked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setWindDirectionChecked(!windDirectionchecked);
-                    }}
-                    position="leading"
-                    />
-                </View>
-              </View>
-              
-            </Surface>
-          </>
-        )}
-      </Portal>
+          <YStack space="$3">
+            <XStack alignItems="center" space="$3">
+              <Checkbox
+                checked={module1Checked}
+                onCheckedChange={() => setModule1Checked(!module1Checked)}
+              />
+              <Text>Module 1: Water Level Temperature</Text>
+            </XStack>
+
+            <XStack alignItems="center" space="$3">
+              <Checkbox
+                checked={module2Checked}
+                onCheckedChange={() => setModule2Checked(!module2Checked)}
+              />
+              <Text>Module 2: Air Properties</Text>
+            </XStack>
+
+            <XStack alignItems="center" space="$3">
+              <Checkbox
+                checked={module3Checked}
+                onCheckedChange={() => setModule3Checked(!module3Checked)}
+              />
+              <Text>Module 3: Air Quality</Text>
+            </XStack>
+
+            <XStack alignItems="center" space="$3">
+              <Checkbox
+                checked={temperatureOverlaychecked}
+                onCheckedChange={() => setTemperatureOverlayChecked(!temperatureOverlaychecked)}
+              />
+              <Text>Temperatur-Overlay</Text>
+            </XStack>
+
+            <XStack alignItems="center" space="$3">
+              <Checkbox
+                checked={windDirectionchecked}
+                onCheckedChange={() => setWindDirectionChecked(!windDirectionchecked)}
+              />
+              <Text>Windrichtung Overlay</Text>
+            </XStack>
+          </YStack>
+        </Sheet.Frame>
+      </Sheet>
       </View>
     );
 }

@@ -2,8 +2,9 @@ import { useSession } from '@/context/SessionContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Link, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Card, Checkbox, Divider, Icon, MD3Colors, Text, TextInput } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
+import { Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator } from 'tamagui';
+import { Eye } from '@tamagui/lucide-icons';
 import { styles } from './_layout';
 
 export default function LoginScreen() {
@@ -38,79 +39,70 @@ export default function LoginScreen() {
           console.error("Login failed:", loginStatus.error);
       }
   };
+
   return (
     <View style={styles.container}>
-      <Card>
-        <Card.Content>
-          {!session && (
-          <View style={style.container}>
-          <View style={{marginTop: 20, alignItems: 'center'}}>
-            <Text style={{marginBottom: 10, fontSize: 28}}>Sign in</Text>
-            <Text style={styles.textLg}>Welcome back! Please enter your credentials.</Text>
-          </View>
+      <Card elevate size="$4" bordered padding="$4" width={350}>
+        {!session && (
+        <YStack space="$4" alignItems="center">
+          <YStack space="$2" alignItems="center" marginTop="$4">
+            <Text fontSize="$8" fontWeight="bold">Sign in</Text>
+            <Text color="$gray10" textAlign="center">Welcome back! Please enter your credentials.</Text>
+          </YStack>
 
-
-          <View style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20}}>
-            <TextInput
-              label="Email*"
+          <YStack space="$4" width="100%">
+            <Input
+              placeholder="you@example.com"
               value={email}
-              mode='outlined'
-              style={{width: '95%'}}
-              placeholder='you@example.com'
               onChangeText={text => setEmail(text)}
+              size="$4"
               />
-            <TextInput
-              label="Password*"
+            <Input
+              placeholder="Password"
               value={password}
-              mode='outlined'
-              placeholder='********'
-              style={{width: '95%'}}
               onChangeText={password => setPassword(password)}
               secureTextEntry={!showPassword}
-              right={<TextInput.Icon icon="eye" color={'green'} onPress={() => setShowPassword(!showPassword)}/>}
+              size="$4"
               />
 
-            <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', paddingRight: 30, justifyContent: 'space-between'}}>
-              <Checkbox.Item 
-                label="Remember me"
-                status={rememberMe ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  setRememberMe(!rememberMe);
-                }}
-                position="leading"
-              />
-              <Link href="/(auth)/register"><Text style={{color: 'green'}}>Forgot password?</Text></Link>
-            </View>
-            <Button mode="contained" buttonColor={'green'} style={style.buttons} onPress={handleSubmit}>
-              <Text style={{color: 'black'}}>Sign in</Text>
-              </Button>
-          </View>
+            <XStack justifyContent="space-between" alignItems="center" width="100%">
+              <XStack space="$2" alignItems="center">
+                <Checkbox
+                  checked={rememberMe}
+                  onCheckedChange={setRememberMe}
+                  size="$4"
+                />
+                <Text>Remember me</Text>
+              </XStack>
+              <Link href="/(auth)/register"><Text color="$green10">Forgot password?</Text></Link>
+            </XStack>
 
-          <View style={{display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'center', gap: 10}}>
-            <Divider style={{width: '45%'}}/>
+            <Button backgroundColor="$green10" color="white" size="$4" onPress={handleSubmit}>
+              Sign in
+            </Button>
+          </YStack>
+
+          <XStack space="$2" alignItems="center" width="100%">
+            <Separator flex={1} />
             <Text>or</Text>
-            <Divider style={{width: '45%'}}/>
-          </View>
+            <Separator flex={1} />
+          </XStack>
 
-          <View style={{display: 'flex', flexDirection: 'column', gap: 20, width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-            <Button mode="outlined" style={style.buttons} onPress={() => {console.log("H")}}>
-              <Icon source="google" color={MD3Colors.error50} size={20} />
-              <Text style={{width: '95%'}}> Sign in with Google</Text>
+          <YStack space="$3" width="100%">
+            <Button variant="outlined" size="$4" onPress={() => {console.log("H")}}>
+              Sign in with Google
             </Button>
 
-            <Button mode="outlined" style={style.buttons} onPress={() => {router.push("/magic-link");}}>
-              <Icon source="creation" color={MD3Colors.error50} size={20} />
-              <Text> Sign in with Email Magic Link</Text>
+            <Button variant="outlined" size="$4" onPress={() => {router.push("/magic-link");}}>
+              Sign in with Email Magic Link
             </Button>
-          </View>
+          </YStack>
 
-          <View>
-            <Text>Don't have an account? <Link href="/(auth)/register" style={{color: 'green'}}>Sign up</Link></Text>
-          </View>
-          </View>
-          )}
-
-        </Card.Content>
+          <YStack alignItems="center">
+            <Text>Don't have an account? <Link href="/(auth)/register"><Text color="$green10">Sign up</Text></Link></Text>
+          </YStack>
+        </YStack>
+        )}
       </Card>
     </View>
   );
@@ -126,7 +118,7 @@ export const style = StyleSheet.create({
     alignItems: 'center',
   },
   buttons: {
-    width: '100%', 
+    width: '100%',
     alignItems: 'center'
   }
 });

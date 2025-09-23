@@ -1,20 +1,20 @@
 import { Link } from "expo-router";
 import { SafeAreaView, View } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Button, Text, YStack } from 'tamagui';
 export default function AboutTabScreen() {
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View style={{flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 50}}>
-        <Button mode="contained-tonal">
+      <YStack flex={1} justifyContent="center" space="$5" paddingHorizontal="$4">
+        <Button size="$5" theme="blue">
           <Link href="/(about)/about"><Text>Über uns</Text></Link>
         </Button>
-        <Button mode="contained-tonal">
+        <Button size="$5" theme="blue">
           <Link href="/(about)/sensors"><Text>Sensoren</Text></Link>
         </Button>
-        <Button mode="contained-tonal">
+        <Button size="$5" theme="blue">
           <Link href="/(about)/api"><Text>API</Text></Link>
         </Button>
-      </View>
+      </YStack>
     </SafeAreaView>
   );
 }

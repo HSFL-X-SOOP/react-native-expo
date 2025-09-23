@@ -2,9 +2,11 @@ import { useSession } from '@/context/SessionContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Link, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Card, Checkbox, Divider, Icon, MD3Colors, Text, TextInput } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
+import { Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator } from 'tamagui';
+import { Eye } from '@tamagui/lucide-icons';
 import { styles } from './_layout';
+
 export default function RegisterScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,80 +43,69 @@ export default function RegisterScreen() {
           console.error("Registration failed:", registerStatus.error);
       }
   };
+
   return (
     <View style={styles.container}>
-      <Card>
-        <Card.Content>
-          <View style={style.container}>
-          <View style={{marginTop: 20, alignItems: 'center'}}>
-            <Text style={{marginBottom: 10, fontSize: 28}}>Create account</Text>
-            <Text style={styles.textLg}>Join us by filling out the information below.</Text>
-          </View>
+      <Card elevate size="$4" bordered padding="$4" width={350}>
+        <YStack space="$4" alignItems="center">
+          <YStack space="$2" alignItems="center" marginTop="$4">
+            <Text fontSize="$8" fontWeight="bold">Create account</Text>
+            <Text color="$gray10" textAlign="center">Join us by filling out the information below.</Text>
+          </YStack>
 
-          <View style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20}}>
-            <TextInput
-              label="Email*"
+          <YStack space="$4" width="100%">
+            <Input
+              placeholder="you@example.com"
               value={email}
-              mode='outlined'
-              style={{width: '95%'}}
-              placeholder='you@example.com'
               onChangeText={text => setEmail(text)}
+              size="$4"
               />
-            <TextInput
-              label="Password*"
+            <Input
+              placeholder="Password"
               value={password}
-              mode='outlined'
-              placeholder='********'
-              style={{width: '95%'}}
               onChangeText={password => setPassword(password)}
               secureTextEntry={!showPassword}
-              right={<TextInput.Icon icon="eye" color={'green'} onPress={() => setShowPassword(!showPassword)}/>}
+              size="$4"
               />
-            <TextInput
-              label="Confirm Password*"
+            <Input
+              placeholder="Confirm Password"
               value={confirmPassword}
-              mode='outlined'
-              placeholder='********'
-              style={{width: '95%'}}
               onChangeText={password => setConfirmPassword(password)}
               secureTextEntry={!showConfirmPassword}
-              right={<TextInput.Icon icon="eye" color={'green'} onPress={() => setShowConfirmPassword(!showConfirmPassword)}/>}
+              size="$4"
               />
 
-            <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%'}}>
-              <Checkbox.Item 
-                label="I agree to the"
-                status={agreeTermsOfService ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  setAgreeTermsOfService(!agreeTermsOfService);
-                }}
-                position="leading"
+            <XStack space="$2" alignItems="center" width="100%">
+              <Checkbox
+                checked={agreeTermsOfService}
+                onCheckedChange={setAgreeTermsOfService}
+                size="$4"
               />
-              <Link href="/(other)/terms-of-service"><Text style={{color: 'green'}}>Terms of Service</Text></Link>
-            </View>
-            <Button mode="contained"  buttonColor='green' style={style.buttons} onPress={handleSubmit}>
-              <Text style={{color: 'black'}}>Sign up</Text>
-              </Button>
-          </View>
+              <Text>I agree to the </Text>
+              <Link href="/(other)/terms-of-service"><Text color="$green10">Terms of Service</Text></Link>
+            </XStack>
 
-          <View style={{display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'center', gap: 10}}>
-            <Divider style={{width: '45%'}}/>
-            <Text>or</Text>
-            <Divider style={{width: '45%'}}/>
-          </View>
-
-          <View style={{display: 'flex', flexDirection: 'column', gap: 20, width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-            <Button mode="outlined" style={style.buttons} onPress={() => {console.log("H")}}>
-              <Icon source="google" color={MD3Colors.error50} size={20} />
-              <Text style={{width: '95%'}}> Sign up with Google</Text>
+            <Button backgroundColor="$green10" color="white" size="$4" onPress={handleSubmit}>
+              Sign up
             </Button>
-          </View>
+          </YStack>
 
-          <View>
-            <Text>Already have an account? <Link href="/(auth)/login" style={{color: 'green'}}>Sign in</Link></Text>
-          </View>
-          </View>
-        </Card.Content>
+          <XStack space="$2" alignItems="center" width="100%">
+            <Separator flex={1} />
+            <Text>or</Text>
+            <Separator flex={1} />
+          </XStack>
+
+          <YStack space="$3" width="100%">
+            <Button variant="outlined" size="$4" onPress={() => {console.log("H")}}>
+              Sign up with Google
+            </Button>
+          </YStack>
+
+          <YStack alignItems="center">
+            <Text>Already have an account? <Link href="/(auth)/login"><Text color="$green10">Sign in</Text></Link></Text>
+          </YStack>
+        </YStack>
       </Card>
     </View>
   );
@@ -130,7 +121,7 @@ export const style = StyleSheet.create({
     alignItems: 'center',
   },
   buttons: {
-    width: '100%', 
+    width: '100%',
     alignItems: 'center'
   }
 });

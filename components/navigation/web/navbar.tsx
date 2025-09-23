@@ -2,7 +2,8 @@ import { useSession } from '@/context/SessionContext';
 import { Link, Stack, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
-import { Appbar, Button, Icon, MD3Colors, Menu, Text } from 'react-native-paper';
+import { Button, Text, View as TamaguiView, XStack, YStack, Sheet } from 'tamagui';
+import { ChevronDown, Map, Info, Sun, UserCircle } from '@tamagui/lucide-icons';
 
 export function NavbarWeb() {
   const [current, setCurrent] = useState('Home');
@@ -11,9 +12,9 @@ export function NavbarWeb() {
   const handlePress = () => setExpanded(!expanded);
 
   //Menu
-  const [visible, setVisible] = useState(false);
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const openMenu = () => setMenuOpen(true);
+  const closeMenu = () => setMenuOpen(false);
 
   //ThemeColor
   const [themeMode, setThemeMode] = useState(false);
@@ -22,71 +23,87 @@ export function NavbarWeb() {
 
   return (
     <View style={{flex: 1}}>
-      <Appbar.Header style={ styles.navbar }>
-        <View style={{left: 30}}>
+      <XStack style={ styles.navbar }>
+        <TamaguiView style={{left: 30}}>
           <Link href="/map">
-            <Text>Marlin</Text>
+            <Text fontSize="$6" fontWeight="bold" color="white">Marlin</Text>
           </Link>
-        </View>
+        </TamaguiView>
         
-        <View style={ styles.navs}>
+        <XStack style={ styles.navs}>
 
             <Link href="/map">
             <Pressable style={styles.navs}>
-              <Icon source='map-outline' color={'white'} size={20} />
-              <Text style={{ fontSize: 18 }}>Karte</Text>
+              <Map color={'white'} size={20} />
+              <Text fontSize={18} color="white">Karte</Text>
             </Pressable>
             </Link>
 
-          <Menu
-            visible={visible}
-            onDismiss={closeMenu}
-            anchor={
-            <Pressable style={styles.navs} onPress={openMenu}>
-              <Icon source='information-outline' color={'white'} size={20} />
-              <Text style={{ fontSize: 18 }}>Über uns</Text>
-              <Icon source='chevron-down' color={'white'} size={20} />
-            </Pressable>
-            }
-          >
-            <Menu.Item title="Über uns" onPress={ () => {router.push("/about"); closeMenu();}} />
-            <Menu.Item title="Sensoren" onPress={ () => {router.push("/sensors"); closeMenu();}}/>
-            <Menu.Item title="API" onPress={ () => {router.push("/api"); closeMenu();}} />
-          </Menu>
-        </View>
+          <Pressable style={styles.navs} onPress={openMenu}>
+            <Info color={'white'} size={20} />
+            <Text fontSize={18} color="white">Über uns</Text>
+            <ChevronDown color={'white'} size={20} />
+          </Pressable>
 
-        <View style={{display: 'flex', flexDirection: 'row', gap: 30, alignItems: 'center', right: 30}}>
+          <Sheet
+            modal
+            open={menuOpen}
+            onOpenChange={setMenuOpen}
+            snapPoints={[25]}
+            dismissOnSnapToBottom
+          >
+            <Sheet.Overlay />
+            <Sheet.Handle />
+            <Sheet.Frame padding="$4">
+              <YStack space="$4">
+                <Button onPress={() => {router.push("/about"); closeMenu();}}>
+                  <Text>Über uns</Text>
+                </Button>
+                <Button onPress={() => {router.push("/sensors"); closeMenu();}}>
+                  <Text>Sensoren</Text>
+                </Button>
+                <Button onPress={() => {router.push("/api"); closeMenu();}}>
+                  <Text>API</Text>
+                </Button>
+              </YStack>
+            </Sheet.Frame>
+          </Sheet>
+        </XStack>
+
+        <XStack gap={30} alignItems="center" style={{right: 30}}>
             <Pressable onPress={() => console.log('Pressed')}>
-              <Icon source='white-balance-sunny' color={MD3Colors.error50} size={20} />
+              <Sun color={'$orange10'} size={20} />
             </Pressable>
               {!session && (
-              <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
+              <XStack gap={10}>
 
-                  <Button mode='outlined' onPress={() => console.log('Pressed')}>
+                  <Button variant="outlined" onPress={() => console.log('Pressed')}>
                     <Link href="/login">
                       <Text>Anmelden</Text>
                     </Link>
                   </Button>
 
-                  <Button mode='outlined' onPress={() => console.log('Pressed')}>
+                  <Button variant="outlined" onPress={() => console.log('Pressed')}>
                     <Link href="/register">
                       <Text>Registrieren</Text>
                     </Link>
                   </Button>
-              </View>
+              </XStack>
               )}
               {session && (
-              <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
-                  <Button mode='outlined' onPress={() => console.log('Pressed')}>
-                    <Link href="/(profile)/profile" style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10}}>
-                      <Icon source="account-circle" size={28}></Icon>
-                      <Text>Profil</Text>
+              <XStack gap={10}>
+                  <Button variant="outlined" onPress={() => console.log('Pressed')}>
+                    <Link href="/(profile)/profile">
+                      <XStack alignItems="center" gap={10}>
+                        <UserCircle size={28} />
+                        <Text>Profil</Text>
+                      </XStack>
                     </Link>
                   </Button>
-              </View>
+              </XStack>
               )}
-        </View>
-      </Appbar.Header>
+        </XStack>
+      </XStack>
 
       
     <Stack screenOptions={{

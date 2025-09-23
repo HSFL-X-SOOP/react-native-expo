@@ -1,7 +1,8 @@
 import { ExternalPathString, Link, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Button, Icon, MD3Colors, Portal, Surface, Text, TextInput } from "react-native-paper";
+import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { Button, Input, Text, View, YStack, Sheet, XStack } from "tamagui";
+import { Settings, ChevronRight } from '@tamagui/lucide-icons';
 import { styles as LayoutStyle } from './_layout';
 
 export default function ProfileScreen() {
@@ -9,7 +10,7 @@ export default function ProfileScreen() {
   const [drawerVisible, setDrawerVisible] = useState(false);
 
   const openDrawer = () => setDrawerVisible(true);
-  const closeDrawer = () => setDrawerVisible(false);  
+  const closeDrawer = () => setDrawerVisible(false);
 
   const [module1Checked, setModule1Checked] = useState(true);
   const [module2Checked, setModule2Checked] = useState(false);
@@ -17,7 +18,7 @@ export default function ProfileScreen() {
   const [temperatureOverlaychecked, setTemperatureOverlayChecked] = useState(false);
   const [windDirectionchecked, setWindDirectionChecked] = useState(false);
 
-  const [name, setName] = useState("");  
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
   const [showDropDown, setShowDropDown] = useState(false);
@@ -45,58 +46,55 @@ export default function ProfileScreen() {
   return (
     <View style={LayoutStyle.container}>
       <TouchableOpacity style={styles.button} onPress={openDrawer}>
-        <Icon source='cog' color={MD3Colors.error50} size={28} />
+        <Settings size={28} color="white" />
       </TouchableOpacity>
 
-      <Portal>
-        {drawerVisible && (
-          <>
-            <Pressable style={styles.backdrop} onPress={closeDrawer} />
+      <Sheet modal open={drawerVisible} onOpenChange={setDrawerVisible} snapPointsMode="fit">
+        <Sheet.Overlay animation="lazy" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }} />
+        <Sheet.Handle />
+        <Sheet.Frame padding="$4" gap="$4">
+          <XStack alignItems="center" gap="$2">
+            <Pressable onPress={closeDrawer}>
+              <ChevronRight size={28} />
+            </Pressable>
+            <Text fontSize="$6" fontWeight="bold">Profil</Text>
+          </XStack>
 
-            <Surface style={styles.drawer}>
-              <View style={{display: 'flex', flexDirection: 'row'}}>
-                <Pressable onPress={closeDrawer}>
-                  <Icon source='chevron-double-right' color={'black'} size={28} />
-                </Pressable>
-                <Text style={styles.drawerTitle}>Profil</Text>
-              </View>
-              <View>
-                {menuItems.map(menuItem => (
-                    <Pressable style={{marginBottom: 10}} key={menuItem.id}>
-                      <Link href={menuItem.route as ExternalPathString} onPress={closeDrawer}>
-                        <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10}}>
-                          <Icon source={menuItem.icon} color={menuItem.color} size={28} />
-                          <Text style={{fontSize: 18, color: 'black'}}>{menuItem.title}</Text>
-                        </View>
-                      </Link>
-                    </Pressable>
-                ))}
-              </View>
-              
-            </Surface>
-          </>
-        )}
-      </Portal>
-      <Text>Profile</Text>
-      <TextInput
-        label="Name"
-        value={name}
-        mode='outlined'
-        style={{width: '95%'}}
-        placeholder='Dein Name'
-        onChangeText={text => setName(text)}
+          <YStack gap="$3">
+            {menuItems.map(menuItem => (
+              <Pressable key={menuItem.id} onPress={closeDrawer}>
+                <Link href={menuItem.route as ExternalPathString}>
+                  <XStack alignItems="center" gap="$3" padding="$2">
+                    <Text fontSize="$4">{menuItem.title}</Text>
+                  </XStack>
+                </Link>
+              </Pressable>
+            ))}
+          </YStack>
+        </Sheet.Frame>
+      </Sheet>
+
+      <YStack space="$4" padding="$4">
+        <Text fontSize="$6" fontWeight="bold">Profile</Text>
+
+        <Input
+          placeholder="Dein Name"
+          value={name}
+          onChangeText={text => setName(text)}
+          size="$4"
         />
-      <TextInput
-        label="Email*"
-        value={email}
-        mode='outlined'
-        style={{width: '95%'}}
-        placeholder='beispiel@domain.de'
-        onChangeText={text => setEmail(text)}
+
+        <Input
+          placeholder="beispiel@domain.de"
+          value={email}
+          onChangeText={text => setEmail(text)}
+          size="$4"
         />
-      <Button mode="outlined" onPress={() => console.log("")}>
-        Speichern
-      </Button>
+
+        <Button variant="outlined" size="$4" onPress={() => console.log("")}>
+          Speichern
+        </Button>
+      </YStack>
     </View>
   );
 }
@@ -109,18 +107,14 @@ type ProfileMenuItemProps = {
 }
 
 export const ProfileMenuItem: React.FC<ProfileMenuItemProps> =({title, icon, color, route}) =>  {
-
   return(
-    <View style={styles.checkboxAndText}>
+    <XStack alignItems="center" gap="$2" style={styles.checkboxAndText}>
       <Link href={route as ExternalPathString}>
-        <Icon source={icon} color={color} size={20} />
         <Text>{title}</Text>
       </Link>
-    </View>
+    </XStack>
   )
 }
-
-
 
 const styles = StyleSheet.create({
   container: {

@@ -1,6 +1,7 @@
 import { Link } from 'expo-router';
 import { FlatList, Platform, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
-import { Card, Icon, MD3Colors, Text } from 'react-native-paper';
+import { Card, Text, XStack, YStack } from 'tamagui';
+import { User } from '@tamagui/lucide-icons';
 import { styles } from './_layout';
 
 export default function AboutScreen() {
@@ -24,18 +25,18 @@ export default function AboutScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <Text variant="headlineLarge" style={styles.largeHeadline}>Über uns</Text>
-        <Text variant="headlineMedium" style={styles.mediumHeadline}>Was bietet diese Webseite?</Text>
-        <Text style={styles.textLg}>Auf dieser Webseite können aktuelle, lokale Daten zu Wetter und Meeresbedingungen abgerufen werden. Die Daten werden von Sensorkits in verschiedenen Marinas erhoben.</Text>
-        <Text style={styles.textLg}>Auf der <Link href={mapPath}><Text style={styles.link}>Karte</Text></Link> werden alle Sensoren angezeigt, sowie eine Approximation der Werte an den Zwischenstellen ohne eigenen Sensor.</Text>
-        <Text style={styles.textLg}>Im <Link href={dashboardPath}><Text style={styles.link}>Dashboard</Text></Link> werden die Daten eines Sensors dargestellt und unter <Link href={historicalDataPath}><Text style={styles.link}>Vergangene Daten</Text></Link> wird die Historie einzelner Werte dargestellt.</Text>
-        <Text style={styles.textLg}>Zum besseren Verständnis für Laien stellen wir eine <Link href={simpleExplanationPath}><Text style={styles.link}>einfache Erklärung der Daten</Text></Link> bereit.</Text>
-        <Text style={styles.textLg}>Außerdem stellen wir eine kostenpflichtige <Link href={apiPath}><Text style={styles.link}>API</Text></Link> bereit, über die die Daten zur Verfügung gestellt werden.</Text>
+        <Text fontSize="$8" fontWeight="bold" style={styles.largeHeadline}>Über uns</Text>
+        <Text fontSize="$6" fontWeight="bold" style={styles.mediumHeadline}>Was bietet diese Webseite?</Text>
+        <Text fontSize="$5" style={styles.textLg}>Auf dieser Webseite können aktuelle, lokale Daten zu Wetter und Meeresbedingungen abgerufen werden. Die Daten werden von Sensorkits in verschiedenen Marinas erhoben.</Text>
+        <Text fontSize="$5" style={styles.textLg}>Auf der <Link href={mapPath}><Text style={styles.link}>Karte</Text></Link> werden alle Sensoren angezeigt, sowie eine Approximation der Werte an den Zwischenstellen ohne eigenen Sensor.</Text>
+        <Text fontSize="$5" style={styles.textLg}>Im <Link href={dashboardPath}><Text style={styles.link}>Dashboard</Text></Link> werden die Daten eines Sensors dargestellt und unter <Link href={historicalDataPath}><Text style={styles.link}>Vergangene Daten</Text></Link> wird die Historie einzelner Werte dargestellt.</Text>
+        <Text fontSize="$5" style={styles.textLg}>Zum besseren Verständnis für Laien stellen wir eine <Link href={simpleExplanationPath}><Text style={styles.link}>einfache Erklärung der Daten</Text></Link> bereit.</Text>
+        <Text fontSize="$5" style={styles.textLg}>Außerdem stellen wir eine kostenpflichtige <Link href={apiPath}><Text style={styles.link}>API</Text></Link> bereit, über die die Daten zur Verfügung gestellt werden.</Text>
         
-        <Text variant="headlineMedium" style={styles.mediumHeadline}>Projekt MARLIN</Text>
-        <Text style={styles.textLg}>Diese Webseite ist im Rahmen des Masterprojekts MARLIN (<Link href={websitePath}><Text style={styles.link}>Projektwebseite</Text></Link>) von Studierenden im Master Angewandte Informatik erstellt worden.</Text>
+        <Text fontSize="$6" fontWeight="bold" style={styles.mediumHeadline}>Projekt MARLIN</Text>
+        <Text fontSize="$5" style={styles.textLg}>Diese Webseite ist im Rahmen des Masterprojekts MARLIN (<Link href={websitePath}><Text style={styles.link}>Projektwebseite</Text></Link>) von Studierenden im Master Angewandte Informatik erstellt worden.</Text>
 
-        <View style={{display: 'flex', flexDirection: 'row', gap: 20}}>
+        <XStack gap={20}>
           <FlatList
             data={studentCards}
             numColumns={numColumns}
@@ -44,11 +45,11 @@ export default function AboutScreen() {
             columnWrapperStyle={isWeb ? style.row : null}
             contentContainerStyle={style.list}
             />
-        </View>
+        </XStack>
 
 
-        <Text variant="headlineMedium" style={styles.mediumHeadline}>SOOP</Text>
-        <Text style={styles.textLg}>Beschreibung von SOOP (hier bitte noch ergänzen, was SOOP ist und warum es für das Projekt relevant ist).</Text>
+        <Text fontSize="$6" fontWeight="bold" style={styles.mediumHeadline}>SOOP</Text>
+        <Text fontSize="$5" style={styles.textLg}>Beschreibung von SOOP (hier bitte noch ergänzen, was SOOP ist und warum es für das Projekt relevant ist).</Text>
       </ScrollView>
     </SafeAreaView>
     
@@ -74,16 +75,14 @@ type StudentCardProps = {
 export const StudentCard: React.FC<StudentCardProps> =({icon, title, body}) =>  {
 
   return(
-    <Card>
-      <Card.Content>
-        <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10}}>
-          <Icon source={icon} color={MD3Colors.error50} size={75}/>
-          <View>
-            <Text variant="titleLarge">{title}</Text>
-            <Text variant="bodyMedium">{body}</Text>
-          </View>
-        </View>
-      </Card.Content>
+    <Card padding="$4">
+      <XStack alignItems="center" gap={10}>
+        <User color={'$orange10'} size={75}/>
+        <YStack>
+          <Text fontSize="$6" fontWeight="bold">{title}</Text>
+          <Text fontSize="$4">{body}</Text>
+        </YStack>
+      </XStack>
     </Card>
   )
 }

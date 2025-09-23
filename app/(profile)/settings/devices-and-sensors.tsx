@@ -1,5 +1,5 @@
 import { ThemedView } from '@/components/ThemedView';
-import { Text } from 'react-native-paper';
+import { Text } from 'tamagui';
 import { styles } from '../_layout';
 export default function ProfileSettingsDevicesAndSensorsScreen() {
   return (
