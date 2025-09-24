@@ -8,10 +8,11 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import '../Global.css';
 import MapFilterButton from './map/MapFilterButton';
 import WebMarker from './map/MapSensorMarker.web';
 import { MapSensorMeasurements } from './map/MapSensorMeasurements';
-export default async function WebMap() {
+export default function WebMap() {
 
   const [content, setContent] = useState<SensorModule[]>([])
   useEffect(() => {
@@ -36,6 +37,7 @@ export default async function WebMap() {
         latitude: 54.47926,
         zoom: 7
       }}
+      key={"map"}
       //style={{width: 1600, height: 1200}}
       // mapStyle="https://demotiles.maplibre.org/style.json"
       mapStyle={require('../assets/images/style.txt')}

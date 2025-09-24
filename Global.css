@@ -1,0 +1,28 @@
+/* Entfernt Standard-Styles vom Popup */
+.maplibregl-popup {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+}
+
+.maplibregl-popup-content {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.maplibregl-popup-close-button {
+  color: #000000;
+  font-size: 24px;
+  opacity: 1;
+  border: none;
+  cursor: pointer;
+    position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  left: auto !important;
+  margin: 0 !important;
+  z-index: 1000 !important;
+}

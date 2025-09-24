@@ -3,8 +3,7 @@ import { Callout, PointAnnotation } from "@maplibre/maplibre-react-native";
 import { View } from "react-native";
 import { MapSensorMeasurements } from "./MapSensorMeasurements";
 import { MapSensorTemperatureText } from "./MapSensorTemperatureText";
-
-export default function AndroidMarker(sensorModule: SensorModule, index: number) {
+export default function AndroidMarker(sensorModule: SensorModule, index: number, onClose?: () => void) {
     return (
         <PointAnnotation
         id={`marker-${index}`}
@@ -18,8 +17,13 @@ export default function AndroidMarker(sensorModule: SensorModule, index: number)
                 <MapSensorTemperatureText sensorModule={sensorModule} />
             </View>
 
-            <Callout style={{ backgroundColor: 'white', width: 200, height: "auto",}}>
-                <MapSensorMeasurements sensorModule={sensorModule} />
+            <Callout style={{ backgroundColor: "transparent",
+                    borderWidth: 0,
+                    shadowColor: "black",
+                    width: 300,
+                    height: 200,
+                    padding: 0 }}>
+                    <MapSensorMeasurements sensorModule={sensorModule} />
             </Callout>
         </PointAnnotation>
     );
