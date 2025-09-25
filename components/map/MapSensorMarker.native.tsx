@@ -21,7 +21,7 @@ export default function AndroidMarker(sensorModule: SensorModule, index: number,
                     borderWidth: 0,
                     shadowColor: "black",
                     width: 300,
-                    height: 200,
+                    height: "auto",
                     padding: 0 }}>
                     <MapSensorMeasurements sensorModule={sensorModule} />
             </Callout>

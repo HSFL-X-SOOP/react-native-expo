@@ -11,6 +11,8 @@
   box-shadow: none;
   border-radius: 0;
   padding: 0;
+  width: 300px;
+  height: "auto";
 }
 
 .maplibregl-popup-close-button {
@@ -19,7 +21,7 @@
   opacity: 1;
   border: none;
   cursor: pointer;
-    position: absolute !important;
+  position: absolute !important;
   top: 8px !important;
   right: 8px !important;
   left: auto !important;

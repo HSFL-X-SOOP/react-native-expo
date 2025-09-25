@@ -15,16 +15,16 @@ export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sens
   }
   excludedMeasurements.push("Standard deviation");
 
+  // Wenn die Width/minWidth geändert wird, dann muss das in der global.css bei '.maplibregl-popup-content' auch angepasst werden, damit das Schließen-Kreuz richtig positioniert ist.
   const cardStyle = Platform.OS === "web"
   ? { backgroundColor: 'white', padding: 12, borderRadius: 8, minWidth: 300, minHeight: 200 }
   : { backgroundColor: 'white', padding: 12, borderRadius: 8, width: 300, minHeight: 200 };
 
   return (
     <Card style={cardStyle}>
-      <Text>Latest Measurements:</Text>
-      <Text>Hafenname</Text>
-      <Link href="/map"><Text>Link to Hafen</Text></Link>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", width: "100%", justifyContent: "space-between" }}>
+      <Text style={{fontSize: 16, color: "#504f4fff"}}>Name</Text>
+      <Link href="/map"><Text style={{fontSize: 24}}>{sensorModule.location.name}</Text></Link>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", width: "100%", justifyContent: "space-between", marginTop: 10 }}>
         {sensorModule.latestMeasurements.map((a, index) => (
           !excludedMeasurements.includes(a.measurementType.name) && (
             <View key={index} style={{flexDirection: "column", width: "48%", marginBottom: 10}}>
