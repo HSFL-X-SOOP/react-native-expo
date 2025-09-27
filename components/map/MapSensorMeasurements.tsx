@@ -7,6 +7,7 @@ type MapSensorMeasurementsProps = {
 }
 
 export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sensorModule}) => {
+  
   const isAdmin = true; //TODO: Hier prüfen ob Admin
   const excludedMeasurements: string[] = [];
 

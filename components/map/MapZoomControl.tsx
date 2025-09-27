@@ -1,14 +1,14 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-paper";
-
 type MapZoomControlProps = {
   zoomLevel: number;
+  minMaxZoomLevel: { min: number; max: number };
   setZoomLevel: (level: number) => void;
   setCurrentCoordinate: (coord: [number, number]) => void;
   homeCoordinate: [number, number];
 };
 
-export default function MapZoomControl({ zoomLevel, setZoomLevel, setCurrentCoordinate, homeCoordinate }: MapZoomControlProps) {
+export default function MapZoomControl({ zoomLevel, minMaxZoomLevel, setZoomLevel, setCurrentCoordinate, homeCoordinate}: MapZoomControlProps) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -16,7 +16,7 @@ export default function MapZoomControl({ zoomLevel, setZoomLevel, setCurrentCoor
         borderTopRightRadius: 8,
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0}]}
-        onPress={() => setZoomLevel(zoomLevel + 1)}
+        onPress={() => {if (zoomLevel < minMaxZoomLevel.max) setZoomLevel(zoomLevel + 1)}}
         activeOpacity={0.7}
       >
         <Icon source="plus" color="black" size={28}></Icon>
@@ -36,7 +36,7 @@ export default function MapZoomControl({ zoomLevel, setZoomLevel, setCurrentCoor
               {/* Windrose/Kompass */}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => {setCurrentCoordinate(homeCoordinate)}}
+        onPress={() => setCurrentCoordinate(homeCoordinate)}
         activeOpacity={0.7}
       >
         <Icon source="home-map-marker" color="black" size={28}></Icon>
@@ -50,7 +50,7 @@ export default function MapZoomControl({ zoomLevel, setZoomLevel, setCurrentCoor
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8}]
     }
-        onPress={() => setZoomLevel(zoomLevel - 1)}
+        onPress={() => {if (zoomLevel > minMaxZoomLevel.min) setZoomLevel(zoomLevel - 1)}}
         activeOpacity={0.7}
       >
         <Icon source="minus" color="black" size={28}></Icon>

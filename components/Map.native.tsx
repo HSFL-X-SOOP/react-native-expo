@@ -1,7 +1,7 @@
 import { GetGeomarData } from "@/data/geomar-data";
 import { SensorModule } from "@/data/sensor";
 import { Camera, MapView } from "@maplibre/maplibre-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import MapFilterButton from "./map/MapFilterButton";
 import AndroidMarker from "./map/MapSensorMarker.native";
@@ -24,7 +24,13 @@ export default function AndroidMap() {
   const [zoomLevel, setZoomLevel] = useState(7);
   const homeCoordinate: [number, number] = [9.26, 54.47926];
   const [currentCoordinate, setCurrentCoordinate] = useState<[number, number]>(homeCoordinate);
+  const mapBoundariesLongLat = {
+    ne: [49.869301, 71.185001],
+    sw: [-31.266001, 27.560001]
+  }
+  const minMaxZoomLevel = { min: 3, max: 16 };
 
+  const mapRef = useRef<any>(null);
 
   return (
     <View style={{flex: 1}}>
@@ -36,15 +42,18 @@ export default function AndroidMap() {
       onRegionDidChange={(region: any) => {
         setCurrentCoordinate(region.centerCoordinate);
       }}
+
       >
       <Camera 
       zoomLevel={zoomLevel} 
       centerCoordinate={currentCoordinate}
+      maxZoomLevel={18}
+      minZoomLevel={3}
       />
       {pins}
       </MapView>
       <MapFilterButton />
-      <MapZoomControl zoomLevel={zoomLevel} setZoomLevel={setZoomLevel} setCurrentCoordinate={setCurrentCoordinate} homeCoordinate={homeCoordinate} />
+      <MapZoomControl zoomLevel={zoomLevel} minMaxZoomLevel={minMaxZoomLevel} setZoomLevel={setZoomLevel} setCurrentCoordinate={setCurrentCoordinate} homeCoordinate={homeCoordinate} />
     </View>
   )
     
