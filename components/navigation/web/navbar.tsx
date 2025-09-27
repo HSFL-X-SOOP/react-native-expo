@@ -1,10 +1,16 @@
 import { useSession } from '@/context/SessionContext';
+import '@/i18n/i18n';
+import i18n from '@/i18n/i18n';
 import { Link, Stack, useRouter } from 'expo-router';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Appbar, Button, Icon, MD3Colors, Menu, Text } from 'react-native-paper';
-
 export function NavbarWeb() {
+  //Internationalization
+  const { t } = useTranslation();
+  const currentLanguage = i18n.language;
+
   const [current, setCurrent] = useState('Home');
   const [expanded, setExpanded] = useState(false);
   const router = useRouter();
@@ -14,6 +20,11 @@ export function NavbarWeb() {
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
+
+  //LanguageMenu
+  const [languageMenuVisible, setLanguageMenuVisible] = useState(false);
+  const openLanguageMenu = () => setLanguageMenuVisible(true);
+  const closeLanguageMenu = () => setLanguageMenuVisible(false);
 
   //ThemeColor
   const [themeMode, setThemeMode] = useState(false);
@@ -34,7 +45,7 @@ export function NavbarWeb() {
             <Link href="/map">
             <Pressable style={styles.navs}>
               <Icon source='map-outline' color={'white'} size={20} />
-              <Text style={{ fontSize: 18 }}>Karte</Text>
+              <Text style={{ fontSize: 18 }}>{t('__section')}</Text>
             </Pressable>
             </Link>
 
@@ -59,6 +70,19 @@ export function NavbarWeb() {
             <Pressable onPress={() => console.log('Pressed')}>
               <Icon source='white-balance-sunny' color={MD3Colors.error50} size={20} />
             </Pressable>
+            <Menu
+              visible={languageMenuVisible}
+              onDismiss={closeLanguageMenu}
+              anchor={
+              <Pressable style={styles.navs} onPress={openLanguageMenu}>
+                <Text style={{ fontSize: 18 }}>{currentLanguage === 'de' ? 'DE' : 'EN'}</Text>
+                <Icon source='chevron-down' color={'white'} size={20} />
+              </Pressable>
+              }
+            >
+              <Menu.Item title="DE" onPress={ () => {i18n.changeLanguage('de'); closeLanguageMenu();}}/>
+              <Menu.Item title="EN" onPress={ () => {i18n.changeLanguage('en'); closeLanguageMenu();}}/>
+          </Menu>
               {!session && (
               <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
 
@@ -85,6 +109,7 @@ export function NavbarWeb() {
                   </Button>
               </View>
               )}
+
         </View>
       </Appbar.Header>
 
