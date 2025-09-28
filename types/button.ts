@@ -1,40 +1,96 @@
-// PrimaryButton.tsx
 import { styled, Button } from 'tamagui'
 
 export const PrimaryButton = styled(Button, {
     name: 'PrimaryButton',
-    br: '$6',
-    px: '$6',
-    py: '$3',
-    ai: 'center',
-    jc: 'center',
-    bw: 0,
-    shadowColor: '$shadow2',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 0,
+    borderRadius: '$6',
+    paddingHorizontal: '$6',
+    paddingVertical: '$4',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '$accent7',
+    borderWidth: 1,
+    borderColor: '$accent7',
+    color: 'white',
     fontWeight: '600',
-    size: '$4',
-
-    variants: {
-        tone: {
-            // 👉 etwas dunkleres Blau (Secondary-Palette)
-            soft: {
-                bg: '$accent4',           // war $background08 → jetzt blaue Stufe 4
-                color: '$accent12',       // dunkelblauer Text für guten Kontrast
-                hoverStyle: { bg: '$accent5' },
-                pressStyle: { bg: '$accent6', scale: 0.98 },
-            },
-            // „bold“ bleibt solide dunkelblau
-            bold: {
-                bg: '$accent6',
-                color: '$background',
-                hoverStyle: { bg: '$accent7' },
-                pressStyle: { bg: '$accent8', scale: 0.98 },
-            },
-        },
+    fontSize: '$4',
+    shadowColor: '$accent3',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+    hoverStyle: {
+        backgroundColor: '$accent8',
+        borderColor: '$accent8',
+        shadowOpacity: 0.3,
+        scale: 1.02,
     },
 
-    defaultVariants: { tone: 'soft' },
+    pressStyle: {
+        backgroundColor: '$accent6',
+        borderColor: '$accent6',
+        scale: 0.98,
+    },
+
+    focusStyle: {
+        borderColor: '$accent9',
+        shadowOpacity: 0.4,
+    },
+
+    disabledStyle: {
+        opacity: 0.5,
+        pointerEvents: 'none',
+        backgroundColor: '$accent4',
+        borderColor: '$accent4',
+    },
 })
+
+
+export const SecondaryButton = styled(Button, {
+    name: 'SecondaryButton',
+
+    // Layout
+    borderRadius: '$6',
+    paddingHorizontal: '$6',
+    paddingVertical: '$4',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: '$accent7',
+    color: '$accent7',
+    fontWeight: '600',
+    fontSize: '$4',
+    shadowColor: '$accent3',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+    hoverStyle: {
+        backgroundColor: '$accent2',
+        borderColor: '$accent8',
+        color: '$accent8',
+        shadowOpacity: 0.2,
+        scale: 1.02,
+    },
+
+    pressStyle: {
+        backgroundColor: '$accent3',
+        borderColor: '$accent6',
+        color: '$accent6',
+        scale: 0.98,
+    },
+
+    focusStyle: {
+        borderColor: '$accent9',
+        shadowOpacity: 0.3,
+    },
+
+    disabledStyle: {
+        opacity: 0.5,
+        pointerEvents: 'none',
+        borderColor: '$accent4',
+        color: '$accent4',
+    },
+})
+
+

@@ -1,4 +1,3 @@
-// src/context/SessionContext.tsx
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
 import { useLocalStorage } from '@/hooks/useLocalStorage';

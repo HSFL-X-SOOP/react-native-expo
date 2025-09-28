@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { TouchableOpacity, useColorScheme } from 'react-native';
-import { Sun, Moon } from '@tamagui/lucide-icons';
+import {MoonFilledIcon, SunFilledIcon} from "@/components/ui/Icons.tsx";
 
 type ThemeContextType = {
   isDark: boolean;
@@ -9,8 +9,6 @@ type ThemeContextType = {
 };
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
-
-// Theme Provider
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const systemTheme = useColorScheme();
   const [isDark, setIsDark] = useState(systemTheme === 'dark');
@@ -68,9 +66,9 @@ export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({
       }}
     >
       {isDark ? (
-        <Sun size={size} color={color} />
+        <SunFilledIcon size={size} color={color} />
       ) : (
-        <Moon size={size} color={color} />
+        <MoonFilledIcon size={size} color={color} />
       )}
     </TouchableOpacity>
   );

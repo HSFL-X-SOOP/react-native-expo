@@ -15,7 +15,7 @@ import config from '@/tamagui.config'
 
 import {AuthProvider} from '@/context/SessionContext'
 import {NavbarWeb} from '@/components/navigation/web/navbar'
-import {ThemeProvider, useThemeContext} from '@/components/ui/ThemeSwitch'
+import {ThemeProvider, useThemeContext} from '@/context/ThemeSwitch.tsx'
 import {TabBarNative} from "@/components/navigation/native/tabbar.tsx";
 
 function RootContent() {

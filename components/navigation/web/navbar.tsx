@@ -1,116 +1,132 @@
 import {Link, useRouter} from 'expo-router';
-import {useState} from 'react';
-import {Button, Text, XStack, YStack, Sheet, useTheme} from 'tamagui';
+import {Button, Text, XStack, YStack, useTheme, Popover, Adapt} from 'tamagui';
 
-import {ThemeSwitch, useThemeContext} from '@/components/ui/ThemeSwitch';
+import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
 import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
-import {User} from '@tamagui/lucide-icons';
+import {User, ChevronDown} from '@tamagui/lucide-icons';
 import {useSession} from '@/context/SessionContext';
-import {PrimaryButton} from "@/types/button.ts";
+import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
+
 
 export function NavbarWeb() {
     const router = useRouter();
-    const {currentTheme} = useThemeContext()
     const t = useTheme();
-
-    const [menuOpen, setMenuOpen] = useState(false);
-    const openMenu = () => setMenuOpen(true);
-    const closeMenu = () => setMenuOpen(false);
-
-
     const {session} = useSession();
 
-    const navbarBg = currentTheme === 'dark' ? '#053246' : '#78d278';
-    const textColor = '#ffffff';
-    const iconColor = textColor;
-
     return (
-        <XStack jc={"space-between"} backgroundColor={"$background"} alignItems={"center"} gap={"$9"} padding="$2">
+        <XStack jc={"space-between"} backgroundColor={"$background"} alignItems={"center"} px={"$10"} gap={"$9"}
+                py={"$1"}>
             <Link href="/map">
                 <XStack ac="center" jc="center" gap="$2">
-                    <LOGO size={70} color={t.color?.val}/>
-                    <Text fontSize={42} fontFamily={"$oswald"} alignSelf={"center"} fontWeight="bold"
-                          textAlign={"center"} color={"$color"}>Marlin</Text>
+                    <LOGO size={75} color={t.accent8?.val}/>
+                    <Text fontSize={40} fontFamily={"$oswald"} alignSelf={"center"} fontWeight="bold"
+                          textAlign={"center"} color={"$accent8"}>Marlin</Text>
                 </XStack>
             </Link>
 
             <XStack alignItems={"center"} gap={"$8"}>
                 <Link href="/map">
                     <XStack alignItems="center" gap="$3">
-                        <MapIcon color={t.accentColor?.val} size={30}/>
-                        <Text fontSize="$7" fontWeight={"500"} alignSelf={"center"} color={"$color"}>
+                        <MapIcon color={t.accent8?.val} size={26}/>
+                        <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
                             Karte
                         </Text>
                     </XStack>
                 </Link>
 
-                <Link href={"/about"}>
-                    <XStack onPress={openMenu} alignItems={"center"} gap={"$3"}>
-                        <InfoIcon color={t.accentColor?.val} size={30}/>
-                        <Text fontSize="$7" fontWeight={"500"} alignSelf={"center"} color={"$color"}>
-                            Über uns
-                        </Text>
-                    </XStack>
+                <Popover placement="bottom" allowFlip>
+                    <Popover.Trigger asChild>
+                        <XStack alignItems={"center"} gap={"$2"} cursor="pointer">
+                            <InfoIcon color={t.accent8?.val} size={26}/>
+                            <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
+                                Über uns
+                            </Text>
+                            <ChevronDown size={16} color={t.accent8?.val} />
+                        </XStack>
+                    </Popover.Trigger>
 
-                </Link>
+                    <Adapt when="sm" platform="touch">
+                        <Popover.Sheet modal dismissOnSnapToBottom>
+                            <Popover.Sheet.Frame padding="$2">
+                                <Adapt.Contents/>
+                            </Popover.Sheet.Frame>
+                            <Popover.Sheet.Overlay
+                                animation="lazy"
+                                enterStyle={{opacity: 0}}
+                                exitStyle={{opacity: 0}}
+                            />
+                        </Popover.Sheet>
+                    </Adapt>
 
-                <Sheet modal open={menuOpen} onOpenChange={setMenuOpen} snapPoints={[25]} dismissOnSnapToBottom>
-                    <Sheet.Overlay/>
-                    <Sheet.Handle/>
-                    <Sheet.Frame padding="$4">
-                        <YStack space="$4">
+                    <Popover.Content
+                        borderWidth={1}
+                        borderColor="$borderColor"
+                        enterStyle={{y: -10, opacity: 0}}
+                        exitStyle={{y: -10, opacity: 0}}
+                        elevate
+                        animation={[
+                            'quick',
+                            {
+                                opacity: {
+                                    overshootClamping: true,
+                                },
+                            },
+                        ]}
+                    >
+                        <Popover.Arrow borderWidth={1} borderColor="$borderColor"/>
+
+                        <YStack gap="$3" padding="$2" minWidth={200}>
                             <Button
-                                onPress={() => {
-                                    router.push('/about');
-                                    closeMenu();
-                                }}
+                                variant="outlined"
+                                justifyContent="flex-start"
+                                onPress={() => router.push('/about')}
                             >
-                                <XStack alignItems="center" gap="$2">
-                                    <InfoIcon size={16}/>
-                                    <Text>Über uns</Text>
+                                <XStack alignItems="center" gap="$3" width="100%">
+                                    <InfoIcon size={26} color={t.accent6?.val}/>
+                                    <Text color="$color" fontSize={"$5"} fontFamily={"$silkscreen"}>Über uns</Text>
                                 </XStack>
                             </Button>
+
                             <Button
-                                onPress={() => {
-                                    router.push('/sensors');
-                                    closeMenu();
-                                }}
+                                variant="outlined"
+                                justifyContent="flex-start"
+                                onPress={() => router.push('/sensors')}
                             >
-                                <XStack alignItems="center" gap="$2">
-                                    <LOGO size={16}/>
-                                    <Text>Sensoren</Text>
+                                <XStack alignItems="center" gap="$3" width="100%">
+                                    <LOGO size={26}   color={t.accent6?.val}/>
+                                    <Text color="$color">Sensoren</Text>
                                 </XStack>
                             </Button>
+
                             <Button
-                                onPress={() => {
-                                    router.push('/api');
-                                    closeMenu();
-                                }}
+                                variant="outlined"
+                                justifyContent="flex-start"
+                                onPress={() => router.push('/api')}
                             >
-                                <XStack alignItems="center" gap="$2">
-                                    <CloudIcon size={16}/>
-                                    <Text>API</Text>
+                                <XStack alignItems="center" gap="$3" width="100%">
+                                    <CloudIcon size={26}  color={t.accent6?.val}/>
+                                    <Text color="$color">API</Text>
                                 </XStack>
                             </Button>
                         </YStack>
-                    </Sheet.Frame>
-                </Sheet>
+                    </Popover.Content>
+                </Popover>
             </XStack>
 
             <XStack gap="$6" alignItems="center" style={{right: 30}}>
-                <ThemeSwitch size={20} color={iconColor}/>
+                <ThemeSwitch size={24} color={"$background"}/>
                 {!session && (
                     <XStack gap="$2">
                         <Link href="/login">
-                            <PrimaryButton theme={"secondary"}>
-                                <Text>Anmelden</Text>
+                            <PrimaryButton>
+                                <Text color="#ffffff">Anmelden</Text>
                             </PrimaryButton>
                         </Link>
 
                         <Link href="/register">
-                            <Button variant="outlined">
+                            <SecondaryButton>
                                 <Text>Registrieren</Text>
-                            </Button>
+                            </SecondaryButton>
                         </Link>
                     </XStack>
                 )}
@@ -119,7 +135,7 @@ export function NavbarWeb() {
                         <Link href="/(profile)/profile">
                             <Button variant="outlined">
                                 <XStack alignItems="center" gap="$2">
-                                    <User size={28} color={iconColor}/>
+                                    <User size={28} color={"$accent8"}/>
                                     <Text>Profil</Text>
                                 </XStack>
                             </Button>

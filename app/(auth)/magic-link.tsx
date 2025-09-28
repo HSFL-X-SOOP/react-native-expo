@@ -1,67 +1,97 @@
 import { Link } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { Button, Card, Input, Text, View, YStack } from 'tamagui';
-import { styles } from './_layout';
+import { SafeAreaView } from 'react-native';
+import { Button, Card, Input, Text, View, YStack, XStack, H1 } from 'tamagui';
+import { Mail, Sparkles } from '@tamagui/lucide-icons';
 
 export default function MagicLinkScreen() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
 
   const hasErrors = () => {
-    return !email.includes('@');
+    return email.length > 0 && !email.includes('@');
   };
 
   return (
-    <View style={styles.container}>
-      <Card elevate size="$4" bordered padding="$4" width={350}>
-        <YStack space="$4" alignItems="center">
-          <YStack space="$2" alignItems="center" marginTop="$2">
-            <Text fontSize="$8" fontWeight="bold">Magic Link</Text>
-            <Text color="$gray10" textAlign="center">Enter your email and we'll send you a sign-in link.</Text>
-          </YStack>
+    <SafeAreaView style={{ flex: 1 }}>
+      <YStack flex={1} backgroundColor="$content3" alignItems="center" justifyContent="center" padding="$4">
+        <Card elevate size="$4" bordered padding="$6" width={400} maxWidth="90%" backgroundColor="$content1" borderRadius="$8" borderColor="$borderColor">
+          <YStack gap="$5" alignItems="center">
 
-          <YStack space="$4" width="100%">
-            <YStack space="$2" width="100%">
-              <Input
-                placeholder="you@example.com"
-                value={email}
-                onChangeText={text => setEmail(text)}
-                size="$4"
+            <YStack gap="$3" alignItems="center">
+              <View
+                width={80}
+                height={80}
+                backgroundColor="$accent2"
+                borderRadius="$12"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Sparkles size={40} color="$accent7" />
+              </View>
+              <H1 fontSize={28} fontWeight="bold" color="$accent7" fontFamily="$oswald">Magic Link</H1>
+              <Text color="$color" textAlign="center" fontSize={16} opacity={0.8} maxWidth={300}>
+                Enter your email and we'll send you a secure sign-in link.
+              </Text>
+            </YStack>
+
+            <YStack gap="$4" width="100%">
+              <YStack gap="$2">
+                <XStack alignItems="center" gap="$2">
+                  <Mail size={16} color="$accent7" />
+                  <Text fontSize={14} fontWeight="500" color="$accent7">Email Address</Text>
+                </XStack>
+                <Input
+                  placeholder="you@example.com"
+                  value={email}
+                  onChangeText={setEmail}
+                  size="$4"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  borderColor="$borderColor"
+                  focusStyle={{ borderColor: "$accent7" }}
                 />
-              {hasErrors() && (
-                <Text color="$red10" fontSize="$2">Email address is invalid!</Text>
-              )}
+                {hasErrors() && (
+                  <Text color="$red10" fontSize={14}>Please enter a valid email address</Text>
+                )}
+              </YStack>
+
+              <Button
+                backgroundColor="$accent7"
+                color="white"
+                size="$4"
+                onPress={() => console.log("Send magic link")}
+                borderRadius="$6"
+                hoverStyle={{ backgroundColor: "$accent8" }}
+                pressStyle={{ backgroundColor: "$accent6" }}
+                disabled={!email || hasErrors()}
+                opacity={!email || hasErrors() ? 0.6 : 1}
+              >
+                <XStack alignItems="center" gap="$2">
+                  <Sparkles size={16} color="white" />
+                  <Text color="white" fontWeight="600">Send Magic Link</Text>
+                </XStack>
+              </Button>
             </YStack>
 
-            <Button backgroundColor="$green10" color="white" size="$4" onPress={() => {console.log("H")}}>
-              Send Link
-            </Button>
-
-            <YStack space="$2" alignItems="center">
-              <Text>Don't have an account? <Link href="/(auth)/register"><Text color="$green10">Sign up</Text></Link></Text>
-              <Text>Already have an account? <Link href="/(auth)/login"><Text color="$green10">Sign in</Text></Link></Text>
+            <YStack gap="$2" alignItems="center">
+              <Text fontSize={14} color="$color">
+                Don&#39;t have an account?{' '}
+                <Link href="/(auth)/register">
+                  <Text color="$accent7" textDecorationLine="underline" fontWeight="600">Sign up</Text>
+                </Link>
+              </Text>
+              <Text fontSize={14} color="$color">
+                Already have an account?{' '}
+                <Link href="/(auth)/login">
+                  <Text color="$accent7" textDecorationLine="underline" fontWeight="600">Sign in</Text>
+                </Link>
+              </Text>
             </YStack>
+
           </YStack>
-        </YStack>
-      </Card>
-    </View>
+        </Card>
+      </YStack>
+    </SafeAreaView>
   );
 }
-
-export const style = StyleSheet.create({
-  container: {
-    height: 400,
-    width: 350,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  buttons: {
-    width: '100%',
-    alignItems: 'center'
-  }
-});
