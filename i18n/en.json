@@ -2,5 +2,5 @@
     "welcome": "Welcome",
     "greeting": "Hello, {{name}}!",
     "about": "About Us",
-    "navigation_map_title": "Map"
+    "map": "Map"
 }

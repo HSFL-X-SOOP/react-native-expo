@@ -45,7 +45,7 @@ export function NavbarWeb() {
             <Link href="/map">
             <Pressable style={styles.navs}>
               <Icon source='map-outline' color={'white'} size={20} />
-              <Text style={{ fontSize: 18 }}>{t('__section')}</Text>
+              <Text style={{ fontSize: 18 }}>{t('map')}</Text>
             </Pressable>
             </Link>
 
