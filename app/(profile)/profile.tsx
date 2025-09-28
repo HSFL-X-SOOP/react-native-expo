@@ -2,7 +2,6 @@ import { ExternalPathString, Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, Input, Text, View, YStack, Sheet, XStack } from "tamagui";
-import { Settings, ChevronRight } from '@tamagui/lucide-icons';
 import { styles as LayoutStyle } from './_layout';
 
 export default function ProfileScreen() {
@@ -46,7 +45,6 @@ export default function ProfileScreen() {
   return (
     <View style={LayoutStyle.container}>
       <TouchableOpacity style={styles.button} onPress={openDrawer}>
-        <Settings size={28} color="white" />
       </TouchableOpacity>
 
       <Sheet modal open={drawerVisible} onOpenChange={setDrawerVisible} snapPointsMode="fit">
@@ -55,7 +53,6 @@ export default function ProfileScreen() {
         <Sheet.Frame padding="$4" gap="$4">
           <XStack alignItems="center" gap="$2">
             <Pressable onPress={closeDrawer}>
-              <ChevronRight size={28} />
             </Pressable>
             <Text fontSize="$6" fontWeight="bold">Profil</Text>
           </XStack>

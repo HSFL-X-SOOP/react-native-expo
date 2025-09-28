@@ -4,7 +4,6 @@ import { Link, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator } from 'tamagui';
-import { Eye } from '@tamagui/lucide-icons';
 import { styles } from './_layout';
 
 export default function RegisterScreen() {
@@ -78,7 +77,7 @@ export default function RegisterScreen() {
             <XStack space="$2" alignItems="center" width="100%">
               <Checkbox
                 checked={agreeTermsOfService}
-                onCheckedChange={setAgreeTermsOfService}
+                onCheckedChange={(checked) => setAgreeTermsOfService(checked === true)}
                 size="$4"
               />
               <Text>I agree to the </Text>

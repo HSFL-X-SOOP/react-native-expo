@@ -1,21 +1,16 @@
-const { getDefaultConfig } = require('expo/metro-config')
-const { withTamagui } = require('@tamagui/metro-plugin')
+const {getDefaultConfig} = require('expo/metro-config')
 
 /** @type {import('expo/metro-config').MetroConfig} */
-const config = getDefaultConfig(__dirname, { isCSSEnabled: true })
-
-// (nur falls nötig) mjs-Workaround für ältere SDKs
-if (!config.resolver.sourceExts.includes('mjs')) {
- config.resolver.sourceExts.push('mjs')
+const config = getDefaultConfig(__dirname, {isCSSEnabled: true})
+config.resolver = {
+    ...config.resolver,
+    assetExts: [...config.resolver.assetExts, 'txt']
 }
 
-// Support für .txt Dateien hinzufügen
-if (!config.resolver.assetExts.includes('txt')) {
- config.resolver.assetExts.push('txt')
-}
-
+const {withTamagui} = require('@tamagui/metro-plugin')
 module.exports = withTamagui(config, {
- components: ['tamagui', '@tamagui/lucide-icons'],
- config: './tamagui.config.ts',
- outputCSS: './tamagui-web.css',
+    components: ['tamagui'],
+    config: './tamagui.config.ts',
+    outputCSS: './.tamagui/tamagui-web.css'
 })
+

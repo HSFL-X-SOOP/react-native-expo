@@ -8,10 +8,18 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import MapFilterButton from './map/MapFilterButton';
 import WebMarker from './map/MapSensorMarker.web';
 import { MapSensorMeasurements } from './map/MapSensorMeasurements';
-export default async function WebMap() {
+
+interface MapWrapperProps {
+  module1Visible?: boolean;
+  module2Visible?: boolean;
+  module3Visible?: boolean;
+  temperatureVisible?: boolean;
+  windDirectionVisible?: boolean;
+}
+
+export default function WebMap(props: MapWrapperProps) {
 
   const [content, setContent] = useState<SensorModule[]>([])
   useEffect(() => {
@@ -29,14 +37,14 @@ export default async function WebMap() {
   ), [content]);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       <Map
       initialViewState={{
         longitude: 9.26,
         latitude: 54.47926,
         zoom: 7
       }}
-      //style={{width: 1600, height: 1200}}
+      style={styles.map}
       // mapStyle="https://demotiles.maplibre.org/style.json"
       mapStyle={require('../assets/images/style.txt')}
 
@@ -53,7 +61,6 @@ export default async function WebMap() {
         </Popup>
       )}
       </Map>
-      <MapFilterButton />
     </View>);
 }
 

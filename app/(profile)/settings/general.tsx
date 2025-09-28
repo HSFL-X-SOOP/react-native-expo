@@ -1,12 +1,11 @@
-import { ThemedView } from '@/components/ThemedView';
-import { Text } from 'tamagui';
+import { Text, View } from 'tamagui';
 import { styles } from '../_layout';
 export default function ProfileSettingsGeneralScreen() {
   return (
 
-    <ThemedView style={styles.container}>
+    <View style={styles.container} backgroundColor="$background">
       <Text>Profile Settings General</Text>
-    </ThemedView>
-    
+    </View>
+
   );
 }

@@ -1,12 +1,11 @@
-import { ThemedView } from '@/components/ThemedView';
 import { useState } from 'react';
-import { Button, Text, Input, YStack } from 'tamagui';
+import { Button, Text, Input, YStack, View } from 'tamagui';
 import { styles } from '../_layout';
 export default function ProfileSettingsFeedbackAndSupportScreen() {
-  const [message, setMessage] = useState("");  
+  const [message, setMessage] = useState("");
   return (
 
-    <ThemedView style={styles.container}>
+    <View style={styles.container} backgroundColor="$background">
       <YStack space="$4" padding="$4">
         <Text fontSize="$5">Gib uns Feedback oder stelle eine Support-Anfrage:</Text>
         <Input
@@ -21,7 +20,7 @@ export default function ProfileSettingsFeedbackAndSupportScreen() {
           <Text>Absenden</Text>
         </Button>
       </YStack>
-    </ThemedView>
-    
+    </View>
+
   );
 }

@@ -1,133 +1,121 @@
-import { useState } from "react";
-import { Dimensions, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Button, Text, XStack, YStack, Sheet, Checkbox } from 'tamagui';
-import { Filter, ChevronRight } from '@tamagui/lucide-icons';
+import { Dimensions, StyleSheet } from "react-native";
+import { Button, Text, XStack, YStack, Sheet, Checkbox, View, useTheme } from 'tamagui';
+import { useState } from 'react';
 
-const { width: screenWidth } = Dimensions.get('window');
+interface MapFilterButtonProps {
+  module1Visible: boolean;
+  setModule1Visible: (value: boolean) => void;
+  module2Visible: boolean;
+  setModule2Visible: (value: boolean) => void;
+  module3Visible: boolean;
+  setModule3Visible: (value: boolean) => void;
+  temperatureVisible: boolean;
+  setTemperatureVisible: (value: boolean) => void;
+  windDirectionVisible: boolean;
+  setWindDirectionVisible: (value: boolean) => void;
+}
 
-export default function MapFilterButton() {
-  const [sheetOpen, setSheetOpen] = useState(false);
+export default function MapFilterButton({
+  module1Visible,
+  setModule1Visible,
+  module2Visible,
+  setModule2Visible,
+  module3Visible,
+  setModule3Visible,
+  temperatureVisible,
+  setTemperatureVisible,
+  windDirectionVisible,
+  setWindDirectionVisible,
+}: MapFilterButtonProps) {
 
-  const openDrawer = () => setSheetOpen(true);
-  const closeDrawer = () => setSheetOpen(false);  
+  const [sheetVisible, setSheetVisible] = useState(false);
+  const theme = useTheme();
 
-  const [module1Checked, setModule1Checked] = useState(true);
-  const [module2Checked, setModule2Checked] = useState(false);
-  const [module3Checked, setModule3Checked] = useState(false);
-  const [temperatureOverlaychecked, setTemperatureOverlayChecked] = useState(false);
-  const [windDirectionchecked, setWindDirectionChecked] = useState(false);
+  const buttonBg = theme.secondary?.get?.() || theme.accentBackground?.get?.() || theme.color?.get?.();
+  const iconColor = theme.onSecondary?.get?.() || theme.accentColor?.get?.() || theme.color?.get?.();
+
   return (
-      <View>
-        <TouchableOpacity style={styles.button} onPress={openDrawer}>
-          <Filter color={'$orange10'} size={28} />
-        </TouchableOpacity>
+    <View>
+      <Button
+        theme="secondary"
+        circular
+        size="$6"
+        onPress={() => setSheetVisible(true)}
+        style={[styles.button, { backgroundColor: buttonBg }]}
+      />
 
-      <Sheet
-        modal
-        open={sheetOpen}
-        onOpenChange={setSheetOpen}
-        snapPoints={[90]}
-        dismissOnSnapToBottom
-      >
-        <Sheet.Overlay />
+      <Sheet modal open={sheetVisible} onOpenChange={setSheetVisible} snapPointsMode="fit">
+        <Sheet.Overlay animation="lazy" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }} />
         <Sheet.Handle />
-        <Sheet.Frame padding="$4" backgroundColor="white">
-          <XStack alignItems="center" marginBottom="$4">
-            <Button onPress={closeDrawer} size="$3" chromeless>
-              <ChevronRight color={'$orange10'} size={28} />
+        <Sheet.Frame padding="$4" backgroundColor="$background" minHeight="50%">
+          <XStack alignItems="center" marginBottom="$4" gap="$2">
+            <Button size="$3" chromeless circular onPress={() => setSheetVisible(false)}>
             </Button>
-            <Text fontSize="$6" fontWeight="bold">Filtereinstellungen</Text>
+            <Text fontSize="$6" fontWeight="600">Filtereinstellungen</Text>
           </XStack>
 
-          <YStack space="$3">
-            <XStack alignItems="center" space="$3">
+          <YStack space="$4">
+            <XStack alignItems="center" space="$3" paddingVertical="$2">
               <Checkbox
-                checked={module1Checked}
-                onCheckedChange={() => setModule1Checked(!module1Checked)}
+                checked={module1Visible}
+                onCheckedChange={(checked) => setModule1Visible(checked === true)}
+                size="$4"
               />
-              <Text>Module 1: Water Level Temperature</Text>
+              <Text fontSize="$4">Module 1: Water Level Temperature</Text>
             </XStack>
 
-            <XStack alignItems="center" space="$3">
+            <XStack alignItems="center" space="$3" paddingVertical="$2">
               <Checkbox
-                checked={module2Checked}
-                onCheckedChange={() => setModule2Checked(!module2Checked)}
+                checked={module2Visible}
+                onCheckedChange={(checked) => setModule2Visible(checked === true)}
+                size="$4"
               />
-              <Text>Module 2: Air Properties</Text>
+              <Text fontSize="$4">Module 2: Air Properties</Text>
             </XStack>
 
-            <XStack alignItems="center" space="$3">
+            <XStack alignItems="center" space="$3" paddingVertical="$2">
               <Checkbox
-                checked={module3Checked}
-                onCheckedChange={() => setModule3Checked(!module3Checked)}
+                checked={module3Visible}
+                onCheckedChange={(checked) => setModule3Visible(checked === true)}
+                size="$4"
               />
-              <Text>Module 3: Air Quality</Text>
+              <Text fontSize="$4">Module 3: Air Quality</Text>
             </XStack>
 
-            <XStack alignItems="center" space="$3">
+            <XStack alignItems="center" space="$3" paddingVertical="$2">
               <Checkbox
-                checked={temperatureOverlaychecked}
-                onCheckedChange={() => setTemperatureOverlayChecked(!temperatureOverlaychecked)}
+                checked={temperatureVisible}
+                onCheckedChange={(checked) => setTemperatureVisible(checked === true)}
+                size="$4"
               />
-              <Text>Temperatur-Overlay</Text>
+              <Text fontSize="$4">Temperatur-Overlay</Text>
             </XStack>
 
-            <XStack alignItems="center" space="$3">
+            <XStack alignItems="center" space="$3" paddingVertical="$2">
               <Checkbox
-                checked={windDirectionchecked}
-                onCheckedChange={() => setWindDirectionChecked(!windDirectionchecked)}
+                checked={windDirectionVisible}
+                onCheckedChange={(checked) => setWindDirectionVisible(checked === true)}
+                size="$4"
               />
-              <Text>Windrichtung Overlay</Text>
+              <Text fontSize="$4">Windrichtung-Overlay</Text>
             </XStack>
           </YStack>
         </Sheet.Frame>
       </Sheet>
-      </View>
-    );
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fafafa',
-  },
   button: {
     position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: '#2c3538ff',
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 100,
     zIndex: 10,
+    boxShadow: '0px 2px 3.84px rgba(0, 0, 0, 0.25)',
+    elevation: 5,
   },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-  },
-  drawer: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 400,
-    height: '100%',
-    backgroundColor: 'white',
-    elevation: 4,
-    padding: 16,
-    zIndex: 20,
-  },
-  drawerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  checkboxAndText: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-  }
 });
