@@ -12,6 +12,7 @@ import {StatusBar} from 'expo-status-bar'
 import {Slot} from 'expo-router'
 
 import {TamaguiProvider, Theme} from 'tamagui'
+import {PortalProvider} from '@tamagui/portal'
 import config from '@/tamagui.config'
 
 import {AuthProvider} from '@/context/SessionContext'
@@ -48,9 +49,11 @@ export default function RootLayout() {
 
     return (
         <TamaguiProvider config={config}>
-            <ThemeProvider>
-                <RootContent/>
-            </ThemeProvider>
+            <PortalProvider shouldAddRootHost>
+                <ThemeProvider>
+                    <RootContent/>
+                </ThemeProvider>
+            </PortalProvider>
         </TamaguiProvider>
     )
 }

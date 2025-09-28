@@ -6,7 +6,11 @@
     "auth": "Auth",
     "aboutUs": "About Us",
     "sensors": "Sensors",
-    "api": "API"
+    "api": "API",
+    "menu": "Menu",
+    "settings": "Settings",
+    "language": "Language",
+    "theme": "Theme"
   },
   "auth": {
     "login": "Login",

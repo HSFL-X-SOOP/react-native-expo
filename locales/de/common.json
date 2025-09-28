@@ -6,7 +6,11 @@
     "auth": "Anmeldung",
     "aboutUs": "Über uns",
     "sensors": "Sensoren",
-    "api": "API"
+    "api": "API",
+    "menu": "Menü",
+    "settings": "Einstellungen",
+    "language": "Sprache",
+    "theme": "Theme"
   },
   "auth": {
     "login": "Anmelden",

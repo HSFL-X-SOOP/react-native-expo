@@ -7,7 +7,7 @@ export default function MapLayout() {
   return (
     <View style={styles.container} backgroundColor="$background">
       <Stack screenOptions={{
-        headerShown: Platform.OS !== 'web',
+        headerShown: false,
       }}/>
     </View>
   );
