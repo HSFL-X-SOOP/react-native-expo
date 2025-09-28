@@ -2,6 +2,7 @@ import {Href, Link} from 'expo-router';
 import {ScrollView, SafeAreaView} from 'react-native';
 import {Card, Text, XStack, YStack, View, Button, H1, H2, Separator} from 'tamagui';
 import {ExternalLink, Globe, Database, MapPin, TrendingUp} from '@tamagui/lucide-icons';
+import {useTranslation} from '@/hooks/useTranslation';
 
 type StudentCardProps = {
     id: string;
@@ -20,66 +21,67 @@ type FeatureProps = {
 };
 
 export default function AboutScreen() {
+    const {t} = useTranslation('about');
     const studentCards: StudentCardProps[] = [
         {
             id: '1',
             letter: 'D',
             name: 'Daniel',
-            role: 'Backend-Entwicklung & API',
-            description: "Verantwortlich für die Server-Infrastruktur und API-Entwicklung. Expertise in Node.js und Datenbank-Design.",
-            skills: ['Node.js', 'PostgreSQL', 'REST APIs', 'Docker']
+            role: t('team.daniel.role'),
+            description: t('team.daniel.description'),
+            skills: t('team.daniel.skills', { returnObjects: true }) as string[]
         },
         {
             id: '2',
             letter: 'F',
             name: 'Fatih',
-            role: 'Frontend & Mobile App',
-            description: "Entwickelt die Benutzeroberfläche und mobile Anwendung. Spezialisiert auf React Native und moderne UI/UX.",
-            skills: ['React Native', 'TypeScript', 'Tamagui', 'UI/UX Design']
+            role: t('team.fatih.role'),
+            description: t('team.fatih.description'),
+            skills: t('team.fatih.skills', { returnObjects: true }) as string[]
         },
         {
             id: '3',
             letter: 'J',
             name: 'Julian',
-            role: 'Datenanalyse & Algorithmen',
-            description: "Analysiert Sensordaten und entwickelt Algorithmen für Dateninterpolation und -vorhersage.",
-            skills: ['Python', 'Data Science', 'Machine Learning', 'Statistik']
+            role: t('team.julian.role'),
+            description: t('team.julian.description'),
+            skills: t('team.julian.skills', { returnObjects: true }) as string[]
         },
         {
             id: '4',
             letter: 'K',
             name: 'Krister',
-            role: 'Hardware & IoT',
-            description: "Entwickelt und wartet die Sensorkits. Expertise in Embedded Systems und IoT-Protokollen.",
-            skills: ['Arduino', 'Raspberry Pi', 'Sensortechnik', 'IoT']
+            role: t('team.krister.role'),
+            description: t('team.krister.description'),
+            skills: t('team.krister.skills', { returnObjects: true }) as string[]
         },
         {
             id: '5',
             letter: 'T',
             name: 'Tarek',
-            role: 'DevOps & Infrastruktur',
-            description: "Verwaltet die Cloud-Infrastruktur und CI/CD-Pipelines. Sorgt für Skalierbarkeit und Zuverlässigkeit.",
-            skills: ['AWS', 'Kubernetes', 'CI/CD', 'Monitoring']
+            role: t('team.tarek.role'),
+            description: t('team.tarek.description'),
+            skills: t('team.tarek.skills', { returnObjects: true }) as string[]
         },
     ]
 
     const features : FeatureProps[] = [
         {
             icon: MapPin,
-            title: 'Interaktive Karte',
-            description: 'Visualisierung aller Sensoren mit Echtzeitdaten und interpolierten Werten zwischen den Messpunkten.',
+            title: t('features.interactiveMap'),
+            description: t('features.interactiveMapDesc'),
             link: '/map'
         },
         {
             icon: TrendingUp,
-            title: 'Dashboard & Historische Daten',
-            description: 'Detaillierte Analyse einzelner Sensoren mit Zeitreihen und historischen Trends.',
+            title: t('features.dashboard'),
+            description: t('features.dashboardDesc'),
             link: '/dashboard'
         },
         {
             icon: Database,
-            title: 'API für Entwickler',
-            description: 'RESTful API für den programmatischen Zugriff auf alle Messdaten.',
+            title: t('features.api'),
+            description: t('features.apiDesc'),
             link: '/api'
         }
     ]
@@ -104,14 +106,14 @@ export default function AboutScreen() {
                             <YStack gap="$4" alignItems="center">
                                 <H1 fontSize={48} fontFamily="$oswald" fontWeight="bold" textAlign="center"
                                     color="white">
-                                    MARLIN
+                                    {t('about.title')}
                                 </H1>
                                 <Text fontSize={24} textAlign="center" color="white" opacity={0.95} fontWeight="500">
-                                    Marine Research & Live Information Network
+                                    {t('about.subtitle')}
                                 </Text>
                                 <Text fontSize={18} textAlign="center" color="white" opacity={0.9} maxWidth={600}
                                       lineHeight={26}>
-                                    Echtzeitdaten zu Wetter und Meeresbedingungen aus verschiedenen Marinas
+                                    {t('about.description')}
                                 </Text>
                             </YStack>
                         </Card>
@@ -120,7 +122,7 @@ export default function AboutScreen() {
                             <YStack gap="$3" alignItems="center">
                                 <H2 fontSize={32} fontFamily="$oswald" fontWeight="600" textAlign="center"
                                     color="$accent7">
-                                    Unsere Features
+                                    {t('about.ourFeatures')}
                                 </H2>
                                 <View width={60} height={4} backgroundColor="$accent7" borderRadius="$2"/>
                             </YStack>
@@ -138,14 +140,14 @@ export default function AboutScreen() {
                             <YStack gap="$3" alignItems="center">
                                 <H2 fontSize={32} fontFamily="$oswald" fontWeight="600" textAlign="center"
                                     color="$accent7">
-                                    Unser Team
+                                    {t('about.ourTeam')}
                                 </H2>
                                 <View width={60} height={4} backgroundColor="$accent7" borderRadius="$2"/>
                             </YStack>
 
                             <Text fontSize={18} textAlign="center" color="$color" opacity={0.85} marginBottom="$4"
                                   maxWidth={700} alignSelf="center" lineHeight={24}>
-                                Studenten des Master Angewandte Informatik, die gemeinsam das MARLIN-Projekt entwickeln
+                                {t('about.teamDescription')}
                             </Text>
 
                             <YStack gap="$4">
@@ -182,16 +184,14 @@ export default function AboutScreen() {
                                 <YStack gap="$3" alignItems="center">
                                     <H2 fontSize={28} fontFamily="$oswald" fontWeight="600" textAlign="center"
                                         color="$accent7">
-                                        Über das Projekt
+                                        {t('about.aboutProject')}
                                     </H2>
                                     <View width={60} height={4} backgroundColor="$accent7" borderRadius="$2"/>
                                 </YStack>
 
                                 <Text fontSize={18} textAlign="center" color="$color" lineHeight={26} maxWidth={700}
                                       opacity={0.9}>
-                                    MARLIN ist ein innovatives Masterprojekt zur Erfassung und Visualisierung von
-                                    Meeres- und Wetterdaten. Unsere Sensornetzwerke in verschiedenen Marinas
-                                    sammeln kontinuierlich Daten, die über diese Plattform zugänglich gemacht werden.
+                                    {t('about.projectDescription')}
                                 </Text>
 
                                 <Link href="https://marlin-live.com/" style={{textDecorationLine: 'none'}}>
@@ -200,8 +200,7 @@ export default function AboutScreen() {
                                             hoverStyle={{backgroundColor: "$accent8"}}>
                                         <XStack alignItems="center" gap="$3">
                                             <ExternalLink size={20} color="white"/>
-                                            <Text color="white" fontWeight="600" fontSize={16}>Projektwebseite
-                                                besuchen</Text>
+                                            <Text color="white" fontWeight="600" fontSize={16}>{t('about.visitWebsite')}</Text>
                                         </XStack>
                                     </Button>
                                 </Link>
@@ -216,7 +215,9 @@ export default function AboutScreen() {
 }
 
 
-const FeatureCard = ({ feature }: { feature: FeatureProps }) => (
+const FeatureCard = ({ feature }: { feature: FeatureProps }) => {
+    const {t} = useTranslation('about');
+    return (
     <Card
         padding="$5"
         backgroundColor="$content1"
@@ -250,14 +251,15 @@ const FeatureCard = ({ feature }: { feature: FeatureProps }) => (
                 {feature.link && (
                     <Link href={feature.link as Href}>
                         <Text fontSize="$3" color="$accent7" textDecorationLine="underline">
-                            Mehr erfahren →
+                            {t('about.learnMore')}
                         </Text>
                     </Link>
                 )}
             </YStack>
         </XStack>
     </Card>
-);
+    );
+};
 
 const ModernStudentCard = ({student}: {student: StudentCardProps}) => (
     <Card

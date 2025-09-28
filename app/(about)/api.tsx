@@ -2,8 +2,11 @@ import { Link } from 'expo-router';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { Text, YStack, Card, H1, H2, XStack, View, Button } from 'tamagui';
 import { Code, Database, Key, Zap } from '@tamagui/lucide-icons';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function APIScreen() {
+  const { t } = useTranslation('api');
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <YStack flex={1} backgroundColor="$content3">
@@ -15,10 +18,10 @@ export default function APIScreen() {
 
             <YStack gap="$3" alignItems="center" marginBottom="$4">
               <H1 fontSize={36} fontFamily="$oswald" fontWeight="bold" textAlign="center" color="$accent7">
-                MARLIN API
+                {t('api.title')}
               </H1>
               <Text fontSize={18} textAlign="center" color="$color" opacity={0.85} maxWidth={600} lineHeight={24}>
-                Programmtische Zugriff auf alle Sensordaten über unsere RESTful API
+                {t('api.subtitle')}
               </Text>
             </YStack>
 
@@ -36,14 +39,14 @@ export default function APIScreen() {
                 </View>
                 <YStack flex={1} gap="$2">
                   <Text fontSize={18} fontWeight="600" color="$accent8">
-                    API-Zugang erforderlich
+                    {t('api.accessRequired')}
                   </Text>
                   <Text fontSize={15} color="$color" opacity={0.9}>
-                    Die Daten werden über eine kostenpflichtige API angeboten.
+                    {t('api.accessDescription')}
                   </Text>
                   <Link href="/(other)/prices">
                     <Text color="$accent8" textDecorationLine="underline" fontWeight="600">
-                      Preise und Zugänge →
+                      {t('api.pricingLink')}
                     </Text>
                   </Link>
                 </YStack>
@@ -52,7 +55,7 @@ export default function APIScreen() {
 
             <YStack gap="$5">
               <H2 fontSize={28} fontFamily="$oswald" fontWeight="600" textAlign="center" color="$accent7">
-                API Features
+                {t('api.features')}
               </H2>
 
               <YStack gap="$4">
@@ -69,12 +72,12 @@ export default function APIScreen() {
                       <Database size={28} color="$accent7" />
                     </View>
                     <YStack flex={1} gap="$3">
-                      <H2 fontSize={20} fontWeight="600" color="$accent7">Flexible Datenabfrage</H2>
+                      <H2 fontSize={20} fontWeight="600" color="$accent7">{t('features.flexibleQuery')}</H2>
                       <YStack gap="$2">
-                        <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">Standort:</Text> Auswahl spezifischer Marinas</Text>
-                        <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">Zeitraum:</Text> Historische und Echtzeitdaten</Text>
-                        <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">Messgrößen:</Text> Temperatur, Wasserstand, Wind, etc.</Text>
-                        <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">Events:</Text> Filterung nach Wetterereignissen</Text>
+                        <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">{t('features.location')}:</Text> {t('features.locationDesc')}</Text>
+                        <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">{t('features.timeRange')}:</Text> {t('features.timeRangeDesc')}</Text>
+                        <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">{t('features.measurements')}:</Text> {t('features.measurementsDesc')}</Text>
+                        <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">{t('features.events')}:</Text> {t('features.eventsDesc')}</Text>
                       </YStack>
                     </YStack>
                   </XStack>
@@ -93,10 +96,9 @@ export default function APIScreen() {
                       <Code size={28} color="$accent7" />
                     </View>
                     <YStack flex={1} gap="$3">
-                      <H2 fontSize={20} fontWeight="600" color="$accent7">RESTful Interface</H2>
+                      <H2 fontSize={20} fontWeight="600" color="$accent7">{t('features.restfulInterface')}</H2>
                       <Text fontSize={16} color="$color" opacity={0.9} lineHeight={22}>
-                        Standard HTTP-Methoden mit JSON-Responses. Vollständige Dokumentation
-                        mit Beispielen und Authentifizierung verfügbar.
+                        {t('features.restfulDesc')}
                       </Text>
                     </YStack>
                   </XStack>
@@ -115,10 +117,9 @@ export default function APIScreen() {
                       <Zap size={28} color="$accent7" />
                     </View>
                     <YStack flex={1} gap="$3">
-                      <H2 fontSize={20} fontWeight="600" color="$accent7">Echtzeitdaten</H2>
+                      <H2 fontSize={20} fontWeight="600" color="$accent7">{t('features.realTimeData')}</H2>
                       <Text fontSize={16} color="$color" opacity={0.9} lineHeight={22}>
-                        Live-Streaming von Sensordaten mit WebSocket-Unterstützung
-                        für kontinuierliche Updates.
+                        {t('features.realTimeDesc')}
                       </Text>
                     </YStack>
                   </XStack>
@@ -137,14 +138,14 @@ export default function APIScreen() {
             >
               <YStack gap="$4" alignItems="center">
                 <H2 fontSize={24} fontWeight="600" color="$accent7" textAlign="center">
-                  Bereit für den API-Zugang?
+                  {t('api.readyTitle')}
                 </H2>
                 <Text fontSize={16} textAlign="center" color="$color" opacity={0.9} maxWidth={500}>
-                  Kontaktieren Sie uns für detaillierte API-Dokumentation und Pricing-Informationen.
+                  {t('api.readyDescription')}
                 </Text>
                 <Link href="/(other)/prices">
                   <Button backgroundColor="$accent7" color="white" borderRadius="$6" paddingHorizontal="$6" paddingVertical="$4" hoverStyle={{ backgroundColor: "$accent8" }}>
-                    <Text color="white" fontWeight="600" fontSize={16}>Preise ansehen</Text>
+                    <Text color="white" fontWeight="600" fontSize={16}>{t('api.viewPricing')}</Text>
                   </Button>
                 </Link>
               </YStack>

@@ -1,0 +1,49 @@
+{
+  "about": {
+    "title": "MARLIN",
+    "subtitle": "Marine Research & Live Information Network",
+    "description": "Real-time weather and marine condition data from various marinas",
+    "ourFeatures": "Our Features",
+    "ourTeam": "Our Team",
+    "aboutProject": "About the Project",
+    "projectDescription": "MARLIN is an innovative master's project for capturing and visualizing marine and weather data. Our sensor networks in various marinas continuously collect data that is made accessible through this platform.",
+    "visitWebsite": "Visit Project Website",
+    "learnMore": "Learn more →",
+    "teamDescription": "Students of Master Applied Computer Science, who together develop the MARLIN project"
+  },
+  "features": {
+    "interactiveMap": "Interactive Map",
+    "interactiveMapDesc": "Visualization of all sensors with real-time data and interpolated values between measurement points.",
+    "dashboard": "Dashboard & Historical Data",
+    "dashboardDesc": "Detailed analysis of individual sensors with time series and historical trends.",
+    "api": "API for Developers",
+    "apiDesc": "RESTful API for programmatic access to all measurement data."
+  },
+  "team": {
+    "daniel": {
+      "role": "Backend Development & API",
+      "description": "Responsible for server infrastructure and API development. Expertise in Node.js and database design.",
+      "skills": ["Node.js", "PostgreSQL", "REST APIs", "Docker"]
+    },
+    "fatih": {
+      "role": "Frontend & Mobile App",
+      "description": "Develops the user interface and mobile application. Specialized in React Native and modern UI/UX.",
+      "skills": ["React Native", "TypeScript", "Tamagui", "UI/UX Design"]
+    },
+    "julian": {
+      "role": "Data Analysis & Algorithms",
+      "description": "Analyzes sensor data and develops algorithms for data interpolation and prediction.",
+      "skills": ["Python", "Data Science", "Machine Learning", "Statistics"]
+    },
+    "krister": {
+      "role": "Hardware & IoT",
+      "description": "Develops and maintains the sensor kits. Expertise in embedded systems and IoT protocols.",
+      "skills": ["Arduino", "Raspberry Pi", "Sensor Technology", "IoT"]
+    },
+    "tarek": {
+      "role": "DevOps & Infrastructure",
+      "description": "Manages cloud infrastructure and CI/CD pipelines. Ensures scalability and reliability.",
+      "skills": ["AWS", "Kubernetes", "CI/CD", "Monitoring"]
+    }
+  }
+}

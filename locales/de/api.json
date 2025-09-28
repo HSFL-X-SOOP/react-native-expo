@@ -1,0 +1,28 @@
+{
+  "api": {
+    "title": "MARLIN API",
+    "subtitle": "Programmtische Zugriff auf alle Sensordaten über unsere RESTful API",
+    "accessRequired": "API-Zugang erforderlich",
+    "accessDescription": "Die Daten werden über eine kostenpflichtige API angeboten.",
+    "pricingLink": "Preise und Zugänge →",
+    "features": "API Features",
+    "readyTitle": "Bereit für den API-Zugang?",
+    "readyDescription": "Kontaktieren Sie uns für detaillierte API-Dokumentation und Pricing-Informationen.",
+    "viewPricing": "Preise ansehen"
+  },
+  "features": {
+    "flexibleQuery": "Flexible Datenabfrage",
+    "location": "Standort",
+    "locationDesc": "Auswahl spezifischer Marinas",
+    "timeRange": "Zeitraum",
+    "timeRangeDesc": "Historische und Echtzeitdaten",
+    "measurements": "Messgrößen",
+    "measurementsDesc": "Temperatur, Wasserstand, Wind, etc.",
+    "events": "Events",
+    "eventsDesc": "Filterung nach Wetterereignissen",
+    "restfulInterface": "RESTful Interface",
+    "restfulDesc": "Standard HTTP-Methoden mit JSON-Responses. Vollständige Dokumentation mit Beispielen und Authentifizierung verfügbar.",
+    "realTimeData": "Echtzeitdaten",
+    "realTimeDesc": "Live-Streaming von Sensordaten mit WebSocket-Unterstützung für kontinuierliche Updates."
+  }
+}

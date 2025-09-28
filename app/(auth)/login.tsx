@@ -5,9 +5,11 @@ import {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {Eye, EyeOff, Lock, Mail} from '@tamagui/lucide-icons';
 import {Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator, Spinner, H1} from 'tamagui';
+import {useTranslation} from '@/hooks/useTranslation';
 
 export default function LoginScreen() {
     const router = useRouter();
+    const {t} = useTranslation();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -62,9 +64,9 @@ export default function LoginScreen() {
                             >
                                 <Lock size={40} color="$accent7"/>
                             </View>
-                            <H1 fontSize={28} fontWeight="bold" color="$accent7" fontFamily="$oswald">Sign in</H1>
+                            <H1 fontSize={28} fontWeight="bold" color="$accent7" fontFamily="$oswald">{t('auth.signIn')}</H1>
                             <Text color="$color" textAlign="center" fontSize={16} opacity={0.8} maxWidth={300}>
-                                Welcome back! Please enter your credentials.
+                                {t('auth.welcomeBack')}
                             </Text>
                         </YStack>
 
@@ -72,10 +74,10 @@ export default function LoginScreen() {
                             <YStack gap="$2">
                                 <XStack alignItems="center" gap="$2">
                                     <Mail size={16} color="$accent7"/>
-                                    <Text fontSize={14} fontWeight="500" color="$accent7">Email</Text>
+                                    <Text fontSize={14} fontWeight="500" color="$accent7">{t('auth.email')}</Text>
                                 </XStack>
                                 <Input
-                                    placeholder="you@example.com"
+                                    placeholder={t('auth.emailPlaceholder')}
                                     value={email}
                                     onChangeText={setEmail}
                                     size="$4"
@@ -90,11 +92,11 @@ export default function LoginScreen() {
                             <YStack gap="$2">
                                 <XStack alignItems="center" gap="$2">
                                     <Lock size={16} color="$accent7"/>
-                                    <Text fontSize={14} fontWeight="500" color="$accent7">Password</Text>
+                                    <Text fontSize={14} fontWeight="500" color="$accent7">{t('auth.password')}</Text>
                                 </XStack>
                                 <XStack alignItems="center" width="100%" position="relative">
                                     <Input
-                                        placeholder="••••••••"
+                                        placeholder={t('auth.passwordPlaceholder')}
                                         value={password}
                                         onChangeText={setPassword}
                                         secureTextEntry={!showPassword}
@@ -132,11 +134,11 @@ export default function LoginScreen() {
                                         onCheckedChange={(checked) => setRememberMe(checked === true)}
                                         size="$3"
                                     />
-                                    <Text fontSize={14} color="$color">Remember me</Text>
+                                    <Text fontSize={14} color="$color">{t('auth.rememberMe')}</Text>
                                 </XStack>
                                 <Link href="/">
                                     <Text color="$accent7" fontSize={14} textDecorationLine="underline">
-                                        Forgot password?
+                                        {t('auth.forgotPassword')}
                                     </Text>
                                 </Link>
                             </XStack>
@@ -155,17 +157,17 @@ export default function LoginScreen() {
                                 {loginStatus.loading ? (
                                     <XStack gap="$2" alignItems="center">
                                         <Spinner size="small" color="white"/>
-                                        <Text color="white" fontWeight="600">Signing in...</Text>
+                                        <Text color="white" fontWeight="600">{t('auth.signingIn')}</Text>
                                     </XStack>
                                 ) : (
-                                    <Text color="white" fontWeight="600">Sign in</Text>
+                                    <Text color="white" fontWeight="600">{t('auth.signIn')}</Text>
                                 )}
                             </Button>
                         </YStack>
 
                         <XStack gap="$3" alignItems="center" width="100%">
                             <Separator flex={1} borderColor="$borderColor"/>
-                            <Text color="$color" fontSize={14} opacity={0.7}>or</Text>
+                            <Text color="$color" fontSize={14} opacity={0.7}>{t('auth.or')}</Text>
                             <Separator flex={1} borderColor="$borderColor"/>
                         </XStack>
 
@@ -180,7 +182,7 @@ export default function LoginScreen() {
                             >
                                 <XStack gap="$2" alignItems="center">
                                     <Text>🔍</Text>
-                                    <Text color="$color">Sign in with Google</Text>
+                                    <Text color="$color">{t('auth.signInWithGoogle')}</Text>
                                 </XStack>
                             </Button>
 
@@ -194,17 +196,17 @@ export default function LoginScreen() {
                             >
                                 <XStack gap="$2" alignItems="center">
                                     <Text>✨</Text>
-                                    <Text color="$color">Sign in with Email Magic Link</Text>
+                                    <Text color="$color">{t('auth.signInWithMagicLink')}</Text>
                                 </XStack>
                             </Button>
                         </YStack>
 
                         <YStack alignItems="center">
                             <Text fontSize={14} color="$color">
-                                Don&#39;t have an account?{' '}
+                                {t('auth.dontHaveAccount')}{' '}
                                 <Link href="/(auth)/register">
                                     <Text color="$accent7" textDecorationLine="underline" fontWeight="600">
-                                        Sign up
+                                        {t('auth.signUp')}
                                     </Text>
                                 </Link>
                             </Text>

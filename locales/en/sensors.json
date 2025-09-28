@@ -1,0 +1,33 @@
+{
+  "sensors": {
+    "title": "Sensor Data Explanation",
+    "subtitle": "Here you will find a simple explanation of the most important measured values and how to interpret them on our website.",
+    "waterTemperature": "Water Temperature",
+    "waterTempDesc": "The water temperature shows how warm or cold the water is.",
+    "waveHeight": "Wave Height",
+    "waveHeightDesc": "The wave height describes how high the water surface waves. The higher the wave, the more force is behind it.",
+    "waterLevel": "Water Level",
+    "waterLevelDesc": "The water level shows how high the water stands compared to the normal value. A high water level can indicate flooding, for example.",
+    "standardDeviation": "Standard Deviation",
+    "standardDeviationDesc": "The standard deviation indicates how much the measured values fluctuate. A small deviation means that the values are stable. Large deviations show that conditions are changing rapidly.",
+    "windSpeed": "Wind Speed",
+    "windSpeedDesc": "The wind speed shows how fast the wind blows. Strong wind can intensify waves and currents.",
+    "windDirection": "Wind Direction",
+    "windDirectionDesc": "The wind direction indicates from which direction the wind comes. It is usually given as a degree number (0° = North, 90° = East, 180° = South, 270° = West).",
+    "airPressure": "Air Pressure",
+    "airPressureDesc": "The air pressure shows how heavily the air presses on the earth. Falling air pressure can indicate bad weather, rising pressure indicates better weather."
+  },
+  "examples": {
+    "freezing": "Freezing",
+    "coldDrink": "Drink straight from the fridge",
+    "wetsuit": "Wetsuit recommended",
+    "swimming": "Pleasant for swimming (swimwear)",
+    "hotShower": "Hot shower",
+    "shortPaper": "A4 sheet (short side)",
+    "canKnockChild": "Can knock down a child",
+    "longPaper": "A4 sheet (long side)",
+    "canKnockAdult": "Can knock down an adult",
+    "tsunami": "Tsunami",
+    "wouldKnockTower": "Would even knock down the Eiffel Tower"
+  }
+}

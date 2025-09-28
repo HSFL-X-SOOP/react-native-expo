@@ -1,6 +1,7 @@
 import { Dimensions, StyleSheet } from "react-native";
 import { Button, Text, XStack, YStack, Sheet, Checkbox, View, useTheme } from 'tamagui';
 import { useState } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface MapFilterButtonProps {
   module1Visible: boolean;
@@ -27,7 +28,7 @@ export default function MapFilterButton({
   windDirectionVisible,
   setWindDirectionVisible,
 }: MapFilterButtonProps) {
-
+  const {t} = useTranslation();
   const [sheetVisible, setSheetVisible] = useState(false);
   const theme = useTheme();
 
@@ -51,7 +52,7 @@ export default function MapFilterButton({
           <XStack alignItems="center" marginBottom="$4" gap="$2">
             <Button size="$3" chromeless circular onPress={() => setSheetVisible(false)}>
             </Button>
-            <Text fontSize="$6" fontWeight="600">Filtereinstellungen</Text>
+            <Text fontSize="$6" fontWeight="600">{t('map.filterSettings')}</Text>
           </XStack>
 
           <YStack space="$4">
@@ -61,7 +62,7 @@ export default function MapFilterButton({
                 onCheckedChange={(checked) => setModule1Visible(checked === true)}
                 size="$4"
               />
-              <Text fontSize="$4">Module 1: Water Level Temperature</Text>
+              <Text fontSize="$4">{t('map.module1')}</Text>
             </XStack>
 
             <XStack alignItems="center" space="$3" paddingVertical="$2">
@@ -70,7 +71,7 @@ export default function MapFilterButton({
                 onCheckedChange={(checked) => setModule2Visible(checked === true)}
                 size="$4"
               />
-              <Text fontSize="$4">Module 2: Air Properties</Text>
+              <Text fontSize="$4">{t('map.module2')}</Text>
             </XStack>
 
             <XStack alignItems="center" space="$3" paddingVertical="$2">
@@ -79,7 +80,7 @@ export default function MapFilterButton({
                 onCheckedChange={(checked) => setModule3Visible(checked === true)}
                 size="$4"
               />
-              <Text fontSize="$4">Module 3: Air Quality</Text>
+              <Text fontSize="$4">{t('map.module3')}</Text>
             </XStack>
 
             <XStack alignItems="center" space="$3" paddingVertical="$2">
@@ -88,7 +89,7 @@ export default function MapFilterButton({
                 onCheckedChange={(checked) => setTemperatureVisible(checked === true)}
                 size="$4"
               />
-              <Text fontSize="$4">Temperatur-Overlay</Text>
+              <Text fontSize="$4">{t('map.temperatureOverlay')}</Text>
             </XStack>
 
             <XStack alignItems="center" space="$3" paddingVertical="$2">
@@ -97,7 +98,7 @@ export default function MapFilterButton({
                 onCheckedChange={(checked) => setWindDirectionVisible(checked === true)}
                 size="$4"
               />
-              <Text fontSize="$4">Windrichtung-Overlay</Text>
+              <Text fontSize="$4">{t('map.windDirectionOverlay')}</Text>
             </XStack>
           </YStack>
         </Sheet.Frame>

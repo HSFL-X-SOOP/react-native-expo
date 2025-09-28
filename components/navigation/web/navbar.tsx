@@ -3,15 +3,18 @@ import {Button, Text, XStack, YStack, useTheme, Popover, Adapt} from 'tamagui';
 
 import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
 import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
-import {User, ChevronDown} from '@tamagui/lucide-icons';
+import {User, ChevronDown, Languages} from '@tamagui/lucide-icons';
 import {useSession} from '@/context/SessionContext';
 import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
+import {useTranslation} from '@/hooks/useTranslation';
+import {LanguageSelector} from '@/components/common/LanguageSelector';
 
 
 export function NavbarWeb() {
     const router = useRouter();
     const t = useTheme();
     const {session} = useSession();
+    const {t: translate} = useTranslation();
 
     return (
         <XStack jc={"space-between"} backgroundColor={"$background"} alignItems={"center"} px={"$10"} gap={"$9"}
@@ -29,7 +32,7 @@ export function NavbarWeb() {
                     <XStack alignItems="center" gap="$3">
                         <MapIcon color={t.accent8?.val} size={26}/>
                         <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
-                            Karte
+                            {translate('navigation.map')}
                         </Text>
                     </XStack>
                 </Link>
@@ -39,7 +42,7 @@ export function NavbarWeb() {
                         <XStack alignItems={"center"} gap={"$2"} cursor="pointer">
                             <InfoIcon color={t.accent8?.val} size={26}/>
                             <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
-                                Über uns
+                                {translate('navigation.aboutUs')}
                             </Text>
                             <ChevronDown size={16} color={t.accent8?.val} />
                         </XStack>
@@ -83,7 +86,7 @@ export function NavbarWeb() {
                             >
                                 <XStack alignItems="center" gap="$3" width="100%">
                                     <InfoIcon size={26} color={t.accent6?.val}/>
-                                    <Text color="$color" fontSize={"$5"} fontFamily={"$silkscreen"}>Über uns</Text>
+                                    <Text color="$color" fontSize={"$5"} fontFamily={"$silkscreen"}>{translate('navigation.aboutUs')}</Text>
                                 </XStack>
                             </Button>
 
@@ -94,7 +97,7 @@ export function NavbarWeb() {
                             >
                                 <XStack alignItems="center" gap="$3" width="100%">
                                     <LOGO size={26}   color={t.accent6?.val}/>
-                                    <Text color="$color">Sensoren</Text>
+                                    <Text color="$color">{translate('navigation.sensors')}</Text>
                                 </XStack>
                             </Button>
 
@@ -105,7 +108,7 @@ export function NavbarWeb() {
                             >
                                 <XStack alignItems="center" gap="$3" width="100%">
                                     <CloudIcon size={26}  color={t.accent6?.val}/>
-                                    <Text color="$color">API</Text>
+                                    <Text color="$color">{translate('navigation.api')}</Text>
                                 </XStack>
                             </Button>
                         </YStack>
@@ -114,18 +117,57 @@ export function NavbarWeb() {
             </XStack>
 
             <XStack gap="$6" alignItems="center" style={{right: 30}}>
+                <Popover placement="bottom" allowFlip>
+                    <Popover.Trigger asChild>
+                        <XStack alignItems={"center"} gap={"$2"} cursor="pointer">
+                            <Languages color={t.accent8?.val} size={24}/>
+                        </XStack>
+                    </Popover.Trigger>
+
+                    <Adapt when="sm" platform="touch">
+                        <Popover.Sheet modal dismissOnSnapToBottom>
+                            <Popover.Sheet.Frame padding="$2">
+                                <Adapt.Contents/>
+                            </Popover.Sheet.Frame>
+                            <Popover.Sheet.Overlay
+                                animation="lazy"
+                                enterStyle={{opacity: 0}}
+                                exitStyle={{opacity: 0}}
+                            />
+                        </Popover.Sheet>
+                    </Adapt>
+
+                    <Popover.Content
+                        borderWidth={1}
+                        borderColor="$borderColor"
+                        enterStyle={{y: -10, opacity: 0}}
+                        exitStyle={{y: -10, opacity: 0}}
+                        elevate
+                        animation={[
+                            'quick',
+                            {
+                                opacity: {
+                                    overshootClamping: true,
+                                },
+                            },
+                        ]}
+                    >
+                        <Popover.Arrow borderWidth={1} borderColor="$borderColor"/>
+                        <LanguageSelector />
+                    </Popover.Content>
+                </Popover>
                 <ThemeSwitch size={24} color={"$background"}/>
                 {!session && (
                     <XStack gap="$2">
                         <Link href="/login">
                             <PrimaryButton>
-                                <Text color="#ffffff">Anmelden</Text>
+                                <Text color="#ffffff">{translate('auth.login')}</Text>
                             </PrimaryButton>
                         </Link>
 
                         <Link href="/register">
                             <SecondaryButton>
-                                <Text>Registrieren</Text>
+                                <Text>{translate('auth.register')}</Text>
                             </SecondaryButton>
                         </Link>
                     </XStack>
@@ -136,13 +178,14 @@ export function NavbarWeb() {
                             <Button variant="outlined">
                                 <XStack alignItems="center" gap="$2">
                                     <User size={28} color={"$accent8"}/>
-                                    <Text>Profil</Text>
+                                    <Text>{translate('navigation.profile')}</Text>
                                 </XStack>
                             </Button>
                         </Link>
                     </XStack>
                 )}
             </XStack>
+
         </XStack>
     );
 }

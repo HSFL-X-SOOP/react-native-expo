@@ -30,7 +30,7 @@ export default function MagicLinkScreen() {
               </View>
               <H1 fontSize={28} fontWeight="bold" color="$accent7" fontFamily="$oswald">Magic Link</H1>
               <Text color="$color" textAlign="center" fontSize={16} opacity={0.8} maxWidth={300}>
-                Enter your email and we'll send you a secure sign-in link.
+                Enter your email and we&apos;ll send you a secure sign-in link.
               </Text>
             </YStack>
 
