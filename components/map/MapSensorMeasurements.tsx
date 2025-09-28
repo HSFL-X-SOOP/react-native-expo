@@ -1,13 +1,14 @@
 import { SensorModule } from "@/data/sensor";
 import { Link } from "expo-router";
-import { Platform, Text, View } from "react-native";
-import { Card, Icon } from "react-native-paper";
+import { Platform } from "react-native";
+import { Waves, Thermometer, ArrowLeft, Battery, HelpCircle } from "@tamagui/lucide-icons";
+import { useTheme, YStack, XStack, Text } from "tamagui";
 type MapSensorMeasurementsProps = {
     sensorModule: SensorModule
 }
 
 export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sensorModule}) => {
-  
+  const t = useTheme();
   const isAdmin = true; //TODO: Hier prüfen ob Admin
   const excludedMeasurements: string[] = [];
 
@@ -17,46 +18,68 @@ export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sens
   excludedMeasurements.push("Standard deviation");
 
   // Wenn die Width/minWidth geändert wird, dann muss das in der global.css bei '.maplibregl-popup-content' auch angepasst werden, damit das Schließen-Kreuz richtig positioniert ist.
-  const cardStyle = Platform.OS === "web"
-  ? { backgroundColor: 'white', padding: 12, borderRadius: 8, minWidth: 300, minHeight: 200 }
-  : { backgroundColor: 'white', padding: 12, borderRadius: 8, width: 300, minHeight: 200 };
+  const cardWidth = Platform.OS === "web" ? 300 : 300;
+  const cardMinHeight = 200;
 
   return (
-    <Card style={cardStyle}>
-      <Text style={{fontSize: 16, color: "#504f4fff"}}>Name</Text>
-      <Link href="/map"><Text style={{fontSize: 24}}>{sensorModule.location.name}</Text></Link>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", width: "100%", justifyContent: "space-between", marginTop: 10 }}>
+    <YStack
+      backgroundColor="$background"
+      padding="$3"
+      borderRadius="$4"
+      width={cardWidth}
+      minHeight={cardMinHeight}
+      shadowColor="$shadowColor"
+      shadowOffset={{ width: 0, height: 2 }}
+      shadowOpacity={0.1}
+      shadowRadius={4}
+      elevation={3}
+    >
+      <Text fontSize={16} color="$gray10">Name</Text>
+      <Link href="/map">
+        <Text fontSize={24} color="$color" fontWeight="600">
+          {sensorModule.location.name}
+        </Text>
+      </Link>
+
+      <XStack flexWrap="wrap" width="100%" justifyContent="space-between" marginTop="$3">
         {sensorModule.latestMeasurements.map((a, index) => (
           !excludedMeasurements.includes(a.measurementType.name) && (
-            <View key={index} style={{flexDirection: "column", width: "48%", marginBottom: 10}}>
-                  <Text style={{fontSize: 16, color: "#504f4fff"}}>{getTextFromMeasurementType(a.measurementType.name)}</Text>
-                  <View style={{flexDirection: "row", alignItems: "center"}}>
-                    <Text style={{fontSize: 24}}>{a.value}{getMeasurementTypeSymbol(a.measurementType.name)} </Text>
-                    <Icon source={getMeasurementTypeIcon(a.measurementType.name)} color="black" size={24} />
-                  </View>
-                </View>
-            )
-          ))}
-          </View>
-    </Card>
+            <YStack key={index} width="48%" marginBottom="$2">
+              <Text fontSize={16} color="$gray10">
+                {getTextFromMeasurementType(a.measurementType.name)}
+              </Text>
+              <XStack alignItems="center">
+                <Text fontSize={24} color="$color">
+                  {a.value}{getMeasurementTypeSymbol(a.measurementType.name)}{" "}
+                </Text>
+                {getMeasurementTypeIcon(a.measurementType.name, t.color?.val)}
+              </XStack>
+            </YStack>
+          )
+        ))}
+      </XStack>
+    </YStack>
   );
 }
 
-const getMeasurementTypeIcon = (measurementType: string): string => {
+const getMeasurementTypeIcon = (measurementType: string, color?: string) => {
+  const iconColor = color || "#000000";
+  const size = 24;
+
   switch (measurementType) {
     case "Wave Height":
-      return "waves";
+      return <Waves color={iconColor} size={size} />;
     case "Temperature, water":
-      return "thermometer";
+      return <Thermometer color={iconColor} size={size} />;
     case "WTemp":
-      return "thermometer";
+      return <Thermometer color={iconColor} size={size} />;
     case "Tide":
       //TODO: Hier noch überprüfen ob Flut oder Ebbe und den Pfeil dementsprechend anpassen?
-      return "waves-arrow-left";
+      return <ArrowLeft color={iconColor} size={size} />;
     case "Battery, voltage":
-      return "battery-80";
+      return <Battery color={iconColor} size={size} />;
     default:
-      return "help-circle";
+      return <HelpCircle color={iconColor} size={size} />;
   }
 };
 

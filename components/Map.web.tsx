@@ -8,7 +8,7 @@ import {
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import '../Global.css';
 import MapFilterButton from './map/MapFilterButton';
 import WebMarker from './map/MapSensorMarker.web';
@@ -26,7 +26,7 @@ export default function WebMap() {
   }, [])
 
   const [popupInfo, setPopupInfo] = useState<SensorModule>();
-  const pins = useMemo(() => content.map((sensorModule, index) => (
+  const pins = useMemo(() => content.map((sensorModule) => (
     WebMarker(sensorModule, setPopupInfo)
     )
   ), [content]);
@@ -75,28 +75,4 @@ export default function WebMap() {
       <MapFilterButton />
     </View>);
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject, // Fill the screen
-  },
-  button: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    backgroundColor: '#2c3538ff',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderRadius: 100,
-    zIndex: 10, // Ensure it's above the map
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-});
-
 
