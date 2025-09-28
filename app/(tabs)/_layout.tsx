@@ -55,6 +55,14 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={"black"} />,
         }}
         />  
+                        <Tabs.Screen
+        name="dashboard_tab"
+        options={{
+          // href: null,
+          title: 'Dashboard',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={"black"} />,
+        }}
+        /> 
     </Tabs>
 
   let a = tabs
