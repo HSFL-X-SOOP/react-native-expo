@@ -1,6 +1,7 @@
 import { GetGeomarData } from '@/data/geomar-data';
 import { SensorModule } from '@/data/sensor';
 import {
+  LngLatBoundsLike,
   Map,
   Popup
 } from '@vis.gl/react-maplibre';
@@ -8,18 +9,12 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import '../Global.css';
+import MapFilterButton from './map/MapFilterButton';
 import WebMarker from './map/MapSensorMarker.web';
 import { MapSensorMeasurements } from './map/MapSensorMeasurements';
-
-interface MapWrapperProps {
-  module1Visible?: boolean;
-  module2Visible?: boolean;
-  module3Visible?: boolean;
-  temperatureVisible?: boolean;
-  windDirectionVisible?: boolean;
-}
-
-export default function WebMap(props: MapWrapperProps) {
+import MapZoomControl from './map/MapZoomControl';
+export default function WebMap() {
 
   const [content, setContent] = useState<SensorModule[]>([])
   useEffect(() => {
@@ -36,18 +31,32 @@ export default function WebMap(props: MapWrapperProps) {
     )
   ), [content]);
 
+  const [zoomLevel, setZoomLevel] = useState(7);
+  const homeCoordinate: [number, number] = [9.26, 54.47926];
+  const [currentCoordinate, setCurrentCoordinate] = useState<[number, number]>(homeCoordinate);
+  const minMaxZoomLevel = { min: 3, max: 16 };
+
+  const mapBoundariesLongLat: LngLatBoundsLike = [[-31.266001, 27.560001], [49.869301, 71.185001]]
+  const [viewState, setViewState] = useState({
+    longitude: homeCoordinate[0],
+    latitude: homeCoordinate[1],
+    zoom: zoomLevel
+  });
+
+
   return (
-    <View style={styles.container}>
+    <View style={{flex: 1}}>
       <Map
-      initialViewState={{
-        longitude: 9.26,
-        latitude: 54.47926,
-        zoom: 7
-      }}
-      style={styles.map}
+      initialViewState={viewState}
+      onMove={e => {setCurrentCoordinate([e.viewState.longitude, e.viewState.latitude]); setViewState(e.viewState); setZoomLevel(e.viewState.zoom)}}
+      key={"map"}
+      //style={{width: 1600, height: 1200}}
       // mapStyle="https://demotiles.maplibre.org/style.json"
       mapStyle={require('../assets/images/style.txt')}
-
+      maxBounds={mapBoundariesLongLat} // Germany
+      longitude={currentCoordinate[0]}
+      latitude={currentCoordinate[1]}
+      zoom={zoomLevel}
       >
         {pins}
         {popupInfo && (
@@ -60,7 +69,10 @@ export default function WebMap(props: MapWrapperProps) {
           <MapSensorMeasurements sensorModule={popupInfo} />
         </Popup>
       )}
+      {/* <NavigationControl showCompass={true} showZoom={true} visualizePitch={true} key={"navigation-control"} /> */}
+      <MapZoomControl zoomLevel={zoomLevel} minMaxZoomLevel={minMaxZoomLevel} setZoomLevel={setZoomLevel} setCurrentCoordinate={setCurrentCoordinate} homeCoordinate={homeCoordinate} />
       </Map>
+      <MapFilterButton />
     </View>);
 }
 
