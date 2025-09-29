@@ -20,7 +20,7 @@ export default function DashboardScreen() {
   const [content, setContent] = useState<SensorModule[]>([])
   const [name, setName] = useState<string>("")
   const [content1, setContent1] = useState<SensorModule[]>([])
-  const [dataPrecision, setDataPrecision] = useState<number>(5)
+  const [dataPrecision, setDataPrecision] = useState<number>(3)
   const { width } = useWindowDimensions();
 
   useEffect(() => {
@@ -154,14 +154,6 @@ console.log(minValueWaterTemperature, maxValueWaterTemperature)
           width: "100%",
           alignSelf: "center",
           padding: 0,
-          backgroundColor: "#42474bff",
-          borderBottomLeftRadius: 12,
-          borderBottomRightRadius: 12,
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          elevation: 2,
           overflow: "hidden",
           height: infoHeight,
         }}
@@ -175,16 +167,11 @@ console.log(minValueWaterTemperature, maxValueWaterTemperature)
       </Animated.View>
 
       {/* Der restliche Content wird jetzt nach unten geschoben */}
-      <View style={{ marginTop: 40 }}>
-        <Text>Standort</Text>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'black' }}>Beschreibung</Text>
-      </View>
-
-      <View style={{ backgroundColor: 'lightgray', display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center', gap: 20}}>
+      <View style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center', gap: 20, marginTop: 30}}>
         <LineChartCard title="Wassertemperatur" chartData={chartWaterTemperature} minValue={10} maxValue={20} dataPrecision={dataPrecision} />
         <LineChartCard title="Tide" chartData={chartTide} minValue={minValueTide} maxValue={50} dataPrecision={dataPrecision} />
         <LineChartCard title="Wellenhöhe" chartData={chartWaveHeight} minValue={minValueWaveHeight} maxValue={10} dataPrecision={dataPrecision} />
-        <LineChartCard title="Batteriestatus" chartData={chartBatteryVoltage} minValue={minValueBatteryVoltage} maxValue={5} dataPrecision={dataPrecision} />
+        {/* <LineChartCard title="Batteriestatus" chartData={chartBatteryVoltage} minValue={minValueBatteryVoltage} maxValue={5} dataPrecision={dataPrecision} /> */}
       </View>
     </ScrollView>
   );
@@ -247,8 +234,9 @@ type LineChartCardProps = {
 export const LineChartCard: React.FC<LineChartCardProps> =({title, chartData, minValue, maxValue, dataPrecision}) =>  {
 
   return(
-    <View style={{ width: 800, padding: 20, backgroundColor: 'white', borderRadius: 10, marginVertical: 10 }}>
-      <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'black' }}>{title}</Text>
+    <Card style={{ width: 800, padding: 10, backgroundColor: 'white', borderRadius: 10, marginVertical: 10 }}>
+      <Card.Content>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'black', marginBottom: 10 }}>{title}</Text>
         <LineChart
           data={chartData.filter((_: { label: string; value: number }, idx: number) => idx % dataPrecision === 0)}
           // lineGradient={true}
@@ -267,7 +255,8 @@ export const LineChartCard: React.FC<LineChartCardProps> =({title, chartData, mi
           curved={true}
           width={700} // Subtracting padding
         />
-      </View>
+        </Card.Content>
+      </Card>
   )
 }
 

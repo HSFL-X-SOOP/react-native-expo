@@ -8,6 +8,6 @@ type MapSensorTemperatureTextProps = {
 export const MapSensorTemperatureText: React.FC<MapSensorTemperatureTextProps> =({sensorModule}) => {
 
   return (
-    <Text style={{ color: 'red', fontWeight: "800"}}>{sensorModule.latestMeasurements.find(measurement => measurement.measurementType.name === "Temperature, water" || measurement.measurementType.name === "WTemp")?.value}°C</Text>
+    <Text style={{ color: 'black', fontSize: 24, fontWeight: "700"}}>{sensorModule.latestMeasurements.find(measurement => measurement.measurementType.name === "Temperature, water" || measurement.measurementType.name === "WTemp")?.value}°C</Text>
   );
 }

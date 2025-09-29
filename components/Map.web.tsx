@@ -10,7 +10,6 @@ import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import '../Global.css';
-import MapFilterButton from './map/MapFilterButton';
 import WebMarker from './map/MapSensorMarker.web';
 import { MapSensorMeasurements } from './map/MapSensorMeasurements';
 import MapZoomControl from './map/MapZoomControl';
@@ -71,7 +70,7 @@ export default function WebMap() {
       {/* <NavigationControl showCompass={true} showZoom={true} visualizePitch={true} key={"navigation-control"} /> */}
       <MapZoomControl zoomLevel={zoomLevel} minMaxZoomLevel={minMaxZoomLevel} setZoomLevel={setZoomLevel} setCurrentCoordinate={setCurrentCoordinate} homeCoordinate={homeCoordinate} />
       </Map>
-      <MapFilterButton />
+      {/* <MapFilterButton /> */}
     </View>);
 }
 

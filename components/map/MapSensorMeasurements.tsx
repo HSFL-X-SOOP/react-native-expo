@@ -1,15 +1,15 @@
 import { SensorModule } from "@/data/sensor";
+import { ArrowLeft, Battery, HelpCircle, Thermometer, Waves } from "@tamagui/lucide-icons";
 import { Link } from "expo-router";
 import { Platform } from "react-native";
-import { Waves, Thermometer, ArrowLeft, Battery, HelpCircle } from "@tamagui/lucide-icons";
-import { useTheme, YStack, XStack, Text } from "tamagui";
+import { Text, useTheme, XStack, YStack } from "tamagui";
 type MapSensorMeasurementsProps = {
     sensorModule: SensorModule
 }
 
 export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sensorModule}) => {
   const t = useTheme();
-  const isAdmin = true; //TODO: Hier prüfen ob Admin
+  const isAdmin = false; //TODO: Hier prüfen ob Admin
   const excludedMeasurements: string[] = [];
 
   if (!isAdmin) {
@@ -18,7 +18,7 @@ export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sens
   excludedMeasurements.push("Standard deviation");
 
   // Wenn die Width/minWidth geändert wird, dann muss das in der global.css bei '.maplibregl-popup-content' auch angepasst werden, damit das Schließen-Kreuz richtig positioniert ist.
-  const cardWidth = Platform.OS === "web" ? 300 : 300;
+  const cardWidth = Platform.OS === "web" ? 300 : 320;
   const cardMinHeight = 200;
 
   return (
@@ -35,11 +35,14 @@ export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sens
       elevation={3}
     >
       <Text fontSize={16} color="$gray10">Name</Text>
-      <Link href="/map">
+
+
+      <Link href={`/dashboard/${sensorModule.location.id}`} style={{ zIndex: 10}} onPress={(e) => e.stopPropagation()}>
         <Text fontSize={24} color="$color" fontWeight="600">
           {sensorModule.location.name}
         </Text>
       </Link>
+
 
       <XStack flexWrap="wrap" width="100%" justifyContent="space-between" marginTop="$3">
         {sensorModule.latestMeasurements.map((a, index) => (

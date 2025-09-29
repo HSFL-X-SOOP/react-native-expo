@@ -1,9 +1,7 @@
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { Stack } from 'expo-router';
 import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 export default function DashboardLayout() {
-  const colorScheme = useColorScheme();
 
   return (
     <View style={styles.container}>
