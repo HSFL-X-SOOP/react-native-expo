@@ -1,66 +1,110 @@
-import { SafeAreaView, ScrollView, View } from 'react-native';
-import { Text } from 'react-native-paper';
-import { styles } from './_layout';
+import { SafeAreaView, ScrollView } from 'react-native';
+import { Text, YStack, Card, H1, H2 } from 'tamagui';
+import { useTranslation } from '@/hooks/useTranslation';
+
 export default function SensorsScreen() {
+  const { t } = useTranslation('sensors');
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <View>
-          <Text variant="headlineLarge" style={styles.largeHeadline}>Erklärung der Daten und Darstellungen</Text>
-          <Text style={styles.textLg}>Hier findest du eine einfache Erklärung der wichtigsten Messwerte und
-                          wie du sie auf unserer Webseite interpretieren kannst.</Text>
-        </View>
-        
-        <View>
-          <Text variant="headlineMedium" style={styles.mediumHeadline}>Wassertemperatur</Text>
-          <Text style={styles.textLg}>Die Wassertemperatur zeigt, wie warm oder kalt das Wasser ist.</Text>
-          <Text style={styles.textLg}>0°C – Gefriert</Text>
-          <Text style={styles.textLg}>8°C – Getränk direkt aus dem Kühlschrank</Text>
-          <Text style={styles.textLg}>10°C – Neoprenanzug empfohlenSensoren</Text>
-          <Text style={styles.textLg}>20°C – Angenehm zum Schwimmen (Badehose)</Text>
-          <Text style={styles.textLg}>38°C – Heiße Dusche</Text>
-        </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <YStack flex={1} backgroundColor="$content3">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentInsetAdjustmentBehavior="automatic"
+        >
+          <YStack gap="$6" padding="$4" maxWidth={800} alignSelf="center" paddingTop="$4">
 
-        <View>
-          <Text variant="headlineMedium" style={styles.mediumHeadline}>Wellenhöhe</Text>
-          <Text style={styles.textLg}>Die Wellenhöhe beschreibt, wie hoch die Wasseroberfläche schwappt. Je höher die Welle, desto
-                                mehr Kraft steckt dahinter.</Text>
-          <Text style={styles.textLg}>A4-Blatt (kurze Seite) – Kann ein Kind umhauen</Text>
-          <Text style={styles.textLg}>A4-Blatt (lange Seite) – Kann einen Erwachsenen umhauen</Text>
-          <Text style={styles.textLg}>Tsunami – Würde sogar den Eiffelturm umwerfen</Text>
-        </View>
+            <YStack gap="$3" alignItems="center" marginBottom="$4">
+              <H1 fontSize={36} fontFamily="$oswald" fontWeight="bold" textAlign="center" color="$accent7">
+                {t('sensors.title')}
+              </H1>
+              <Text fontSize={18} textAlign="center" color="$color" opacity={0.85} maxWidth={600} lineHeight={24}>
+                {t('sensors.subtitle')}
+              </Text>
+            </YStack>
 
-        <View>
-          <Text variant="headlineMedium" style={styles.mediumHeadline}>Wasserstand</Text>
-          <Text style={styles.textLg}>Der Wasserstand zeigt, wie hoch das Wasser im Vergleich zum Normalwert steht. Ein hoher
-                                Wasserstand kann z.B. auf Hochwasser hindeuten.</Text>
-        </View>
+            <YStack gap="$5">
 
-        <View>
-          <Text variant="headlineMedium" style={styles.mediumHeadline}>Standardabweichung</Text>
-          <Text style={styles.textLg}>Die Standardabweichung gibt an, wie stark die Messwerte schwanken. Eine kleine Abweichung bedeutet, dass die Werte stabil sind. Große Abweichungen zeigen, 
-            dass sich die Bedingungen schnell ändern.</Text>
-        </View>
+              <Card padding="$5" backgroundColor="$content1" borderRadius="$6" borderWidth={1} borderColor="$borderColor">
+                <YStack gap="$3">
+                  <H2 fontSize={24} fontWeight="600" color="$accent7">{t('sensors.waterTemperature')}</H2>
+                  <Text fontSize={16} lineHeight={22} color="$color" opacity={0.9}>
+                    {t('sensors.waterTempDesc')}
+                  </Text>
+                  <YStack gap="$2" paddingLeft="$4" marginTop="$2">
+                    <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">0°C</Text> – {t('examples.freezing')}</Text>
+                    <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">8°C</Text> – {t('examples.coldDrink')}</Text>
+                    <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">10°C</Text> – {t('examples.wetsuit')}</Text>
+                    <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">20°C</Text> – {t('examples.swimming')}</Text>
+                    <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">38°C</Text> – {t('examples.hotShower')}</Text>
+                  </YStack>
+                </YStack>
+              </Card>
 
-        <View>
-          <Text variant="headlineMedium" style={styles.mediumHeadline}>Windgeschwindigkeit</Text>
-          <Text style={styles.textLg}>Die Windgeschwindigkeit zeigt, wie schnell der Wind weht. Starker Wind kann Wellen und
-                                Strömungen verstärken.</Text>
-        </View>
+              <Card padding="$5" backgroundColor="$content1" borderRadius="$6" borderWidth={1} borderColor="$borderColor">
+                <YStack gap="$3">
+                  <H2 fontSize={24} fontWeight="600" color="$accent7">{t('sensors.waveHeight')}</H2>
+                  <Text fontSize={16} lineHeight={22} color="$color" opacity={0.9}>
+                    {t('sensors.waveHeightDesc')}
+                  </Text>
+                  <YStack gap="$2" paddingLeft="$4" marginTop="$2">
+                    <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">{t('examples.shortPaper')}</Text> – {t('examples.canKnockChild')}</Text>
+                    <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">{t('examples.longPaper')}</Text> – {t('examples.canKnockAdult')}</Text>
+                    <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">{t('examples.tsunami')}</Text> – {t('examples.wouldKnockTower')}</Text>
+                  </YStack>
+                </YStack>
+              </Card>
 
-        <View>
-          <Text variant="headlineMedium" style={styles.mediumHeadline}>Windrichtung</Text>
-          <Text style={styles.textLg}>Die Windrichtung gibt an, aus welcher Richtung der Wind kommt. Sie wird meist als Gradzahl
-                                (0° = Norden, 90° = Osten, 180° = Süden, 270° = Westen) angegeben.</Text>
-        </View>
+              <Card padding="$5" backgroundColor="$content1" borderRadius="$6" borderWidth={1} borderColor="$borderColor">
+                <YStack gap="$3">
+                  <H2 fontSize={24} fontWeight="600" color="$accent7">{t('sensors.waterLevel')}</H2>
+                  <Text fontSize={16} lineHeight={22} color="$color" opacity={0.9}>
+                    {t('sensors.waterLevelDesc')}
+                  </Text>
+                </YStack>
+              </Card>
 
-        <View>
-          <Text variant="headlineMedium" style={styles.mediumHeadline}>Luftdruck</Text>
-          <Text style={styles.textLg}>Der Luftdruck zeigt, wie schwer die Luft auf die Erde drückt. Ein sinkender Luftdruck kann
-                                auf schlechtes Wetter hindeuten, ein steigender auf besseres Wetter.</Text>
-        </View>
-      </ScrollView>
+              <Card padding="$5" backgroundColor="$content1" borderRadius="$6" borderWidth={1} borderColor="$borderColor">
+                <YStack gap="$3">
+                  <H2 fontSize={24} fontWeight="600" color="$accent7">{t('sensors.standardDeviation')}</H2>
+                  <Text fontSize={16} lineHeight={22} color="$color" opacity={0.9}>
+                    {t('sensors.standardDeviationDesc')}
+                  </Text>
+                </YStack>
+              </Card>
 
+              <Card padding="$5" backgroundColor="$content1" borderRadius="$6" borderWidth={1} borderColor="$borderColor">
+                <YStack gap="$3">
+                  <H2 fontSize={24} fontWeight="600" color="$accent7">{t('sensors.windSpeed')}</H2>
+                  <Text fontSize={16} lineHeight={22} color="$color" opacity={0.9}>
+                    {t('sensors.windSpeedDesc')}
+                  </Text>
+                </YStack>
+              </Card>
+
+              <Card padding="$5" backgroundColor="$content1" borderRadius="$6" borderWidth={1} borderColor="$borderColor">
+                <YStack gap="$3">
+                  <H2 fontSize={24} fontWeight="600" color="$accent7">{t('sensors.windDirection')}</H2>
+                  <Text fontSize={16} lineHeight={22} color="$color" opacity={0.9}>
+                    {t('sensors.windDirectionDesc')}
+                  </Text>
+                </YStack>
+              </Card>
+
+              <Card padding="$5" backgroundColor="$content1" borderRadius="$6" borderWidth={1} borderColor="$borderColor">
+                <YStack gap="$3">
+                  <H2 fontSize={24} fontWeight="600" color="$accent7">{t('sensors.airPressure')}</H2>
+                  <Text fontSize={16} lineHeight={22} color="$color" opacity={0.9}>
+                    {t('sensors.airPressureDesc')}
+                  </Text>
+                </YStack>
+              </Card>
+
+            </YStack>
+
+          </YStack>
+        </ScrollView>
+      </YStack>
     </SafeAreaView>
   );
 }

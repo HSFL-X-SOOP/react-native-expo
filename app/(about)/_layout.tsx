@@ -1,19 +1,9 @@
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { Stack } from 'expo-router';
 import React from 'react';
-import { Platform, StyleSheet } from 'react-native';
-export default function AuthLayout() {
-  const colorScheme = useColorScheme();
+import { Slot } from 'expo-router';
+import { StyleSheet } from 'react-native';
 
-  return (
-    <Stack screenOptions={{
-      headerShown: Platform.OS !== 'web', 
-    }}>
-      <Stack.Screen name='about' options={{title: 'Über uns', headerShown: Platform.OS !== 'web' }}/>
-      <Stack.Screen name='sensors' options={{title: 'Sensoren', headerShown: Platform.OS !== 'web'}}/>
-      <Stack.Screen name='api' options={{title: 'API', headerShown: Platform.OS !== 'web'}}/>
-    </Stack>
-  );
+export default function AboutLayout() {
+  return <Slot />;
 }
 
 export const styles = StyleSheet.create({

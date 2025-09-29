@@ -1,113 +1,193 @@
-import { useSession } from '@/context/SessionContext';
-import { Link, Stack, useRouter } from 'expo-router';
-import { useState } from 'react';
-import { Platform, Pressable, StyleSheet, View } from 'react-native';
-import { Appbar, Button, Icon, MD3Colors, Menu, Text } from 'react-native-paper';
+import {Link, useRouter} from 'expo-router';
+import {Button, Text, XStack, YStack, useTheme, Popover, Adapt} from 'tamagui';
+
+import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
+import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
+import {User, ChevronDown, Languages} from '@tamagui/lucide-icons';
+import {useSession} from '@/context/SessionContext';
+import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
+import {useTranslation} from '@/hooks/useTranslation';
+import {LanguageSelector} from '@/components/common/LanguageSelector';
+
 
 export function NavbarWeb() {
-  const [current, setCurrent] = useState('Home');
-  const [expanded, setExpanded] = useState(false);
-  const router = useRouter();
-  const handlePress = () => setExpanded(!expanded);
+    const router = useRouter();
+    const t = useTheme();
+    const {session} = useSession();
+    const {t: translate} = useTranslation();
 
-  //Menu
-  const [visible, setVisible] = useState(false);
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
-
-  //ThemeColor
-  const [themeMode, setThemeMode] = useState(false);
-  const switchThemeMode = () => setThemeMode(!themeMode);
-  const {session} = useSession()
-
-  return (
-    <View style={{flex: 1}}>
-      <Appbar.Header style={ styles.navbar }>
-        <View style={{left: 30}}>
-          <Link href="/map">
-            <Text>Marlin</Text>
-          </Link>
-        </View>
-        
-        <View style={ styles.navs}>
-
+    return (
+        <XStack jc={"space-between"} backgroundColor={"$background"} alignItems={"center"} px={"$10"} gap={"$9"}
+                py={"$1"}>
             <Link href="/map">
-            <Pressable style={styles.navs}>
-              <Icon source='map-outline' color={'white'} size={20} />
-              <Text style={{ fontSize: 18 }}>Karte</Text>
-            </Pressable>
+                <XStack ac="center" jc="center" gap="$2">
+                    <LOGO size={75} color={t.accent8?.val}/>
+                    <Text fontSize={40} fontFamily={"$oswald"} alignSelf={"center"} fontWeight="bold"
+                          textAlign={"center"} color={"$accent8"}>Marlin</Text>
+                </XStack>
             </Link>
 
-          <Menu
-            visible={visible}
-            onDismiss={closeMenu}
-            anchor={
-            <Pressable style={styles.navs} onPress={openMenu}>
-              <Icon source='information-outline' color={'white'} size={20} />
-              <Text style={{ fontSize: 18 }}>Über uns</Text>
-              <Icon source='chevron-down' color={'white'} size={20} />
-            </Pressable>
-            }
-          >
-            <Menu.Item title="Über uns" onPress={ () => {router.push("/about"); closeMenu();}} />
-            <Menu.Item title="Sensoren" onPress={ () => {router.push("/sensors"); closeMenu();}}/>
-            <Menu.Item title="API" onPress={ () => {router.push("/api"); closeMenu();}} />
-          </Menu>
-        </View>
+            <XStack alignItems={"center"} gap={"$8"}>
+                <Link href="/map">
+                    <XStack alignItems="center" gap="$3">
+                        <MapIcon color={t.accent8?.val} size={26}/>
+                        <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
+                            {translate('navigation.map')}
+                        </Text>
+                    </XStack>
+                </Link>
 
-        <View style={{display: 'flex', flexDirection: 'row', gap: 30, alignItems: 'center', right: 30}}>
-            <Pressable onPress={() => console.log('Pressed')}>
-              <Icon source='white-balance-sunny' color={MD3Colors.error50} size={20} />
-            </Pressable>
-              {!session && (
-              <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
+                <Popover placement="bottom" allowFlip>
+                    <Popover.Trigger asChild>
+                        <XStack alignItems={"center"} gap={"$2"} cursor="pointer">
+                            <InfoIcon color={t.accent8?.val} size={26}/>
+                            <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
+                                {translate('navigation.aboutUs')}
+                            </Text>
+                            <ChevronDown size={16} color={t.accent8?.val} />
+                        </XStack>
+                    </Popover.Trigger>
 
-                  <Button mode='outlined' onPress={() => console.log('Pressed')}>
-                    <Link href="/login">
-                      <Text>Anmelden</Text>
-                    </Link>
-                  </Button>
+                    <Adapt when="sm" platform="touch">
+                        <Popover.Sheet modal dismissOnSnapToBottom>
+                            <Popover.Sheet.Frame padding="$2">
+                                <Adapt.Contents/>
+                            </Popover.Sheet.Frame>
+                            <Popover.Sheet.Overlay
+                                animation="lazy"
+                                enterStyle={{opacity: 0}}
+                                exitStyle={{opacity: 0}}
+                            />
+                        </Popover.Sheet>
+                    </Adapt>
 
-                  <Button mode='outlined' onPress={() => console.log('Pressed')}>
-                    <Link href="/register">
-                      <Text>Registrieren</Text>
-                    </Link>
-                  </Button>
-              </View>
-              )}
-              {session && (
-              <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
-                  <Button mode='outlined' onPress={() => console.log('Pressed')}>
-                    <Link href="/(profile)/profile" style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10}}>
-                      <Icon source="account-circle" size={28}></Icon>
-                      <Text>Profil</Text>
-                    </Link>
-                  </Button>
-              </View>
-              )}
-        </View>
-      </Appbar.Header>
+                    <Popover.Content
+                        borderWidth={1}
+                        borderColor="$borderColor"
+                        enterStyle={{y: -10, opacity: 0}}
+                        exitStyle={{y: -10, opacity: 0}}
+                        elevate
+                        animation={[
+                            'quick',
+                            {
+                                opacity: {
+                                    overshootClamping: true,
+                                },
+                            },
+                        ]}
+                    >
+                        <Popover.Arrow borderWidth={1} borderColor="$borderColor"/>
 
-      
-    <Stack screenOptions={{
-      headerShown: Platform.OS !== 'web', 
-    }}/>
-    </View>
-  );
+                        <YStack gap="$3" padding="$2" minWidth={200}>
+                            <Button
+                                variant="outlined"
+                                justifyContent="flex-start"
+                                onPress={() => router.push('/about')}
+                            >
+                                <XStack alignItems="center" gap="$3" width="100%">
+                                    <InfoIcon size={26} color={t.accent6?.val}/>
+                                    <Text color="$color" fontSize={"$5"} fontFamily={"$silkscreen"}>{translate('navigation.aboutUs')}</Text>
+                                </XStack>
+                            </Button>
+
+                            <Button
+                                variant="outlined"
+                                justifyContent="flex-start"
+                                onPress={() => router.push('/sensors')}
+                            >
+                                <XStack alignItems="center" gap="$3" width="100%">
+                                    <LOGO size={26}   color={t.accent6?.val}/>
+                                    <Text color="$color">{translate('navigation.sensors')}</Text>
+                                </XStack>
+                            </Button>
+
+                            <Button
+                                variant="outlined"
+                                justifyContent="flex-start"
+                                onPress={() => router.push('/api')}
+                            >
+                                <XStack alignItems="center" gap="$3" width="100%">
+                                    <CloudIcon size={26}  color={t.accent6?.val}/>
+                                    <Text color="$color">{translate('navigation.api')}</Text>
+                                </XStack>
+                            </Button>
+                        </YStack>
+                    </Popover.Content>
+                </Popover>
+            </XStack>
+
+            <XStack gap="$6" alignItems="center" style={{right: 30}}>
+                <Popover placement="bottom" allowFlip>
+                    <Popover.Trigger asChild>
+                        <XStack alignItems={"center"} gap={"$2"} cursor="pointer">
+                            <Languages color={t.accent8?.val} size={24}/>
+                        </XStack>
+                    </Popover.Trigger>
+
+                    <Adapt when="sm" platform="touch">
+                        <Popover.Sheet modal dismissOnSnapToBottom>
+                            <Popover.Sheet.Frame padding="$2">
+                                <Adapt.Contents/>
+                            </Popover.Sheet.Frame>
+                            <Popover.Sheet.Overlay
+                                animation="lazy"
+                                enterStyle={{opacity: 0}}
+                                exitStyle={{opacity: 0}}
+                            />
+                        </Popover.Sheet>
+                    </Adapt>
+
+                    <Popover.Content
+                        borderWidth={1}
+                        borderColor="$borderColor"
+                        enterStyle={{y: -10, opacity: 0}}
+                        exitStyle={{y: -10, opacity: 0}}
+                        elevate
+                        animation={[
+                            'quick',
+                            {
+                                opacity: {
+                                    overshootClamping: true,
+                                },
+                            },
+                        ]}
+                    >
+                        <Popover.Arrow borderWidth={1} borderColor="$borderColor"/>
+                        <LanguageSelector />
+                    </Popover.Content>
+                </Popover>
+                <ThemeSwitch size={24} color={"$background"}/>
+                {!session && (
+                    <XStack gap="$2">
+                        <Link href="/login">
+                            <PrimaryButton>
+                                <Text color="#ffffff">{translate('auth.login')}</Text>
+                            </PrimaryButton>
+                        </Link>
+
+                        <Link href="/register">
+                            <SecondaryButton>
+                                <Text>{translate('auth.register')}</Text>
+                            </SecondaryButton>
+                        </Link>
+                    </XStack>
+                )}
+                {session && (
+                    <XStack gap="$2">
+                        <Link href="/(profile)/profile">
+                            <Button variant="outlined">
+                                <XStack alignItems="center" gap="$2">
+                                    <User size={28} color={"$accent8"}/>
+                                    <Text>{translate('navigation.profile')}</Text>
+                                </XStack>
+                            </Button>
+                        </Link>
+                    </XStack>
+                )}
+            </XStack>
+
+        </XStack>
+    );
 }
 
-const styles = StyleSheet.create({
-  navbar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  navs: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10
-  }
-});
+

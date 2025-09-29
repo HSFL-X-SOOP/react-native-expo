@@ -1,15 +1,9 @@
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { Stack } from 'expo-router';
 import React from 'react';
-import { Platform, StyleSheet } from 'react-native';
-export default function OtherLayout() {
-  const colorScheme = useColorScheme();
+import { Slot } from 'expo-router';
+import { StyleSheet } from 'react-native';
 
-  return (
-      <Stack screenOptions={{
-        headerShown: Platform.OS !== 'web', 
-      }}/>
-  );
+export default function OtherLayout() {
+  return <Slot />;
 }
 
 export const styles = StyleSheet.create({

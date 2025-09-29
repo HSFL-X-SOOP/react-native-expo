@@ -2,9 +2,10 @@ import { useSession } from '@/context/SessionContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Link, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Card, Checkbox, Divider, Icon, MD3Colors, Text, TextInput } from 'react-native-paper';
-import { styles } from './_layout';
+import { SafeAreaView } from 'react-native';
+import { Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator, H1, Spinner } from 'tamagui';
+import { User, Mail, Lock, Eye, EyeOff } from '@tamagui/lucide-icons';
+
 export default function RegisterScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,100 +38,193 @@ export default function RegisterScreen() {
           });
           router.push("/");
       } else {
-          // TODO: ADD ERROR BANNER
           console.error("Registration failed:", registerStatus.error);
       }
   };
+
+  const passwordsMatch = password === confirmPassword;
+  const isFormValid = email && password && passwordsMatch && agreeTermsOfService;
+
   return (
-    <View style={styles.container}>
-      <Card>
-        <Card.Content>
-          <View style={style.container}>
-          <View style={{marginTop: 20, alignItems: 'center'}}>
-            <Text style={{marginBottom: 10, fontSize: 28}}>Create account</Text>
-            <Text style={styles.textLg}>Join us by filling out the information below.</Text>
-          </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <YStack flex={1} backgroundColor="$content3" alignItems="center" justifyContent="center" padding="$4">
+        <Card elevate size="$4" bordered padding="$6" width={450} maxWidth="90%" backgroundColor="$content1" borderRadius="$8" borderColor="$borderColor">
+          <YStack gap="$5" alignItems="center">
 
-          <View style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20}}>
-            <TextInput
-              label="Email*"
-              value={email}
-              mode='outlined'
-              style={{width: '95%'}}
-              placeholder='you@example.com'
-              onChangeText={text => setEmail(text)}
-              />
-            <TextInput
-              label="Password*"
-              value={password}
-              mode='outlined'
-              placeholder='********'
-              style={{width: '95%'}}
-              onChangeText={password => setPassword(password)}
-              secureTextEntry={!showPassword}
-              right={<TextInput.Icon icon="eye" color={'green'} onPress={() => setShowPassword(!showPassword)}/>}
-              />
-            <TextInput
-              label="Confirm Password*"
-              value={confirmPassword}
-              mode='outlined'
-              placeholder='********'
-              style={{width: '95%'}}
-              onChangeText={password => setConfirmPassword(password)}
-              secureTextEntry={!showConfirmPassword}
-              right={<TextInput.Icon icon="eye" color={'green'} onPress={() => setShowConfirmPassword(!showConfirmPassword)}/>}
-              />
+            <YStack gap="$3" alignItems="center">
+              <View
+                width={80}
+                height={80}
+                backgroundColor="$accent2"
+                borderRadius="$12"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <User size={40} color="$accent7" />
+              </View>
+              <H1 fontSize={28} fontWeight="bold" color="$accent7" fontFamily="$oswald">Create Account</H1>
+              <Text color="$color" textAlign="center" fontSize={16} opacity={0.8} maxWidth={350}>
+                Join us by filling out the information below.
+              </Text>
+            </YStack>
 
-            <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%'}}>
-              <Checkbox.Item 
-                label="I agree to the"
-                status={agreeTermsOfService ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  setAgreeTermsOfService(!agreeTermsOfService);
-                }}
-                position="leading"
-              />
-              <Link href="/(other)/terms-of-service"><Text style={{color: 'green'}}>Terms of Service</Text></Link>
-            </View>
-            <Button mode="contained"  buttonColor='green' style={style.buttons} onPress={handleSubmit}>
-              <Text style={{color: 'black'}}>Sign up</Text>
+            <YStack gap="$4" width="100%">
+                <YStack gap="$2">
+                <XStack alignItems="center" gap="$2">
+                  <Mail size={16} color="$accent7" />
+                  <Text fontSize={14} fontWeight="500" color="$accent7">Email</Text>
+                </XStack>
+                <Input
+                  placeholder="you@example.com"
+                  value={email}
+                  onChangeText={setEmail}
+                  size="$4"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  borderColor="$borderColor"
+                  focusStyle={{ borderColor: "$accent7" }}
+                />
+              </YStack>
+
+              <YStack gap="$2">
+                <XStack alignItems="center" gap="$2">
+                  <Lock size={16} color="$accent7" />
+                  <Text fontSize={14} fontWeight="500" color="$accent7">Password</Text>
+                </XStack>
+                <XStack alignItems="center" width="100%" position="relative">
+                  <Input
+                    placeholder="••••••••"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    size="$4"
+                    flex={1}
+                    autoComplete="new-password"
+                    borderColor="$borderColor"
+                    focusStyle={{ borderColor: "$accent7" }}
+                  />
+                  <Button
+                    position="absolute"
+                    right="$2"
+                    size="$3"
+                    circular
+                    chromeless
+                    onPress={() => setShowPassword(!showPassword)}
+                    zIndex={1}
+                  >
+                    {showPassword ? <EyeOff size={16} color="$accent7" /> : <Eye size={16} color="$accent7" />}
+                  </Button>
+                </XStack>
+              </YStack>
+
+              <YStack gap="$2">
+                <XStack alignItems="center" gap="$2">
+                  <Lock size={16} color="$accent7" />
+                  <Text fontSize={14} fontWeight="500" color="$accent7">Confirm Password</Text>
+                </XStack>
+                <XStack alignItems="center" width="100%" position="relative">
+                  <Input
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    secureTextEntry={!showConfirmPassword}
+                    size="$4"
+                    flex={1}
+                    autoComplete="new-password"
+                    borderColor={confirmPassword && !passwordsMatch ? "$red10" : "$borderColor"}
+                    focusStyle={{ borderColor: confirmPassword && !passwordsMatch ? "$red10" : "$accent7" }}
+                  />
+                  <Button
+                    position="absolute"
+                    right="$2"
+                    size="$3"
+                    circular
+                    chromeless
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                    zIndex={1}
+                  >
+                    {showConfirmPassword ? <EyeOff size={16} color="$accent7" /> : <Eye size={16} color="$accent7" />}
+                  </Button>
+                </XStack>
+                {confirmPassword && !passwordsMatch && (
+                  <Text color="$red10" fontSize={14}>Passwords do not match</Text>
+                )}
+              </YStack>
+
+              {registerStatus.error && (
+                <Text color="$red10" fontSize={14} textAlign="center">
+                  {registerStatus.error.message}
+                </Text>
+              )}
+
+              <XStack gap="$2" alignItems="center" width="100%">
+                <Checkbox
+                  checked={agreeTermsOfService}
+                  onCheckedChange={(checked) => setAgreeTermsOfService(checked === true)}
+                  size="$3"
+                />
+                <Text fontSize={14} color="$color">
+                  I agree to the{' '}
+                  <Link href="/(other)/terms-of-service">
+                    <Text color="$accent7" textDecorationLine="underline">Terms of Service</Text>
+                  </Link>
+                </Text>
+              </XStack>
+
+              <Button
+                backgroundColor="$accent7"
+                color="white"
+                size="$4"
+                onPress={handleSubmit}
+                disabled={!isFormValid || registerStatus.loading}
+                opacity={!isFormValid || registerStatus.loading ? 0.6 : 1}
+                borderRadius="$6"
+                hoverStyle={{ backgroundColor: "$accent8" }}
+                pressStyle={{ backgroundColor: "$accent6" }}
+              >
+                {registerStatus.loading ? (
+                  <XStack gap="$2" alignItems="center">
+                    <Spinner size="small" color="white" />
+                    <Text color="white" fontWeight="600">Creating account...</Text>
+                  </XStack>
+                ) : (
+                  <Text color="white" fontWeight="600">Create Account</Text>
+                )}
               </Button>
-          </View>
+            </YStack>
 
-          <View style={{display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'center', gap: 10}}>
-            <Divider style={{width: '45%'}}/>
-            <Text>or</Text>
-            <Divider style={{width: '45%'}}/>
-          </View>
+            <XStack gap="$3" alignItems="center" width="100%">
+              <Separator flex={1} borderColor="$borderColor" />
+              <Text color="$color" fontSize={14} opacity={0.7}>or</Text>
+              <Separator flex={1} borderColor="$borderColor" />
+            </XStack>
 
-          <View style={{display: 'flex', flexDirection: 'column', gap: 20, width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-            <Button mode="outlined" style={style.buttons} onPress={() => {console.log("H")}}>
-              <Icon source="google" color={MD3Colors.error50} size={20} />
-              <Text style={{width: '95%'}}> Sign up with Google</Text>
+            <Button
+              variant="outlined"
+              size="$4"
+              onPress={() => console.log("Google signup")}
+              borderColor="$borderColor"
+              borderRadius="$6"
+              hoverStyle={{ backgroundColor: "$content2" }}
+              width="100%"
+            >
+              <XStack gap="$2" alignItems="center">
+                <Text>🔍</Text>
+                <Text color="$color">Sign up with Google</Text>
+              </XStack>
             </Button>
-          </View>
 
-          <View>
-            <Text>Already have an account? <Link href="/(auth)/login" style={{color: 'green'}}>Sign in</Link></Text>
-          </View>
-          </View>
-        </Card.Content>
-      </Card>
-    </View>
+            <Text fontSize={14} color="$color">
+              Already have an account?{' '}
+              <Link href="/(auth)/login">
+                <Text color="$accent7" textDecorationLine="underline" fontWeight="600">Sign in</Text>
+              </Link>
+            </Text>
+
+          </YStack>
+        </Card>
+      </YStack>
+    </SafeAreaView>
   );
 }
-
-export const style = StyleSheet.create({
-  container: {
-    height: 600,
-    width: 350,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  buttons: {
-    width: '100%', 
-    alignItems: 'center'
-  }
-});

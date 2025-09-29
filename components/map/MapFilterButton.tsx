@@ -1,141 +1,121 @@
-import { useState } from "react";
-import { Dimensions, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Button, Checkbox, Icon, MD3Colors, Portal, Surface, Text } from "react-native-paper";
+import {StyleSheet} from "react-native";
+import {Button, Text, XStack, YStack, Sheet, Checkbox, View, useTheme} from 'tamagui';
+import {useState} from 'react';
+import {useTranslation} from '@/hooks/useTranslation';
 
-const { width: screenWidth } = Dimensions.get('window');
+interface MapFilterButtonProps {
+    module1Visible: boolean;
+    setModule1Visible: (value: boolean) => void;
+    module2Visible: boolean;
+    setModule2Visible: (value: boolean) => void;
+    module3Visible: boolean;
+    setModule3Visible: (value: boolean) => void;
+    temperatureVisible: boolean;
+    setTemperatureVisible: (value: boolean) => void;
+    windDirectionVisible: boolean;
+    setWindDirectionVisible: (value: boolean) => void;
+}
 
-export default function MapFilterButton() {
-  const [drawerVisible, setDrawerVisible] = useState(false);
+export default function MapFilterButton({
+                                            module1Visible,
+                                            setModule1Visible,
+                                            module2Visible,
+                                            setModule2Visible,
+                                            module3Visible,
+                                            setModule3Visible,
+                                            temperatureVisible,
+                                            setTemperatureVisible,
+                                            windDirectionVisible,
+                                            setWindDirectionVisible,
+                                        }: MapFilterButtonProps) {
+    const {t} = useTranslation();
+    const [sheetVisible, setSheetVisible] = useState(false);
+    const theme = useTheme();
 
-  const openDrawer = () => setDrawerVisible(true);
-  const closeDrawer = () => setDrawerVisible(false);  
+    const buttonBg = theme.secondary?.get?.() || theme.accentBackground?.get?.() || theme.color?.get?.();
 
-  const [module1Checked, setModule1Checked] = useState(true);
-  const [module2Checked, setModule2Checked] = useState(false);
-  const [module3Checked, setModule3Checked] = useState(false);
-  const [temperatureOverlaychecked, setTemperatureOverlayChecked] = useState(false);
-  const [windDirectionchecked, setWindDirectionChecked] = useState(false);
-  return (
-      <View>
-        <TouchableOpacity style={styles.button} onPress={openDrawer}>
-          <Icon source='filter' color={MD3Colors.error50} size={28} />
-        </TouchableOpacity>
+    return (
+        <View>
+            <Button
+                theme="secondary"
+                circular
+                size="$6"
+                onPress={() => setSheetVisible(true)}
+                style={[styles.button, {backgroundColor: buttonBg}]}
+            />
 
-      <Portal>
-        {drawerVisible && (
-          <>
-            <Pressable style={styles.backdrop} onPress={closeDrawer} />
+            <Sheet modal open={sheetVisible} onOpenChange={setSheetVisible} snapPointsMode="fit">
+                <Sheet.Overlay animation="lazy" enterStyle={{opacity: 0}} exitStyle={{opacity: 0}}/>
+                <Sheet.Handle/>
+                <Sheet.Frame padding="$4" backgroundColor="$background" minHeight="50%">
+                    <XStack alignItems="center" marginBottom="$4" gap="$2">
+                        <Button size="$3" chromeless circular onPress={() => setSheetVisible(false)}>
+                        </Button>
+                        <Text fontSize="$6" fontWeight="600">{t('map.filterSettings')}</Text>
+                    </XStack>
 
-            <Surface style={styles.drawer}>
-              <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                <Button onPress={closeDrawer}>
-                  <Icon source='chevron-double-right' color={MD3Colors.error50} size={28} />
-                </Button>
-                <Text style={styles.drawerTitle}>Filtereinstellungen</Text>
-              </View>
-              <View>
-                <View style={styles.checkboxAndText}>
-                  <Checkbox.Item 
-                    label="Module 1: Water Level Temperature"
-                    status={module1Checked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setModule1Checked(!module1Checked);
-                    }}
-                    position="leading"
-                    />
-                </View>
-                <View style={styles.checkboxAndText}>
-                  <Checkbox.Item
-                    label="Module 2: Air Properties"
-                    status={module2Checked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setModule2Checked(!module2Checked);
-                    }}
-                    position="leading"
-                    />
-                </View>
-                <View style={styles.checkboxAndText}>
-                  <Checkbox.Item
-                    label="Module 3: Air Quality"
-                    status={module3Checked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setModule3Checked(!module3Checked);
-                    }}
-                    position="leading"
-                    />
-                </View>
-                <View style={styles.checkboxAndText}>
-                  <Checkbox.Item
-                    label="Temperatur-Overlay"
-                    status={temperatureOverlaychecked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setTemperatureOverlayChecked(!temperatureOverlaychecked);
-                    }}
-                    position="leading"
-                    />
-                </View>
-                <View style={styles.checkboxAndText}>
-                  <Checkbox.Item
-                    label="Windrichtung Overlay"
-                    status={windDirectionchecked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setWindDirectionChecked(!windDirectionchecked);
-                    }}
-                    position="leading"
-                    />
-                </View>
-              </View>
-              
-            </Surface>
-          </>
-        )}
-      </Portal>
-      </View>
+                    <YStack gap="$4">
+                        <XStack alignItems="center" gap="$3" paddingVertical="$2">
+                            <Checkbox
+                                checked={module1Visible}
+                                onCheckedChange={(checked) => setModule1Visible(checked === true)}
+                                size="$4"
+                            />
+                            <Text fontSize="$4">{t('map.module1')}</Text>
+                        </XStack>
+
+                        <XStack alignItems="center" gap="$3" paddingVertical="$2">
+                            <Checkbox
+                                checked={module2Visible}
+                                onCheckedChange={(checked) => setModule2Visible(checked === true)}
+                                size="$4"
+                            />
+                            <Text fontSize="$4">{t('map.module2')}</Text>
+                        </XStack>
+
+                        <XStack alignItems="center" gap="$3" paddingVertical="$2">
+                            <Checkbox
+                                checked={module3Visible}
+                                onCheckedChange={(checked) => setModule3Visible(checked === true)}
+                                size="$4"
+                            />
+                            <Text fontSize="$4">{t('map.module3')}</Text>
+                        </XStack>
+
+                        <XStack alignItems="center" gap="$3" paddingVertical="$2">
+                            <Checkbox
+                                checked={temperatureVisible}
+                                onCheckedChange={(checked) => setTemperatureVisible(checked === true)}
+                                size="$4"
+                            />
+                            <Text fontSize="$4">{t('map.temperatureOverlay')}</Text>
+                        </XStack>
+
+                        <XStack alignItems="center" gap="$3" paddingVertical="$2">
+                            <Checkbox
+                                checked={windDirectionVisible}
+                                onCheckedChange={(checked) => setWindDirectionVisible(checked === true)}
+                                size="$4"
+                            />
+                            <Text fontSize="$4">{t('map.windDirectionOverlay')}</Text>
+                        </XStack>
+                    </YStack>
+                </Sheet.Frame>
+            </Sheet>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fafafa',
-  },
-  button: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    backgroundColor: '#2c3538ff',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderRadius: 100,
-    zIndex: 10,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-  },
-  drawer: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 400,
-    height: '100%',
-    backgroundColor: 'white',
-    elevation: 4,
-    padding: 16,
-    zIndex: 20,
-  },
-  drawerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  checkboxAndText: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-  }
+    button: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        paddingVertical: 16,
+        paddingHorizontal: 16,
+        borderRadius: 100,
+        zIndex: 10,
+        boxShadow: '0px 2px 3.84px rgba(0, 0, 0, 0.25)',
+        elevation: 5,
+    },
 });

@@ -1,51 +1,59 @@
-import { TabBarNative } from '@/components/navigation/native/tabbar';
-import { NavbarWeb } from '@/components/navigation/web/navbar';
-import { AuthProvider } from '@/context/SessionContext';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useFonts } from 'expo-font';
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { Platform, StyleSheet } from 'react-native';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import 'react-native-reanimated';
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-    const [current, setCurrent] = useState('Home');
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+import 'react-native-reanimated'
+import '@/i18n'
+import {
+    useFonts,
+    Oswald_400Regular,
+    Oswald_500Medium,
+    Oswald_600SemiBold,
+    Oswald_700Bold
+} from '@expo-google-fonts/oswald'
+import {Platform, View} from 'react-native'
+import {StatusBar} from 'expo-status-bar'
+import {Slot} from 'expo-router'
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
+import {TamaguiProvider, Theme} from 'tamagui'
+import {PortalProvider} from '@tamagui/portal'
+import config from '@/tamagui.config'
 
-  return (
-    <PaperProvider>
-      <AuthProvider>
-        {Platform.OS === 'web' ? <NavbarWeb /> : <TabBarNative />}
-        <StatusBar style="auto" />
-      </AuthProvider>
-    </PaperProvider>
-  );
+import {AuthProvider} from '@/context/SessionContext'
+import {NavbarWeb} from '@/components/navigation/web/navbar'
+import {ThemeProvider, useThemeContext} from '@/context/ThemeSwitch.tsx'
+import {TabBarNative} from "@/components/navigation/native/tabbar.tsx";
+
+function RootContent() {
+    const {currentTheme} = useThemeContext()
+
+    return (
+        <Theme name={currentTheme}>
+            <AuthProvider>
+                <View style={{flex: 1}}>
+                    {Platform.OS === 'web' ? <NavbarWeb /> : <TabBarNative />}
+                    <Slot/>
+                    <StatusBar style={currentTheme === 'dark' ? 'light' : 'dark'}/>
+                </View>
+            </AuthProvider>
+        </Theme>
+    )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  text: {
-    color: '#000',
-    fontSize: 18,
-  },
-});
+export default function RootLayout() {
+    const [loaded] = useFonts({
+        Oswald_400Regular,
+        Oswald_500Medium,
+        Oswald_600SemiBold,
+        Oswald_700Bold,
+        SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    })
 
-const theme = {
-  ...DefaultTheme,
-  roundness: 2,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#3498db',
-    accent: '#f1c40f',
-  },
-};
+    if (!loaded) return null
+
+    return (
+        <TamaguiProvider config={config}>
+            <PortalProvider shouldAddRootHost>
+                <ThemeProvider>
+                    <RootContent/>
+                </ThemeProvider>
+            </PortalProvider>
+        </TamaguiProvider>
+    )
+}

@@ -1,12 +1,11 @@
-import { ThemedView } from '@/components/ThemedView';
-import { Text } from 'react-native-paper';
+import { Text, View } from 'tamagui';
 import { styles } from '../_layout';
 export default function ProfileSettingsNotificationScreen() {
   return (
 
-    <ThemedView style={styles.container}>
+    <View style={styles.container} backgroundColor="$background">
       <Text>Profile Settings Notification</Text>
-    </ThemedView>
-    
+    </View>
+
   );
 }

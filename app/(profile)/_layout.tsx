@@ -1,15 +1,9 @@
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { Stack } from 'expo-router';
 import React from 'react';
+import { Slot } from 'expo-router';
 import { StyleSheet } from 'react-native';
-export default function ProfileLayout() {
-  const colorScheme = useColorScheme();
 
-  return (
-      <Stack screenOptions={{
-        headerShown: false, 
-      }}/>
-  );
+export default function ProfileLayout() {
+  return <Slot />;
 }
 
 export const styles = StyleSheet.create({

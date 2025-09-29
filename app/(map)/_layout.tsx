@@ -1,14 +1,13 @@
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { Stack } from 'expo-router';
 import React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
-export default function MapLayout() {
-  const colorScheme = useColorScheme();
+import { Platform, StyleSheet } from 'react-native';
+import { View } from 'tamagui';
 
+export default function MapLayout() {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} backgroundColor="$background">
       <Stack screenOptions={{
-        headerShown: Platform.OS !== 'web', 
+        headerShown: false,
       }}/>
     </View>
   );

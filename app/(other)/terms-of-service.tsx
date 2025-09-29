@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Text } from 'tamagui';
 import { styles } from './_layout';
 export default function TermsOfServiceScreen() {
   const [current, setCurrent] = useState('Home');
@@ -8,8 +8,8 @@ export default function TermsOfServiceScreen() {
   return (
     <SafeAreaView style={styles.container}>
         <ScrollView style={styles.scrollView}>
-        <Text variant="headlineLarge" style={styles.largeHeadline}>Terms of Service</Text>
-        <Text style={styles.textLg}>...</Text>
+        <Text fontSize="$8" fontWeight="bold" style={styles.largeHeadline}>Terms of Service</Text>
+        <Text fontSize="$5" style={styles.textLg}>...</Text>
         </ScrollView>
     </SafeAreaView>
   );

@@ -1,0 +1,49 @@
+{
+  "about": {
+    "title": "MARLIN",
+    "subtitle": "Marine Research & Live Information Network",
+    "description": "Echtzeitdaten zu Wetter und Meeresbedingungen aus verschiedenen Marinas",
+    "ourFeatures": "Unsere Features",
+    "ourTeam": "Unser Team",
+    "aboutProject": "Über das Projekt",
+    "projectDescription": "MARLIN ist ein innovatives Masterprojekt zur Erfassung und Visualisierung von Meeres- und Wetterdaten. Unsere Sensornetzwerke in verschiedenen Marinas sammeln kontinuierlich Daten, die über diese Plattform zugänglich gemacht werden.",
+    "visitWebsite": "Projektwebseite besuchen",
+    "learnMore": "Mehr erfahren →",
+    "teamDescription": "Studenten des Master Angewandte Informatik, die gemeinsam das MARLIN-Projekt entwickeln"
+  },
+  "features": {
+    "interactiveMap": "Interaktive Karte",
+    "interactiveMapDesc": "Visualisierung aller Sensoren mit Echtzeitdaten und interpolierten Werten zwischen den Messpunkten.",
+    "dashboard": "Dashboard & Historische Daten",
+    "dashboardDesc": "Detaillierte Analyse einzelner Sensoren mit Zeitreihen und historischen Trends.",
+    "api": "API für Entwickler",
+    "apiDesc": "RESTful API für den programmatischen Zugriff auf alle Messdaten."
+  },
+  "team": {
+    "daniel": {
+      "role": "Backend-Entwicklung & API",
+      "description": "Verantwortlich für die Server-Infrastruktur und API-Entwicklung. Expertise in Node.js und Datenbank-Design.",
+      "skills": ["Node.js", "PostgreSQL", "REST APIs", "Docker"]
+    },
+    "fatih": {
+      "role": "Frontend & Mobile App",
+      "description": "Entwickelt die Benutzeroberfläche und mobile Anwendung. Spezialisiert auf React Native und moderne UI/UX.",
+      "skills": ["React Native", "TypeScript", "Tamagui", "UI/UX Design"]
+    },
+    "julian": {
+      "role": "Datenanalyse & Algorithmen",
+      "description": "Analysiert Sensordaten und entwickelt Algorithmen für Dateninterpolation und -vorhersage.",
+      "skills": ["Python", "Data Science", "Machine Learning", "Statistik"]
+    },
+    "krister": {
+      "role": "Hardware & IoT",
+      "description": "Entwickelt und wartet die Sensorkits. Expertise in Embedded Systems und IoT-Protokollen.",
+      "skills": ["Arduino", "Raspberry Pi", "Sensortechnik", "IoT"]
+    },
+    "tarek": {
+      "role": "DevOps & Infrastruktur",
+      "description": "Verwaltet die Cloud-Infrastruktur und CI/CD-Pipelines. Sorgt für Skalierbarkeit und Zuverlässigkeit.",
+      "skills": ["AWS", "Kubernetes", "CI/CD", "Monitoring"]
+    }
+  }
+}

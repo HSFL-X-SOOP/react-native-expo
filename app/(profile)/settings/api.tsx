@@ -1,24 +1,24 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { Button, Text, Input, YStack } from 'tamagui';
 import { styles } from '../_layout';
 export default function ProfileSettingsApiScreen() {
   const [apiKey, setApiKey] = useState("");  
   return (
 
     <View style={styles.container}>
-      <Text>Hier kannst du deinen persönlichen API-Token verwalten:</Text>
-      <TextInput
-        label="API-Token"
-        value={apiKey}
-        mode='outlined'
-        style={{width: '95%'}}
-        placeholder='1234-5678-ABCD-EFGH'
-        onChangeText={text => setApiKey(text)}
+      <YStack space="$4" padding="$4">
+        <Text fontSize="$5">Hier kannst du deinen persönlichen API-Token verwalten:</Text>
+        <Input
+          placeholder="1234-5678-ABCD-EFGH"
+          value={apiKey}
+          onChangeText={setApiKey}
+          width="95%"
         />
-      <Button mode="outlined" onPress={() => console.log("")}>
-        Speichern
-      </Button>
+        <Button variant="outlined" onPress={() => console.log("")}>
+          <Text>Speichern</Text>
+        </Button>
+      </YStack>
     </View>
     
   );

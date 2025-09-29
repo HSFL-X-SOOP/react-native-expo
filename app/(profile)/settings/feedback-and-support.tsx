@@ -1,25 +1,26 @@
-import { ThemedView } from '@/components/ThemedView';
 import { useState } from 'react';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { Button, Text, Input, YStack, View } from 'tamagui';
 import { styles } from '../_layout';
 export default function ProfileSettingsFeedbackAndSupportScreen() {
-  const [message, setMessage] = useState("");  
+  const [message, setMessage] = useState("");
   return (
 
-    <ThemedView style={styles.container}>
-      <Text>Gib uns Feedback oder stelle eine Support-Anfrage:</Text>
-      <TextInput
-        label="Nachricht"
-        value={message}
-        mode='outlined'
-        style={{width: '95%'}}
-        placeholder='Dein Feedback oder deine Frage...'
-        onChangeText={text => setMessage(text)}
+    <View style={styles.container} backgroundColor="$background">
+      <YStack space="$4" padding="$4">
+        <Text fontSize="$5">Gib uns Feedback oder stelle eine Support-Anfrage:</Text>
+        <Input
+          placeholder="Dein Feedback oder deine Frage..."
+          value={message}
+          onChangeText={setMessage}
+          multiline
+          numberOfLines={4}
+          width="95%"
         />
-      <Button mode="outlined" onPress={() => console.log("")}>
-        Absenden
-      </Button>
-    </ThemedView>
-    
+        <Button variant="outlined" onPress={() => console.log("")}>
+          <Text>Absenden</Text>
+        </Button>
+      </YStack>
+    </View>
+
   );
 }
