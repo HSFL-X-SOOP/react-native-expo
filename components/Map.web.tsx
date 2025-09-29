@@ -21,7 +21,6 @@ export default async function WebMap() {
     }
     fetchData()
   }, [])
-
   const [popupInfo, setPopupInfo] = useState<SensorModule>();
   const pins = useMemo(() => content.map((sensorModule, index) => (
     WebMarker(sensorModule, setPopupInfo)

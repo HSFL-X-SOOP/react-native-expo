@@ -1,4 +1,5 @@
 import { SensorModule } from "@/data/sensor";
+import { Link } from "expo-router";
 import { Text, View } from "react-native";
 
 type MapSensorMeasurementsProps = {
@@ -8,11 +9,15 @@ type MapSensorMeasurementsProps = {
 export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sensorModule}) => {
 
   return (
-    sensorModule.latestMeasurements.map((a, index) => (
+    <View>
+    <Link href={`/dashboard/${sensorModule.location.id}`} > <Text>{sensorModule.location.name}</Text> </Link>
+    {sensorModule.latestMeasurements.map((a, index) => (
         <View key={index} style={{flexDirection: "row", width: 200, height: 20, justifyContent: "space-between"}}>
             <Text> {a.measurementType.name}</Text>
             <Text>{a.value} {a.measurementType.unitSymbol} </Text>
         </View>
-    ))
+    ))}
+
+    </View>
   );
 }
