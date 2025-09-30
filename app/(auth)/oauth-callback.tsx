@@ -43,7 +43,8 @@ export default function OAuthCallbackHandler() {
                     accessToken: accessToken,
                     refreshToken: refreshToken || null,
                     loggedInSince: new Date(),
-                    lastTokenRefresh: null
+                    lastTokenRefresh: null,
+                    profile: null
                 });
 
                 if (Platform.OS === 'web' && typeof window !== 'undefined') {

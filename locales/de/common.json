@@ -48,7 +48,66 @@
     "changePassword": "Passwort ändern",
     "preferences": "Einstellungen",
     "language": "Sprache",
-    "notifications": "Benachrichtigungen"
+    "notifications": "Benachrichtigungen",
+    "edit": "Bearbeiten",
+    "loadingProfile": "Profil wird geladen...",
+    "noProfileFound": "Kein Profil gefunden",
+    "noProfileMessage": "Sie haben noch kein Profil erstellt. Bitte erstellen Sie eines, um fortzufahren.",
+    "createProfile": "Profil erstellen",
+    "changeProfilePicture": "Profilbild ändern",
+    "uploadPhoto": "Foto hochladen",
+    "tabs": {
+      "profile": "Profil",
+      "boats": "Boote",
+      "settings": "Einstellungen"
+    },
+    "boats": {
+      "title": "Meine Boote",
+      "noBoats": "Noch keine Boote hinzugefügt",
+      "addBoat": "Boot hinzufügen",
+      "boatName": "Bootsname",
+      "boatType": "Bootstyp"
+    },
+    "menu": {
+      "profile": "Profil",
+      "general": "Allgemeine Daten",
+      "boat": "Boot",
+      "settings": "Einstellungen",
+      "filterSettings": "Filtereinstellungen",
+      "alarmsNotifications": "Alarme & Benachrichtigungen",
+      "devicesAndSensors": "Geräte & Sensoren",
+      "apiAccess": "API-Zugang",
+      "feedbackSupport": "Feedback & Support",
+      "calendar": "Kalender"
+    },
+    "languageSection": {
+      "title": "Sprache",
+      "german": "Deutsch",
+      "english": "Englisch"
+    },
+    "activitiesSection": {
+      "title": "Ihre Aktivitäten",
+      "noActivities": "Keine Aktivitäten ausgewählt",
+      "roles": {
+        "HARBOR_MASTER": "Hafenmeister",
+        "SWIMMER": "Schwimmer",
+        "SAILOR": "Segler",
+        "FISHERMAN": "Fischer"
+      }
+    },
+    "measurementSection": {
+      "title": "Maßsystem",
+      "metric": "Metrisch (°C, km, m/s)",
+      "imperial": "Imperial (°F, Meilen, mph)"
+    },
+    "actions": {
+      "cancel": "Abbrechen",
+      "saveChanges": "Änderungen speichern",
+      "saving": "Speichern..."
+    },
+    "validation": {
+      "selectAtLeastOneActivity": "Bitte wählen Sie mindestens eine Aktivität aus"
+    }
   },
   "map": {
     "title": "Karte",

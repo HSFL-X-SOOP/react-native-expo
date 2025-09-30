@@ -1,3 +1,5 @@
+import { UserProfile } from './profile';
+
 export interface LoginRequest {
     email: string;
     password: string;
@@ -7,6 +9,7 @@ export interface LoginRequest {
 export interface LoginResponse {
     accessToken: string;
     refreshToken: string | null;
+    profile: UserProfile | null;
 }
 
 export interface MagicLinkLoginRequest {

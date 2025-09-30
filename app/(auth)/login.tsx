@@ -32,7 +32,8 @@ export default function LoginScreen() {
                 accessToken: res.accessToken,
                 refreshToken: res.refreshToken,
                 loggedInSince: new Date(),
-                lastTokenRefresh: null
+                lastTokenRefresh: null,
+                profile: res.profile
             });
             router.push("/map");
         } else {
@@ -133,12 +134,22 @@ export default function LoginScreen() {
                             )}
 
                             <XStack justifyContent="space-between" alignItems="center" width="100%">
-                                <XStack gap="$2" alignItems="center">
+                                <XStack gap="$2" alignItems="center" pressStyle={{ opacity: 0.7 }} onPress={() => setRememberMe(!rememberMe)}>
                                     <Checkbox
+                                        id="remember-me"
                                         checked={rememberMe}
                                         onCheckedChange={(checked) => setRememberMe(checked === true)}
-                                        size="$3"
-                                    />
+                                        size="$4"
+                                        borderWidth={2}
+                                        borderColor={rememberMe ? "$accent7" : "$borderColor"}
+                                        backgroundColor={rememberMe ? "$accent7" : "transparent"}
+                                    >
+                                        <Checkbox.Indicator>
+                                            <View width="100%" height="100%" alignItems="center" justifyContent="center">
+                                                <Text color="white" fontWeight="bold">✓</Text>
+                                            </View>
+                                        </Checkbox.Indicator>
+                                    </Checkbox>
                                     <Text fontSize={14} color="$color">{t('auth.rememberMe')}</Text>
                                 </XStack>
                                 <Link href="/">

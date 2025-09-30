@@ -48,7 +48,66 @@
     "changePassword": "Change Password",
     "preferences": "Preferences",
     "language": "Language",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "edit": "Edit",
+    "loadingProfile": "Loading profile...",
+    "noProfileFound": "No Profile Found",
+    "noProfileMessage": "You haven't created a profile yet. Please create one to continue.",
+    "createProfile": "Create Profile",
+    "changeProfilePicture": "Change Profile Picture",
+    "uploadPhoto": "Upload Photo",
+    "tabs": {
+      "profile": "Profile",
+      "boats": "Boats",
+      "settings": "Settings"
+    },
+    "boats": {
+      "title": "My Boats",
+      "noBoats": "No boats added yet",
+      "addBoat": "Add Boat",
+      "boatName": "Boat Name",
+      "boatType": "Boat Type"
+    },
+    "menu": {
+      "profile": "Profile",
+      "general": "General Data",
+      "boat": "Boat",
+      "settings": "Settings",
+      "filterSettings": "Filter Settings",
+      "alarmsNotifications": "Alarms & Notifications",
+      "devicesAndSensors": "Devices & Sensors",
+      "apiAccess": "API Access",
+      "feedbackSupport": "Feedback & Support",
+      "calendar": "Calendar"
+    },
+    "languageSection": {
+      "title": "Language",
+      "german": "German",
+      "english": "English"
+    },
+    "activitiesSection": {
+      "title": "Your Activities",
+      "noActivities": "No activities selected",
+      "roles": {
+        "HARBOR_MASTER": "Harbor Master",
+        "SWIMMER": "Swimmer",
+        "SAILOR": "Sailor",
+        "FISHERMAN": "Fisherman"
+      }
+    },
+    "measurementSection": {
+      "title": "Measurement System",
+      "metric": "Metric (°C, km, m/s)",
+      "imperial": "Imperial (°F, miles, mph)"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "saving": "Saving..."
+    },
+    "validation": {
+      "selectAtLeastOneActivity": "Please select at least one activity"
+    }
   },
   "map": {
     "title": "Map",

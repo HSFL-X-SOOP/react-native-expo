@@ -2,18 +2,21 @@ import React, { createContext, ReactNode, useContext, useState } from 'react';
 
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useRouter } from 'expo-router';
+import { UserProfile } from '@/api/models/profile';
 
 export interface SessionInfo {
     accessToken: string;
     refreshToken: string | null;
     loggedInSince: Date;
     lastTokenRefresh: Date | null;
+    profile: UserProfile | null;
 }
 
 interface AuthContextType {
     session?: SessionInfo;
     login: (session: SessionInfo) => void;
     logout: () => void;
+    updateProfile: (profile: UserProfile) => void;
 }
 
 const SessionContext = createContext<AuthContextType>({
@@ -21,6 +24,8 @@ const SessionContext = createContext<AuthContextType>({
     login: () => {
     },
     logout: () => {
+    },
+    updateProfile: () => {
     },
 });
 
@@ -31,13 +36,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const login = (newSession: SessionInfo) => {
         setStored(newSession);
     };
+
     const logout = () => {
         setStored(undefined);
         router.push('/');
     };
 
+    const updateProfile = (profile: UserProfile) => {
+        if (stored) {
+            setStored({ ...stored, profile });
+        }
+    };
+
     return (
-        <SessionContext.Provider value={{session: stored, login, logout}}>
+        <SessionContext.Provider value={{session: stored, login, logout, updateProfile}}>
             {children}
         </SessionContext.Provider>
     );

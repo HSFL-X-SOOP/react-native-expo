@@ -35,6 +35,7 @@ export function useHttpClient() {
                         refreshToken: data.refreshToken,
                         loggedInSince: session.loggedInSince,
                         lastTokenRefresh: new Date(),
+                        profile: data.profile,
                     }
 
                     login(newSession)
