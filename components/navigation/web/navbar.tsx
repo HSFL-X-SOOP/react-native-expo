@@ -1,13 +1,14 @@
 import {Link, useRouter} from 'expo-router';
-import {Button, Text, XStack, YStack, useTheme, Popover, Adapt} from 'tamagui';
+import {Button, Text, XStack, YStack, useTheme, Popover, Adapt, Sheet, useMedia} from 'tamagui';
 
 import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
 import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
-import {User, ChevronDown, Languages} from '@tamagui/lucide-icons';
+import {User, ChevronDown, Languages, Menu} from '@tamagui/lucide-icons';
 import {useSession} from '@/context/SessionContext';
 import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
 import {useTranslation} from '@/hooks/useTranslation';
 import {LanguageSelector} from '@/components/common/LanguageSelector';
+import {useState} from 'react';
 
 
 export function NavbarWeb() {
@@ -15,18 +16,22 @@ export function NavbarWeb() {
     const t = useTheme();
     const {session} = useSession();
     const {t: translate} = useTranslation();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const media = useMedia();
 
     return (
-        <XStack jc={"space-between"} backgroundColor={"$background"} alignItems={"center"} px={"$10"} gap={"$9"}
+        <XStack jc={"space-between"} backgroundColor={"$background"} alignItems={"center"} px={"$14"} $md={{px: "$4"}} gap={"$4"}
                 py={"$1"}>
             <Link href="/map">
-                <XStack ac="center" jc="center" gap="$2">
-                    <LOGO size={75} color={t.accent8?.val}/>
-                    <Text fontSize={40} fontFamily={"$oswald"} alignSelf={"center"} fontWeight="bold"
-                          textAlign={"center"} color={"$accent8"}>Marlin</Text>
+                <XStack ac="center" jc="flex-start" gap="$2">
+                    <LOGO size={media.gtMd ? 75 : 50} color={t.accent8?.val}/>
+                    <Text fontSize={media.gtMd ? 40 : 28} fontFamily={"$oswald"} alignSelf={"center"} fontWeight="bold"
+                          textAlign={"left"} color={"$accent8"}>Marlin</Text>
                 </XStack>
             </Link>
 
+            {/* Desktop Navigation - Visible on desktop, hidden on mobile */}
+            {media.gtMd && (
             <XStack alignItems={"center"} gap={"$8"}>
                 <Link href="/map">
                     <XStack alignItems="center" gap="$3">
@@ -47,19 +52,6 @@ export function NavbarWeb() {
                             <ChevronDown size={16} color={t.accent8?.val} />
                         </XStack>
                     </Popover.Trigger>
-
-                    <Adapt when="sm" platform="touch">
-                        <Popover.Sheet modal dismissOnSnapToBottom>
-                            <Popover.Sheet.Frame padding="$2">
-                                <Adapt.Contents/>
-                            </Popover.Sheet.Frame>
-                            <Popover.Sheet.Overlay
-                                animation="lazy"
-                                enterStyle={{opacity: 0}}
-                                exitStyle={{opacity: 0}}
-                            />
-                        </Popover.Sheet>
-                    </Adapt>
 
                     <Popover.Content
                         borderWidth={1}
@@ -86,7 +78,7 @@ export function NavbarWeb() {
                             >
                                 <XStack alignItems="center" gap="$3" width="100%">
                                     <InfoIcon size={26} color={t.accent6?.val}/>
-                                    <Text color="$color" fontSize={"$5"} fontFamily={"$silkscreen"}>{translate('navigation.aboutUs')}</Text>
+                                    <Text color="$color" fontSize={"$5"}>{translate('navigation.aboutUs')}</Text>
                                 </XStack>
                             </Button>
 
@@ -96,7 +88,7 @@ export function NavbarWeb() {
                                 onPress={() => router.push('/sensors')}
                             >
                                 <XStack alignItems="center" gap="$3" width="100%">
-                                    <LOGO size={26}   color={t.accent6?.val}/>
+                                    <LOGO size={26} color={t.accent6?.val}/>
                                     <Text color="$color">{translate('navigation.sensors')}</Text>
                                 </XStack>
                             </Button>
@@ -107,7 +99,7 @@ export function NavbarWeb() {
                                 onPress={() => router.push('/api')}
                             >
                                 <XStack alignItems="center" gap="$3" width="100%">
-                                    <CloudIcon size={26}  color={t.accent6?.val}/>
+                                    <CloudIcon size={26} color={t.accent6?.val}/>
                                     <Text color="$color">{translate('navigation.api')}</Text>
                                 </XStack>
                             </Button>
@@ -115,27 +107,17 @@ export function NavbarWeb() {
                     </Popover.Content>
                 </Popover>
             </XStack>
+            )}
 
-            <XStack gap="$6" alignItems="center" style={{right: 30}}>
+            {/* Desktop Right Side - Visible on desktop, hidden on mobile */}
+            {media.gtMd && (
+            <XStack gap="$6" alignItems="center">
                 <Popover placement="bottom" allowFlip>
                     <Popover.Trigger asChild>
                         <XStack alignItems={"center"} gap={"$2"} cursor="pointer">
                             <Languages color={t.accent8?.val} size={24}/>
                         </XStack>
                     </Popover.Trigger>
-
-                    <Adapt when="sm" platform="touch">
-                        <Popover.Sheet modal dismissOnSnapToBottom>
-                            <Popover.Sheet.Frame padding="$2">
-                                <Adapt.Contents/>
-                            </Popover.Sheet.Frame>
-                            <Popover.Sheet.Overlay
-                                animation="lazy"
-                                enterStyle={{opacity: 0}}
-                                exitStyle={{opacity: 0}}
-                            />
-                        </Popover.Sheet>
-                    </Adapt>
 
                     <Popover.Content
                         borderWidth={1}
@@ -185,6 +167,200 @@ export function NavbarWeb() {
                     </XStack>
                 )}
             </XStack>
+            )}
+
+            {/* Mobile Menu Button - Visible on mobile, hidden on desktop */}
+            {!media.gtMd && (
+            <Button
+                onPress={() => setIsMenuOpen(true)}
+                circular
+                size="$4"
+                backgroundColor="$background"
+                borderWidth={2}
+                borderColor="$borderColor"
+                hoverStyle={{
+                    backgroundColor: "$backgroundHover",
+                    borderColor: "$accent8"
+                }}
+                pressStyle={{
+                    backgroundColor: "$backgroundPress",
+                    scale: 0.95
+                }}
+            >
+                <Menu size={24} color={t.accent8?.val} />
+            </Button>
+            )}
+
+            {/* Mobile Menu Sheet */}
+            <Sheet
+                modal
+                open={isMenuOpen}
+                onOpenChange={setIsMenuOpen}
+                snapPoints={[85, 50]}
+                dismissOnSnapToBottom
+                animation="medium"
+            >
+                <Sheet.Overlay
+                    animation="lazy"
+                    enterStyle={{ opacity: 0 }}
+                    exitStyle={{ opacity: 0 }}
+                    opacity={0}
+                />
+                <Sheet.Frame
+                    padding="$0"
+                    backgroundColor="$background"
+                    borderTopLeftRadius="$6"
+                    borderTopRightRadius="$6"
+                >
+                    <Sheet.Handle backgroundColor="$borderColor" />
+
+                    <YStack padding="$4" gap="$2">
+                        {/* Header */}
+                        <XStack justifyContent="space-between" alignItems="center" paddingBottom="$4" borderBottomWidth={1} borderBottomColor="$borderColor">
+                            <Text fontSize="$7" fontWeight="bold" color="$accent8" fontFamily="$oswald">
+                                Menu
+                            </Text>
+                            <Button
+                                circular
+                                size="$3"
+                                chromeless
+                                onPress={() => setIsMenuOpen(false)}
+                            >
+                                <Text fontSize="$6" color="$color">✕</Text>
+                            </Button>
+                        </XStack>
+
+                        {/* Navigation Links */}
+                        <YStack gap="$2" paddingTop="$3">
+                            <Link href="/map" onPress={() => setIsMenuOpen(false)}>
+                                <XStack
+                                    alignItems="center"
+                                    gap="$3"
+                                    padding="$3"
+                                    borderRadius="$3"
+                                    hoverStyle={{
+                                        backgroundColor: "$backgroundHover"
+                                    }}
+                                    pressStyle={{
+                                        backgroundColor: "$backgroundPress"
+                                    }}
+                                >
+                                    <MapIcon color={t.accent8?.val} size={24}/>
+                                    <Text fontSize="$5" fontWeight="500" color="$accent8">
+                                        {translate('navigation.map')}
+                                    </Text>
+                                </XStack>
+                            </Link>
+
+                            <Link href="/about" onPress={() => setIsMenuOpen(false)}>
+                                <XStack
+                                    alignItems="center"
+                                    gap="$3"
+                                    padding="$3"
+                                    borderRadius="$3"
+                                    hoverStyle={{
+                                        backgroundColor: "$backgroundHover"
+                                    }}
+                                    pressStyle={{
+                                        backgroundColor: "$backgroundPress"
+                                    }}
+                                >
+                                    <InfoIcon size={24} color={t.accent8?.val}/>
+                                    <Text fontSize="$5" fontWeight="500" color="$accent8">{translate('navigation.aboutUs')}</Text>
+                                </XStack>
+                            </Link>
+
+                            <Link href="/sensors" onPress={() => setIsMenuOpen(false)}>
+                                <XStack
+                                    alignItems="center"
+                                    gap="$3"
+                                    padding="$3"
+                                    borderRadius="$3"
+                                    hoverStyle={{
+                                        backgroundColor: "$backgroundHover"
+                                    }}
+                                    pressStyle={{
+                                        backgroundColor: "$backgroundPress"
+                                    }}
+                                >
+                                    <LOGO size={24} color={t.accent8?.val}/>
+                                    <Text fontSize="$5" fontWeight="500" color="$accent8">{translate('navigation.sensors')}</Text>
+                                </XStack>
+                            </Link>
+
+                            <Link href="/api" onPress={() => setIsMenuOpen(false)}>
+                                <XStack
+                                    alignItems="center"
+                                    gap="$3"
+                                    padding="$3"
+                                    borderRadius="$3"
+                                    hoverStyle={{
+                                        backgroundColor: "$backgroundHover"
+                                    }}
+                                    pressStyle={{
+                                        backgroundColor: "$backgroundPress"
+                                    }}
+                                >
+                                    <CloudIcon size={24} color={t.accent8?.val}/>
+                                    <Text fontSize="$5" fontWeight="500" color="$accent8">{translate('navigation.api')}</Text>
+                                </XStack>
+                            </Link>
+                        </YStack>
+
+                        {/* Settings Section */}
+                        <YStack gap="$3" paddingTop="$4" borderTopWidth={1} borderTopColor="$borderColor" marginTop="$3">
+                            <YStack gap="$2">
+                                <XStack gap="$3" padding="$3" alignItems="center" justifyContent="space-between">
+                                    <XStack gap="$2" alignItems="center">
+                                        <Languages color={t.accent8?.val} size={22}/>
+                                        <Text fontSize="$4" fontWeight="500" color="$color">{translate('settings.language')}</Text>
+                                    </XStack>
+                                    <Text fontSize="$3" color="$color">{translate('language.name')}</Text>
+                                </XStack>
+                                <YStack paddingHorizontal="$3">
+                                    <LanguageSelector />
+                                </YStack>
+                            </YStack>
+
+                            <XStack gap="$3" padding="$3" alignItems="center" justifyContent="space-between">
+                                <XStack gap="$2" alignItems="center">
+                                    <Text fontSize="$4" fontWeight="500" color="$color">{translate('settings.theme')}</Text>
+                                </XStack>
+                                <ThemeSwitch size={24} />
+                            </XStack>
+                        </YStack>
+
+                        {/* Auth Buttons */}
+                        {!session && (
+                            <YStack gap="$3" paddingTop="$4">
+                                <Link href="/login" onPress={() => setIsMenuOpen(false)}>
+                                    <PrimaryButton width="100%">
+                                        <Text color="#ffffff" fontSize="$5">{translate('auth.login')}</Text>
+                                    </PrimaryButton>
+                                </Link>
+                                <Link href="/register" onPress={() => setIsMenuOpen(false)}>
+                                    <SecondaryButton width="100%">
+                                        <Text fontSize="$5">{translate('auth.register')}</Text>
+                                    </SecondaryButton>
+                                </Link>
+                            </YStack>
+                        )}
+
+                        {session && (
+                            <YStack paddingTop="$4">
+                                <Link href="/(profile)/profile" onPress={() => setIsMenuOpen(false)}>
+                                    <Button variant="outlined" width="100%">
+                                        <XStack alignItems="center" gap="$2">
+                                            <User size={24} color={"$accent8"}/>
+                                            <Text fontSize="$5">{translate('navigation.profile')}</Text>
+                                        </XStack>
+                                    </Button>
+                                </Link>
+                            </YStack>
+                        )}
+                    </YStack>
+                </Sheet.Frame>
+            </Sheet>
 
         </XStack>
     );

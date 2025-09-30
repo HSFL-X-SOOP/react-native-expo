@@ -12,6 +12,13 @@
     "language": "Language",
     "theme": "Theme"
   },
+  "language": {
+    "name": "English"
+  },
+  "settings": {
+    "language": "Language",
+    "theme": "Theme"
+  },
   "auth": {
     "login": "Login",
     "register": "Register",
@@ -39,7 +46,9 @@
     "privacyPolicy": "Privacy Policy",
     "and": "and",
     "creating": "Creating...",
-    "passwordsDontMatch": "Passwords don't match"
+    "passwordsDontMatch": "Passwords don't match",
+    "signUpWithGoogle": "Sign up with Google",
+    "passwordsDoNotMatch": "Passwords do not match"
   },
   "profile": {
     "title": "Profile",

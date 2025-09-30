@@ -23,7 +23,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const toggleTheme = () => {
     setIsDark(!isDark);
     setIsManualOverride(true)
-    console.log('Theme manuell gewechselt zu:', !isDark ? 'dark' : 'light');
   };
 
   const currentTheme = isDark ? 'dark' : 'light';
@@ -38,10 +37,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 export const useThemeContext = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    // Fallback when context is not available - use system theme
     console.warn('useThemeContext used outside ThemeProvider, using system theme as fallback');
     return {
-      isDark: false, // Default to light theme
+      isDark: false,
       toggleTheme: () => {
         console.warn('ThemeSwitch used outside ThemeProvider - toggle ignored');
       },
@@ -58,9 +56,11 @@ export interface ThemeSwitchProps {
 
 export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({
   size = 22,
-  color = '#ffffff'
+  color
 }) => {
   const { isDark, toggleTheme } = useThemeContext();
+
+  const iconColor = color || (isDark ? '#FDB813' : '#1a1a1a');
 
   return (
     <TouchableOpacity
@@ -74,9 +74,9 @@ export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({
       }}
     >
       {isDark ? (
-        <SunFilledIcon size={size} color={color} />
+        <SunFilledIcon size={size} color={iconColor} />
       ) : (
-        <MoonFilledIcon size={size} color={color} />
+        <MoonFilledIcon size={size} color={iconColor} />
       )}
     </TouchableOpacity>
   );

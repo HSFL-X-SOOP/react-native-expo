@@ -23,6 +23,15 @@ export const config = createTamagui({
     oswald: oswaldFont,
   },
   themes,
+  media: {
+    xs: { maxWidth: 660 },
+    sm: { maxWidth: 800 },
+    md: { maxWidth: 1024 },
+    lg: { maxWidth: 1280 },
+    xl: { maxWidth: 1536 },
+    xxl: { minWidth: 1536 },
+    gtMd: { minWidth: 1025 },
+  },
 })
 
 export type AppConfig = typeof config

@@ -1,32 +1,36 @@
 import { useRef, useState } from 'react';
 import { Animated, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Card, Icon } from 'react-native-paper';
-// Add the correct import for LineChart below. Adjust the path if you use a different chart library.
 import { GetGeomarData, GetGeomarDataTimeRange } from '@/data/geomar-data';
 import { SensorModule } from '@/data/sensor';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { Platform, ScrollView, useWindowDimensions } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
-import { XStack, YStack } from 'tamagui';
-
-const widthDivider = Platform.OS === "web" ? 2 : 1.5;
+import { XStack, YStack, useMedia, Card } from 'tamagui';
+import { Home, Waves, Thermometer, WavesLadder, Battery, HelpCircle, ChevronUp, ChevronDown } from '@tamagui/lucide-icons';
 
 export default function DashboardScreen() {
   const [showInfo, setShowInfo] = useState(false);
   const infoHeight = useRef(new Animated.Value(0)).current;
-  const cardGap = Platform.OS === "web" ? 20 : 10;
+  const media = useMedia();
+  const cardGap = media.md ? 20 : 10;
   let { id } = useLocalSearchParams();
 
   if (!id) {
-    id = "4"; // Default-Wert, falls id nicht vorhanden ist
+    id = "4";
   }
   const [content, setContent] = useState<SensorModule[]>([])
   const [name, setName] = useState<string>("")
   const [content1, setContent1] = useState<SensorModule[]>([])
   const [dataPrecision, setDataPrecision] = useState<number>(3)
-  const { screenWidth } = useWindowDimensions();
-  const cardChartWidth = Platform.OS === "web" ? screenWidth / 2 - 40 : screenWidth - 40; // 40 für Padding
+  const { width: screenWidth } = useWindowDimensions();
+
+  const getCardChartWidth = () => {
+    if (media.xl) return screenWidth / 2 - 60;
+    if (media.md) return screenWidth / 2 - 40;
+    return screenWidth - 40;
+  };
+  const cardChartWidth = getCardChartWidth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +41,7 @@ export default function DashboardScreen() {
     fetchData()
   }, [])
 
-  const isAdmin = false; //TODO: Hier prüfen ob Admin
+  const isAdmin = false;
   const excludedMeasurements: string[] = [];
 
   if (!isAdmin) {
@@ -101,65 +105,43 @@ console.log(minValueWaterTemperature, maxValueWaterTemperature)
   return (
   <SafeAreaView style={{flex: 1}}>
     <ScrollView style={{ flex: 1 }}>
-      {/* <View style={{ width: "100%" }}> */}
         <Image
-          style={{ width: 1920, height: 300, objectFit: 'contain', alignSelf: "center" }}
+          style={{ width: '100%', height: media.md ? 300 : 200, objectFit: 'cover', alignSelf: "center" }}
           source={{
             uri: "https://www.im-jaich.de/wp-content/uploads/2022/07/im-jaich-Flensburg-2019-0196-Kristina-Steiner.jpg",
           }}
         />
-      {/* </View> */}
 
-
-      {/* <View
-        style={{
-          marginTop: -80, // Karten ins Bild schieben
-          flexDirection: "row",
-          gap: cardGap,
-          justifyContent: "space-between",
-          paddingHorizontal: 80,
-          flexWrap: "wrap",
-        }}
-      > */}
-      <XStack flexWrap='wrap' gap={cardGap} justifyContent='center' alignItems='center' paddingHorizontal={20} marginTop={-60}>
+      <XStack flexWrap='wrap' gap={cardGap} justifyContent='center' alignItems='center' paddingHorizontal={media.md ? 20 : 10} marginTop={media.md ? -60 : -40}>
 
         {/* Hafen-Card mit Button */}
-        <Card style={{ backgroundColor: "#e3f2fd", width: Platform.OS === "web" ? 475 : 375, minWidth: 300, height: "auto", padding: 10 }}>
-          <Card.Content>
-            <View style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10 }}>
-              <Icon source={"home"} color={"black"} size={50} />
-              <View style={{ flexDirection: "column", gap: 10 }}>
-                <Text style={{ fontSize: 16, color: "#504f4fff" }}>{"Hafen"}</Text>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text style={{ fontSize: 24, color: "black" }}>{name}</Text>
-                </View>
-                {/* Button */}
-                <View>
-                  <TouchableOpacity onPress={toggleInfo} style={{ marginTop: 10, display: "flex", flexDirection: "row", alignItems: "center", gap: 10 }}>
-                  <Text>Weitere Informationen</Text>
-                    <Icon
-                      source={showInfo ? "chevron-up" : "chevron-down"}
-                      color={"#333"}
-                      size={28}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </Card.Content>
+        <Card backgroundColor="#e3f2fd" width={media.md ? 475 : '100%'} maxWidth={475} minWidth={media.md ? 300 : 'auto'} height="auto" padding="$4">
+            <XStack gap="$3" alignItems="center">
+              <Home color="black" size={media.md ? 50 : 40} />
+              <YStack gap="$2" flex={1}>
+                <Text style={{ fontSize: media.md ? 16 : 14, color: "#504f4fff" }}>{"Hafen"}</Text>
+                <Text style={{ fontSize: media.md ? 24 : 20, color: "black" }}>{name}</Text>
+                <TouchableOpacity onPress={toggleInfo}>
+                  <XStack gap="$2" alignItems="center" marginTop="$2">
+                    <Text style={{ fontSize: media.md ? 14 : 12 }}>Weitere Informationen</Text>
+                    {showInfo ? (
+                      <ChevronUp color="#333" size={24} />
+                    ) : (
+                      <ChevronDown color="#333" size={24} />
+                    )}
+                  </XStack>
+                </TouchableOpacity>
+              </YStack>
+            </XStack>
         </Card>
 
-        <XStack flexWrap='wrap' gap={cardGap} justifyContent='center' paddingHorizontal={20}>
-
-        {/* <View style={{flexDirection: "row", gap: 10, justifyContent: "center", paddingHorizontal: 20, flexWrap: "wrap", marginTop: 20 }}> */}
+        <XStack flexWrap='wrap' gap={cardGap} justifyContent='center' paddingHorizontal={media.md ? 20 : 5}>
           {content[0] &&( content[0].latestMeasurements.map((a, index) => (
             !excludedMeasurements.includes(a.measurementType.name) && (
               <MeasurementCard key={index} measurementType={a.measurementType.name} value={String(a.value)} />)
             )))}
-        {/* </View> */}
             </XStack>
       </XStack>
-      {/* </View> */}
 
       <Animated.View
         style={{
@@ -179,13 +161,10 @@ console.log(minValueWaterTemperature, maxValueWaterTemperature)
       </Animated.View>
 
       {/* Der restliche Content wird jetzt nach unten geschoben */}
-      <XStack flexWrap='wrap' gap={cardGap} justifyContent='center' paddingHorizontal={20} marginTop={20}>
-      {/* <View style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center', gap: 20, marginTop: 30}}> */}
+      <XStack flexWrap='wrap' gap={cardGap} justifyContent='center' paddingHorizontal={media.md ? 20 : 10} marginTop={20}>
         <LineChartCard title="Wassertemperatur" chartData={chartWaterTemperature} minValue={10} maxValue={20} dataPrecision={dataPrecision} width={cardChartWidth} />
         <LineChartCard title="Tide" chartData={chartTide} minValue={minValueTide} maxValue={50} dataPrecision={dataPrecision} width={cardChartWidth} />
         <LineChartCard title="Wellenhöhe" chartData={chartWaveHeight} minValue={minValueWaveHeight} maxValue={10} dataPrecision={dataPrecision} width={cardChartWidth} />
-        {/* <LineChartCard title="Batteriestatus" chartData={chartBatteryVoltage} minValue={minValueBatteryVoltage} maxValue={5} dataPrecision={dataPrecision} /> */}
-      {/* </View> */}
       </XStack>
     </ScrollView>
   </SafeAreaView>
@@ -220,27 +199,26 @@ const CreateMeasurementDictionary = (data: any) => {
 }
 
 export const MeasurementCard: React.FC<MeasurementCardProps> =({measurementType, value}) =>  {
+  const IconComponent = getMeasurementTypeIconComponent(measurementType);
 
   return(
-    <Card style={{ backgroundColor: "#e3f2fd", height: "auto"}}>
-        <Card.Content>
+    <Card backgroundColor="#e3f2fd" height="auto" padding="$3">
             <XStack
-              gap={10}
+              gap="$3"
               alignItems="center"
-              justifyContent="center" // horizontal zentrieren
+              justifyContent="center"
               width="100%"
-              height={80} // feste Höhe für vertikale Zentrierung
+              height={80}
             >
-              <Icon source={getMeasurementTypeIcon(measurementType)} color={"black"} size={30}/>
+              <IconComponent color="black" size={30}/>
               <YStack
-                alignItems="center" // horizontal zentrieren im Stack
-                justifyContent="center" // vertikal zentrieren im Stack
+                alignItems="center"
+                justifyContent="center"
               >
                 <Text style={{fontSize: 16, color: "#504f4fff", textAlign: "center"}}>{getTextFromMeasurementType(measurementType)}</Text>
                 <Text style={{fontSize: 24, color: "black", textAlign: "center"}}>{value}{getMeasurementTypeSymbol(measurementType)} </Text>
               </YStack>
             </XStack>
-        </Card.Content>
     </Card>
   )
 }
@@ -255,49 +233,45 @@ type LineChartCardProps = {
 }
 
 export const LineChartCard: React.FC<LineChartCardProps> =({title, chartData, minValue, maxValue, dataPrecision, width}) =>  {
+  const media = useMedia();
+  const chartWidth = Math.max(width - 60, 250);
 
   return(
-    <Card style={{ width: width  / widthDivider, padding: 10, backgroundColor: 'white', borderRadius: 10, marginVertical: 10 }}>
-      <Card.Content>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'black', marginBottom: 10 }}>{title}</Text>
+    <Card width={width} maxWidth="100%" padding={media.md ? "$3" : "$2"} backgroundColor="white" borderRadius="$4" marginVertical="$3">
+        <Text style={{ fontSize: media.md ? 24 : 18, fontWeight: 'bold', color: 'black', marginBottom: 10 }}>{title}</Text>
         <LineChart
           data={chartData.filter((_: { label: string; value: number }, idx: number) => idx % dataPrecision === 0)}
-          // lineGradient={true}
-          // lineGradientStartColor='#ff0000ff'
-          // lineGradientEndColor='#08e025ff'
-          thickness={3}
+          thickness={media.md ? 3 : 2}
           mostNegativeValue={minValue}
           maxValue={maxValue}
           noOfSections={10}
           yAxisColor="lightgray"
           xAxisColor="lightgray"
-          yAxisTextStyle={{ color: 'black', fontWeight: '600' }}
-          xAxisLabelTextStyle={{ color: 'black', fontWeight: '600' }}
+          yAxisTextStyle={{ color: 'black', fontWeight: '600', fontSize: media.md ? 12 : 10 }}
+          xAxisLabelTextStyle={{ color: 'black', fontWeight: '600', fontSize: media.md ? 12 : 10 }}
           rulesColor="gray"
           rulesType="solid"
           curved={true}
-          width={width / widthDivider} // Subtracting padding
+          width={chartWidth}
         />
-        </Card.Content>
       </Card>
   )
 }
 
-const getMeasurementTypeIcon = (measurementType: string): string => {
+const getMeasurementTypeIconComponent = (measurementType: string) => {
   switch (measurementType) {
     case "Wave Height":
-      return "waves";
+      return Waves;
     case "Temperature, water":
-      return "thermometer";
+      return Thermometer;
     case "WTemp":
-      return "thermometer";
+      return Thermometer;
     case "Tide":
-      //TODO: Hier noch überprüfen ob Flut oder Ebbe und den Pfeil dementsprechend anpassen?
-      return "waves-arrow-left";
+      return WavesLadder;
     case "Battery, voltage":
-      return "battery-80";
+      return Battery;
     default:
-      return "help-circle";
+      return HelpCircle;
   }
 };
 
@@ -310,7 +284,6 @@ const getTextFromMeasurementType = (measurementType: string): string => {
     case "WTemp":
       return "Wassertemperatur";
     case "Tide":
-      //TODO: Hier noch überprüfen ob Flut oder Ebbe und den Pfeil dementsprechend anpassen?
       return "Tide";
     case "Battery, voltage":
       return "Batteriespannung";
@@ -328,7 +301,6 @@ const getMeasurementTypeSymbol = (measurementType: string): string => {
     case "WTemp":
       return "°C";
     case "Tide":
-      //TODO: Hier noch überprüfen ob Flut oder Ebbe und den Pfeil dementsprechend anpassen?
       return "cm";
     case "Battery, voltage":
       return "V";
