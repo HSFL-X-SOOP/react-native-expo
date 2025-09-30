@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native';
 import {Eye, EyeOff, Lock, Mail} from '@tamagui/lucide-icons';
 import {Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator, Spinner, H1} from 'tamagui';
 import {useTranslation} from '@/hooks/useTranslation';
+import {ENV} from '@/config/environment';
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -42,7 +43,11 @@ export default function LoginScreen() {
     const handleGoogleLogin = () => {
         // Web OAuth redirect
         if (typeof window !== 'undefined') {
-            window.location.assign("/api/login/google");
+            const loginUrl = ENV.mode === 'dev'
+                ? `${ENV.apiUrl}/login/google`
+                : "/api/login/google";
+
+            window.location.assign(loginUrl);
         }
     };
 

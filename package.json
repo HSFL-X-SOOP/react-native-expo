@@ -4,12 +4,27 @@
   "version": "1.0.1",
   "scripts": {
     "start": "expo start",
+    "start:dev": "cross-env APP_MODE=dev expo start",
+    "start:test": "cross-env APP_MODE=test expo start",
+    "start:prod": "cross-env APP_MODE=prod expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
+    "android:dev": "cross-env APP_MODE=dev expo run:android",
+    "android:test": "cross-env APP_MODE=test expo run:android",
+    "android:prod": "cross-env APP_MODE=prod expo run:android",
     "ios": "expo run:ios",
+    "ios:dev": "cross-env APP_MODE=dev expo run:ios",
+    "ios:test": "cross-env APP_MODE=test expo run:ios",
+    "ios:prod": "cross-env APP_MODE=prod expo run:ios",
     "web": "expo start --web",
+    "web:dev": "cross-env APP_MODE=dev expo start --web",
+    "web:test": "cross-env APP_MODE=test expo start --web",
+    "web:prod": "cross-env APP_MODE=prod expo start --web",
     "lint": "expo lint",
-    "web:build": "expo export --platform web"
+    "web:build": "expo export --platform web",
+    "web:build:dev": "cross-env APP_MODE=dev expo export --platform web",
+    "web:build:test": "cross-env APP_MODE=test expo export --platform web",
+    "web:build:prod": "cross-env APP_MODE=prod expo export --platform web"
   },
   "dependencies": {
     "@expo-google-fonts/oswald": "^0.4.2",
@@ -72,6 +87,7 @@
     "@babel/core": "^7.25.2",
     "@tamagui/babel-plugin": "^1.134.1",
     "@types/react": "~19.0.10",
+    "cross-env": "^10.1.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
     "typescript": "~5.8.3"

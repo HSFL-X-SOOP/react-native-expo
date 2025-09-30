@@ -26,21 +26,18 @@ const SessionContext = createContext<AuthContextType>({
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [stored, setStored] = useLocalStorage<SessionInfo>('session');
-    const [session, setSession] = useState<SessionInfo | undefined>(stored);
     const router = useRouter();
 
     const login = (newSession: SessionInfo) => {
-        setSession(newSession);
         setStored(newSession);
     };
     const logout = () => {
-        setSession(undefined);
         setStored(undefined);
-        router.push('/map');
+        router.push('/');
     };
 
     return (
-        <SessionContext.Provider value={{session, login, logout}}>
+        <SessionContext.Provider value={{session: stored, login, logout}}>
             {children}
         </SessionContext.Provider>
     );

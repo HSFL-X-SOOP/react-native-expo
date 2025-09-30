@@ -1,12 +1,13 @@
 import { LoginResponse } from "@/api/models/auth";
 import { useSession } from "@/context/SessionContext";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { ENV } from "@/config/environment";
 
 export function useHttpClient() {
     const {session, login, logout} = useSession()
 
     const httpClient = axios.create({
-        baseURL: "https://marlin-live.com/api",
+        baseURL: ENV.apiUrl,
         timeout: 30_000,
     })
 
@@ -25,7 +26,7 @@ export function useHttpClient() {
             if (needsRefresh) {
                 try {
                     const {data} = await axios.post<LoginResponse>(
-                        "https://marlin-live.com/api/auth/refresh",
+                        `${ENV.apiUrl}/auth/refresh`,
                         {refreshToken: session.refreshToken}
                     )
 
