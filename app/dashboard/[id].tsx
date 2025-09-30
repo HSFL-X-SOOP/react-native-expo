@@ -4,8 +4,8 @@ import {useThemeContext} from '@/context/ThemeSwitch';
 import {GetGeomarData, GetGeomarDataTimeRange} from '@/data/geomar-data';
 import {SensorModule} from '@/data/sensor';
 import {useLocalSearchParams} from 'expo-router';
-import {Grid, XAxis, YAxis, AreaChart} from 'react-native-svg-charts';
-import * as shape from 'd3-shape';
+import { LineChart } from 'react-native-chart-kit';
+import { Dimensions } from 'react-native';
 import {
     XStack,
     YStack,
@@ -368,7 +368,7 @@ export default function DashboardScreen() {
                                 color="#F97316"
                             />
                             <LineChartCard
-                                title="Tide"
+                                title="Gezeiten"
                                 icon={<Waves size={20} color="#3B82F6"/>}
                                 chartData={chartTide}
                                 dataPrecision={dataPrecision}
@@ -470,8 +470,9 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                                                                 color = "#4dabf7"
                                                             }) => {
     const {isDark} = useThemeContext();
-
-    // Prepare data for svg-charts (needs array of numbers)
+    const media = useMedia();
+    
+    // Prepare data for charts
     const data = chartData.length > 0
         ? chartData.filter((_, idx) => idx % dataPrecision === 0).map(item => item.value)
         : [];
@@ -480,14 +481,41 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
         ? chartData.filter((_, idx) => idx % dataPrecision === 0).map(item => item.label)
         : [];
 
-    const contentInset = {top: 20, bottom: 20};
-    const chartHeight = 200;
+    // Show max 6 labels
+    const showEvery = Math.ceil(labels.length / 6);
+    const displayLabels = labels.filter((_, index) => index % showEvery === 0);
+    
+    // Get chart width based on card width
+    const chartWidth = media.lg ? 400 : 320;
+    const chartHeight = 220;
+
+    const chartConfig = {
+        backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+        backgroundGradientFrom: isDark ? '#1a1a1a' : '#ffffff',
+        backgroundGradientTo: isDark ? '#1a1a1a' : '#ffffff',
+        decimalPlaces: 1,
+        color: (opacity = 1) => color + Math.round(opacity * 255).toString(16).padStart(2, '0'),
+        labelColor: (opacity = 1) => isDark ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
+        style: {
+            borderRadius: 16
+        },
+        propsForDots: {
+            r: "4",
+            strokeWidth: "2",
+            stroke: color
+        },
+        propsForBackgroundLines: {
+            strokeDasharray: "5,5",
+            stroke: isDark ? '#333' : '#e5e5e5',
+            strokeWidth: 1
+        }
+    };
 
     return (
         <Card
             elevate
             bordered
-            backgroundColor="$background"
+            backgroundColor={isDark ? '$gray1' : '$background'}
             flex={1}
             minWidth={280}
         >
@@ -518,58 +546,38 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                     )}
                 </XStack>
             </Card.Header>
-            <Card.Footer padded paddingTop="$0" width="100%">
+            <Card.Footer padded paddingTop="$0">
                 {data.length > 0 ? (
-                    <View style={{height: chartHeight + 30, flexDirection: 'row', width: '100%'}}>
-                        <YAxis
-                            data={data}
-                            contentInset={contentInset}
-                            svg={{
-                                fill: isDark ? '#999' : '#666',
-                                fontSize: 10,
-                            }}
-                            numberOfTicks={5}
-                            formatLabel={(value: number) => `${value.toFixed(0)}`}
-                            style={{marginRight: 10, width: 35}}
-                        />
-                        <View style={{flex: 1, width: '100%'}}>
-                            <AreaChart
-                                style={{height: chartHeight, width: '100%'}}
-                                data={data}
-                                contentInset={contentInset}
-                                curve={shape.curveNatural}
-                                svg={{
-                                    fill: color + '30',
-                                    stroke: color,
+                    <View style={{ width: '100%', alignItems: 'center' }}>
+                        <LineChart
+                            data={{
+                                labels: displayLabels,
+                                datasets: [{
+                                    data: data.length > 0 ? data : [0],
+                                    color: (opacity = 1) => color,
                                     strokeWidth: 2.5
-                                }}
-                                numberOfTicks={5}
-                            >
-                                <Grid
-                                    svg={{
-                                        stroke: isDark ? '#333' : '#e5e5e5',
-                                        strokeDasharray: [5, 5]
-                                    }}
-                                />
-                            </AreaChart>
-                            <XAxis
-                                style={{marginTop: 10, height: 20}}
-                                data={data}
-                                formatLabel={(_value: number, index: number) => {
-                                    // Show every nth label to avoid crowding
-                                    const showEvery = Math.ceil(labels.length / 6);
-                                    return index % showEvery === 0 ? labels[index] : '';
-                                }}
-                                contentInset={{left: 20, right: 20}}
-                                svg={{
-                                    fontSize: 10,
-                                    fill: isDark ? '#999' : '#666',
-                                    rotation: -45,
-                                    originY: 15,
-                                    y: 5
-                                }}
-                            />
-                        </View>
+                                }]
+                            }}
+                            width={chartWidth}
+                            height={chartHeight}
+                            yAxisLabel=""
+                            yAxisSuffix=""
+                            yAxisInterval={1}
+                            chartConfig={chartConfig}
+                            bezier
+                            style={{
+                                marginVertical: 8,
+                                borderRadius: 16
+                            }}
+                            withInnerLines={true}
+                            withOuterLines={false}
+                            withVerticalLines={true}
+                            withHorizontalLines={true}
+                            withVerticalLabels={true}
+                            withHorizontalLabels={true}
+                            withDots={data.length < 20}
+                            transparent={true}
+                        />
                     </View>
                 ) : (
                     <YStack height={chartHeight} alignItems="center" justifyContent="center">
