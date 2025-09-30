@@ -64,8 +64,8 @@ export default function DashboardScreen() {
         fetchData()
     }, [id, timeRange])
 
-    const isAdmin = false; //TODO: Hier prüfen ob Admin
-    const excludedMeasurements: string[] = [];
+  const isAdmin = false;
+  const excludedMeasurements: string[] = [];
 
     if (!isAdmin) {
         excludedMeasurements.push("Battery, voltage");
@@ -471,7 +471,7 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                                                             }) => {
     const {isDark} = useThemeContext();
     const media = useMedia();
-    
+
     // Prepare data for charts
     const data = chartData.length > 0
         ? chartData.filter((_, idx) => idx % dataPrecision === 0).map(item => item.value)
@@ -484,7 +484,7 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
     // Show max 6 labels
     const showEvery = Math.ceil(labels.length / 6);
     const displayLabels = labels.filter((_, index) => index % showEvery === 0);
-    
+
     // Get chart width based on card width
     const chartWidth = media.lg ? 400 : 320;
     const chartHeight = 220;

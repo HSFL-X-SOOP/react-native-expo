@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import { Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator, H1, Spinner } from 'tamagui';
 import { User, Mail, Lock, Eye, EyeOff } from '@tamagui/lucide-icons';
+import { useTranslation } from '@/hooks/useTranslation';
+import { GoogleIcon } from '@/components/ui/Icons';
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState("");
@@ -17,6 +19,7 @@ export default function RegisterScreen() {
   const router = useRouter();
   const {register, registerStatus} = useAuth();
   const {login, session} = useSession();
+  const {t} = useTranslation();
 
   useEffect(() => {
       if (session) {
@@ -62,9 +65,9 @@ export default function RegisterScreen() {
               >
                 <User size={40} color="$accent7" />
               </View>
-              <H1 fontSize={28} fontWeight="bold" color="$accent7" fontFamily="$oswald">Create Account</H1>
+              <H1 fontSize={28} fontWeight="bold" color="$accent7" fontFamily="$oswald">{t('auth.createAccount')}</H1>
               <Text color="$color" textAlign="center" fontSize={16} opacity={0.8} maxWidth={350}>
-                Join us by filling out the information below.
+                {t('auth.joinUsMessage')}
               </Text>
             </YStack>
 
@@ -72,10 +75,10 @@ export default function RegisterScreen() {
                 <YStack gap="$2">
                 <XStack alignItems="center" gap="$2">
                   <Mail size={16} color="$accent7" />
-                  <Text fontSize={14} fontWeight="500" color="$accent7">Email</Text>
+                  <Text fontSize={14} fontWeight="500" color="$accent7">{t('auth.email')}</Text>
                 </XStack>
                 <Input
-                  placeholder="you@example.com"
+                  placeholder={t('auth.emailPlaceholder')}
                   value={email}
                   onChangeText={setEmail}
                   size="$4"
@@ -90,11 +93,11 @@ export default function RegisterScreen() {
               <YStack gap="$2">
                 <XStack alignItems="center" gap="$2">
                   <Lock size={16} color="$accent7" />
-                  <Text fontSize={14} fontWeight="500" color="$accent7">Password</Text>
+                  <Text fontSize={14} fontWeight="500" color="$accent7">{t('auth.password')}</Text>
                 </XStack>
                 <XStack alignItems="center" width="100%" position="relative">
                   <Input
-                    placeholder="••••••••"
+                    placeholder={t('auth.passwordPlaceholder')}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
@@ -121,11 +124,11 @@ export default function RegisterScreen() {
               <YStack gap="$2">
                 <XStack alignItems="center" gap="$2">
                   <Lock size={16} color="$accent7" />
-                  <Text fontSize={14} fontWeight="500" color="$accent7">Confirm Password</Text>
+                  <Text fontSize={14} fontWeight="500" color="$accent7">{t('auth.confirmPassword')}</Text>
                 </XStack>
                 <XStack alignItems="center" width="100%" position="relative">
                   <Input
-                    placeholder="••••••••"
+                    placeholder={t('auth.passwordPlaceholder')}
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
                     secureTextEntry={!showConfirmPassword}
@@ -148,7 +151,7 @@ export default function RegisterScreen() {
                   </Button>
                 </XStack>
                 {confirmPassword && !passwordsMatch && (
-                  <Text color="$red10" fontSize={14}>Passwords do not match</Text>
+                  <Text color="$red10" fontSize={14}>{t('auth.passwordsDoNotMatch')}</Text>
                 )}
               </YStack>
 
@@ -165,9 +168,9 @@ export default function RegisterScreen() {
                   size="$3"
                 />
                 <Text fontSize={14} color="$color">
-                  I agree to the{' '}
+                  {t('auth.agreeToTerms').split(' ')[0]} {t('auth.agreeToTerms').split(' ').slice(1, -3).join(' ')}{' '}
                   <Link href="/(other)/terms-of-service">
-                    <Text color="$accent7" textDecorationLine="underline">Terms of Service</Text>
+                    <Text color="$accent7" textDecorationLine="underline">{t('auth.termsOfService')}</Text>
                   </Link>
                 </Text>
               </XStack>
@@ -186,17 +189,17 @@ export default function RegisterScreen() {
                 {registerStatus.loading ? (
                   <XStack gap="$2" alignItems="center">
                     <Spinner size="small" color="white" />
-                    <Text color="white" fontWeight="600">Creating account...</Text>
+                    <Text color="white" fontWeight="600">{t('auth.creating')}</Text>
                   </XStack>
                 ) : (
-                  <Text color="white" fontWeight="600">Create Account</Text>
+                  <Text color="white" fontWeight="600">{t('auth.createAccount')}</Text>
                 )}
               </Button>
             </YStack>
 
             <XStack gap="$3" alignItems="center" width="100%">
               <Separator flex={1} borderColor="$borderColor" />
-              <Text color="$color" fontSize={14} opacity={0.7}>or</Text>
+              <Text color="$color" fontSize={14} opacity={0.7}>{t('auth.or')}</Text>
               <Separator flex={1} borderColor="$borderColor" />
             </XStack>
 
@@ -209,16 +212,16 @@ export default function RegisterScreen() {
               hoverStyle={{ backgroundColor: "$content2" }}
               width="100%"
             >
-              <XStack gap="$2" alignItems="center">
-                <Text>🔍</Text>
-                <Text color="$color">Sign up with Google</Text>
+              <XStack gap="$3" alignItems="center">
+                <GoogleIcon size={20} />
+                <Text color="$color">{t('auth.signUpWithGoogle')}</Text>
               </XStack>
             </Button>
 
             <Text fontSize={14} color="$color">
-              Already have an account?{' '}
+              {t('auth.alreadyHaveAccount')}{' '}
               <Link href="/(auth)/login">
-                <Text color="$accent7" textDecorationLine="underline" fontWeight="600">Sign in</Text>
+                <Text color="$accent7" textDecorationLine="underline" fontWeight="600">{t('auth.signIn')}</Text>
               </Link>
             </Text>
 

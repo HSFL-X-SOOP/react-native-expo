@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native';
 import {Eye, EyeOff, Lock, Mail} from '@tamagui/lucide-icons';
 import {Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator, Spinner, H1} from 'tamagui';
 import {useTranslation} from '@/hooks/useTranslation';
+import {GoogleIcon} from '@/components/ui/Icons';
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -180,8 +181,8 @@ export default function LoginScreen() {
                                 borderRadius="$6"
                                 hoverStyle={{backgroundColor: "$content2"}}
                             >
-                                <XStack gap="$2" alignItems="center">
-                                    <Text>🔍</Text>
+                                <XStack gap="$3" alignItems="center">
+                                    <GoogleIcon size={20} />
                                     <Text color="$color">{t('auth.signInWithGoogle')}</Text>
                                 </XStack>
                             </Button>

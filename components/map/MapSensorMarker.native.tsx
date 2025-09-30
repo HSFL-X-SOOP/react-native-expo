@@ -1,38 +1,76 @@
 import { LocationWithBoxes } from "@/data/sensor";
-import { Callout, PointAnnotation } from "@maplibre/maplibre-react-native";
+import { PointAnnotation } from "@maplibre/maplibre-react-native";
 import { useRouter } from "expo-router";
-import { View } from "react-native";
+import React, { useState } from "react";
+import { Modal, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import { MapSensorMeasurementsNew } from "./MapSensorMeasurements";
 import { MapSensorTemperatureTextNew } from "./MapSensorTemperatureText";
-export default function AndroidMarker(locationWithBoxes: LocationWithBoxes, index: number, onClose?: () => void) {
+export default function AndroidMarker({
+    locationWithBoxes,
+    index,
+    onClose,
+}: {
+    locationWithBoxes: LocationWithBoxes;
+    index?: number;
+    onClose?: () => void;
+}) {
     const router = useRouter();
+    const [overlayVisible, setOverlayVisible] = useState(false);
+
     return (
-        <PointAnnotation
-        id={`marker-${index}`}
-        key={`marker-${index}`}
-        coordinate={[ locationWithBoxes.location.coordinates.lon, locationWithBoxes.location.coordinates.lat]}
-        title="Marker Title"
-        selected={true}
-        // onSelected={() => {
-        //     router.push(`/dashboard/${locationWithBoxes.location.id}`);
-        // }}
-        >
-            <View>
-                <MapSensorTemperatureTextNew locationWithBoxes={locationWithBoxes} />
-            </View>
+        <>
+            <PointAnnotation
+                id={`marker-${index}`}
+                key={`marker-${index}`}
+                coordinate={[
+                    locationWithBoxes.location.coordinates.lon,
+                    locationWithBoxes.location.coordinates.lat,
+                ]}
+                title="Marker Title"
+                selected={true}
+                onSelected={() => setOverlayVisible(true)}
+            >
+                <View>
+                    <MapSensorTemperatureTextNew locationWithBoxes={locationWithBoxes} />
+                </View>
+            </PointAnnotation>
 
-
-            <Callout style={{ backgroundColor: "transparent",
-                    borderWidth: 0,
-                    shadowColor: "black",
-                    width: 350,
-                    height: "auto",
-                    padding: 0 ,
-                    zIndex: -1
-                }}
-                >
-                    <MapSensorMeasurementsNew locationWithBoxes={locationWithBoxes} />
-            </Callout>
-        </PointAnnotation>
+            <Modal
+                visible={overlayVisible}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setOverlayVisible(false)}
+            >
+                <TouchableWithoutFeedback onPress={() => setOverlayVisible(false)}>
+                    <View style={styles.overlayContainer}>
+                        <TouchableWithoutFeedback onPress={() => setOverlayVisible(false)}>
+                            <MapSensorMeasurementsNew locationWithBoxes={locationWithBoxes} closeOverlay={() => setOverlayVisible(false)}/>
+                        </TouchableWithoutFeedback>
+                    </View>
+                </TouchableWithoutFeedback>
+            </Modal>
+        </>
     );
 }
+
+const styles = StyleSheet.create({
+    overlayContainer: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    overlayBox: {
+        backgroundColor: "white",
+        padding: 24,
+        borderRadius: 16,
+        minWidth: 300,
+        alignItems: "center",
+    },
+    linkButton: {
+        marginTop: 20,
+    },
+    closeButton: {
+        marginTop: 10,
+    },
+});
