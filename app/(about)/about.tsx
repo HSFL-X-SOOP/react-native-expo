@@ -76,13 +76,13 @@ export default function AboutScreen() {
             icon: TrendingUp,
             title: t('features.dashboard'),
             description: t('features.dashboardDesc'),
-            link: '/dashboard'
+            link: '/dashboard/5'
         },
         {
             icon: Database,
             title: t('features.api'),
             description: t('features.apiDesc'),
-            link: '/api'
+            link: 'https://marlin-live.com/swagger/index.html'
         }
     ]
 

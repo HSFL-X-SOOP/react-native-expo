@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
-import { SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView, Linking } from 'react-native';
 import { Text, YStack, Card, H1, H2, XStack, View, Button } from 'tamagui';
-import { Code, Database, Key, Zap } from '@tamagui/lucide-icons';
+import { Code, Database, Key, ExternalLink } from '@tamagui/lucide-icons';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function APIScreen() {
@@ -114,13 +114,29 @@ export default function APIScreen() {
                       alignItems="center"
                       justifyContent="center"
                     >
-                      <Zap size={28} color="$accent7" />
+                      <Database size={28} color="$accent7" />
                     </View>
                     <YStack flex={1} gap="$3">
-                      <H2 fontSize={20} fontWeight="600" color="$accent7">{t('features.realTimeData')}</H2>
+                      <H2 fontSize={20} fontWeight="600" color="$accent7">{t('api.documentation')}</H2>
                       <Text fontSize={16} color="$color" opacity={0.9} lineHeight={22}>
-                        {t('features.realTimeDesc')}
+                        {t('api.documentationDesc')}
                       </Text>
+                      <Button
+                        backgroundColor="$accent7"
+                        color="white"
+                        borderRadius="$6"
+                        paddingHorizontal="$4"
+                        paddingVertical="$3"
+                        marginTop="$2"
+                        alignSelf="flex-start"
+                        hoverStyle={{ backgroundColor: "$accent8" }}
+                        onPress={() => Linking.openURL('https://www.marlin-live.com/api/')}
+                      >
+                        <XStack alignItems="center" gap="$2">
+                          <ExternalLink size={16} color="white" />
+                          <Text color="white" fontWeight="600" fontSize={14}>{t('api.viewDocs')}</Text>
+                        </XStack>
+                      </Button>
                     </YStack>
                   </XStack>
                 </Card>

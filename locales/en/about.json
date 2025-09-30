@@ -1,7 +1,7 @@
 {
   "about": {
     "title": "MARLIN",
-    "subtitle": "Marine Research & Live Information Network",
+    "subtitle": "Maritime Live Information",
     "description": "Real-time weather and marine condition data from various marinas",
     "ourFeatures": "Our Features",
     "ourTeam": "Our Team",
@@ -21,29 +21,29 @@
   },
   "team": {
     "daniel": {
-      "role": "Backend Development & API",
-      "description": "Responsible for server infrastructure and API development. Expertise in Node.js and database design.",
-      "skills": ["Node.js", "PostgreSQL", "REST APIs", "Docker"]
+      "role": "Project Management",
+      "description": "Coordinates the team and monitors project progress. Responsible for planning and organization.",
+      "skills": ["Project Management"]
     },
     "fatih": {
       "role": "Frontend & Mobile App",
       "description": "Develops the user interface and mobile application. Specialized in React Native and modern UI/UX.",
-      "skills": ["React Native", "TypeScript", "Tamagui", "UI/UX Design"]
+      "skills": ["React Native", "TypeScript", "Tamagui", "UI/UX Design", "Frontend Development", "Mobile Development"]
     },
     "julian": {
-      "role": "Data Analysis & Algorithms",
-      "description": "Analyzes sensor data and develops algorithms for data interpolation and prediction.",
-      "skills": ["Python", "Data Science", "Machine Learning", "Statistics"]
+      "role": "Frontend & Map Visualization",
+      "description": "Develops the map view and frontend components. Specialized in React Native and visualization.",
+      "skills": ["React Native", "TypeScript", "Tamagui", "UI/UX Design", "Frontend Development", "Map Visualization"]
     },
     "krister": {
-      "role": "Hardware & IoT",
-      "description": "Develops and maintains the sensor kits. Expertise in embedded systems and IoT protocols.",
-      "skills": ["Arduino", "Raspberry Pi", "Sensor Technology", "IoT"]
+      "role": "Backend & Data Analysis",
+      "description": "Develops backend services and analyzes sensor data. Expertise in API development and data processing.",
+      "skills": ["Backend Development", "Data Analysis", "API Development"]
     },
     "tarek": {
-      "role": "DevOps & Infrastructure",
-      "description": "Manages cloud infrastructure and CI/CD pipelines. Ensures scalability and reliability.",
-      "skills": ["AWS", "Kubernetes", "CI/CD", "Monitoring"]
+      "role": "Backend & DevOps",
+      "description": "Develops backend systems and manages infrastructure. Expertise in cloud technologies and CI/CD.",
+      "skills": ["AWS", "Kubernetes", "CI/CD", "Monitoring", "Backend Development", "DevOps", "Infrastructure"]
     }
   }
 }
