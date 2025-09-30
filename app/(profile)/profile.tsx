@@ -74,7 +74,7 @@ export default function ProfileScreen() {
   const handleCancel = () => {
     if (session?.profile) {
       setSelectedLanguage(session.profile.language);
-      setSelectedRoles(session.profile.role || []);
+      setSelectedRoles(session.profile.roles || []);
       setSelectedMeasurement(session.profile.measurementSystem);
     }
     setIsEditing(false);

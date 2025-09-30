@@ -227,7 +227,6 @@ export default function LoginScreen() {
                                 </Link>
                             </Text>
                         </YStack>
-
                     </YStack>
                 </Card>
             </YStack>
