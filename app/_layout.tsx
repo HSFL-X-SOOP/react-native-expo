@@ -1,24 +1,24 @@
-import 'react-native-reanimated'
 import '@/i18n'
 import {
-    useFonts,
     Oswald_400Regular,
     Oswald_500Medium,
     Oswald_600SemiBold,
-    Oswald_700Bold
+    Oswald_700Bold,
+    useFonts
 } from '@expo-google-fonts/oswald'
-import {Platform, View} from 'react-native'
-import {StatusBar} from 'expo-status-bar'
-import {Slot} from 'expo-router'
+import { Slot } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
+import { Platform, View } from 'react-native'
+import 'react-native-reanimated'
 
-import {TamaguiProvider, Theme} from 'tamagui'
-import {PortalProvider} from '@tamagui/portal'
 import config from '@/tamagui.config'
+import { PortalProvider } from '@tamagui/portal'
+import { TamaguiProvider, Theme } from 'tamagui'
 
-import {AuthProvider} from '@/context/SessionContext'
-import {NavbarWeb} from '@/components/navigation/web/navbar'
-import {ThemeProvider, useThemeContext} from '@/context/ThemeSwitch.tsx'
-import {TabBarNative} from "@/components/navigation/native/tabbar.tsx";
+import { TabBarNative } from "@/components/navigation/native/tabbar.tsx"
+import { NavbarWeb } from '@/components/navigation/web/navbar'
+import { AuthProvider } from '@/context/SessionContext'
+import { ThemeProvider, useThemeContext } from '@/context/ThemeSwitch.tsx'
 
 function RootContent() {
     const {currentTheme} = useThemeContext()

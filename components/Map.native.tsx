@@ -1,9 +1,8 @@
-import {GetGeomarData} from "@/data/geomar-data";
-import {SensorModule} from "@/data/sensor";
-import {Camera, MapView} from "@maplibre/maplibre-react-native";
-import {useEffect, useRef, useState} from "react";
-import {View} from "react-native";
-import MapFilterButton from "./map/MapFilterButton";
+import { GetGeomarData } from "@/data/geomar-data";
+import { SensorModule } from "@/data/sensor";
+import { Camera, MapView } from "@maplibre/maplibre-react-native";
+import { useEffect, useRef, useState } from "react";
+import { View } from "react-native";
 import AndroidMarker from "./map/MapSensorMarker.native";
 import MapZoomControl from "./map/MapZoomControl";
 
@@ -53,7 +52,7 @@ export default function AndroidMap() {
       />
       {pins}
       </MapView>
-      <MapFilterButton />
+      {/* <MapFilterButton /> */}
       <MapZoomControl zoomLevel={zoomLevel} minMaxZoomLevel={minMaxZoomLevel} setZoomLevel={setZoomLevel} setCurrentCoordinate={setCurrentCoordinate} homeCoordinate={homeCoordinate} />
     </View>
   )
