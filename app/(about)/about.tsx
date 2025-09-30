@@ -194,7 +194,7 @@ export default function AboutScreen() {
                                     {t('about.projectDescription')}
                                 </Text>
 
-                                <Link href="https://marlin-live.com/" style={{textDecorationLine: 'none'}}>
+                                <Link href="https://projekt.marlin-live.com" style={{textDecorationLine: 'none'}}>
                                     <Button backgroundColor="$accent7" color="white" borderRadius="$6"
                                             paddingHorizontal="$6" paddingVertical="$4"
                                             hoverStyle={{backgroundColor: "$accent8"}}>
