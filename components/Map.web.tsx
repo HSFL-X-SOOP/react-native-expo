@@ -1,5 +1,5 @@
-import { GetGeomarData } from '@/data/geomar-data';
-import { SensorModule } from '@/data/sensor';
+import { GetGeomarData, GetGeomarDataNew } from '@/data/geomar-data';
+import { LocationWithBoxes, SensorModule } from '@/data/sensor';
 import {
   LngLatBoundsLike,
   Map,
@@ -10,12 +10,13 @@ import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import '../Global.css';
-import WebMarker from './map/MapSensorMarker.web';
-import { MapSensorMeasurements } from './map/MapSensorMeasurements';
+import { WebMarker, WebMarkerNew } from './map/MapSensorMarker.web';
+import { MapSensorMeasurementsNew } from './map/MapSensorMeasurements';
 import MapZoomControl from './map/MapZoomControl';
 export default function WebMap() {
 
   const [content, setContent] = useState<SensorModule[]>([])
+  const [content2, setContent2] = useState<LocationWithBoxes[]>([])
   useEffect(() => {
     const fetchData = async () => {
     let data = await GetGeomarData()
@@ -23,11 +24,26 @@ export default function WebMap() {
     }
     fetchData()
   }, [])
+
+    useEffect(() => {
+    const fetchData = async () => {
+    let data = await GetGeomarDataNew()
+    setContent2(data)
+    }
+    fetchData()
+  }, [])
+
   const [popupInfo, setPopupInfo] = useState<SensorModule>();
+  const [popupInfo2, setPopupInfo2] = useState<LocationWithBoxes>();
   const pins = useMemo(() => content.map((sensorModule) => (
     WebMarker(sensorModule, setPopupInfo)
     )
   ), [content]);
+
+  const pins2 = useMemo(() => content2.map((sensorModule) => (
+    WebMarkerNew(sensorModule, setPopupInfo2)
+    )
+  ), [content2]);
 
   const [zoomLevel, setZoomLevel] = useState(7);
   const homeCoordinate: [number, number] = [9.26, 54.47926];
@@ -56,8 +72,8 @@ export default function WebMap() {
       latitude={currentCoordinate[1]}
       zoom={zoomLevel}
       >
-        {pins}
-        {popupInfo && (
+        {pins2}
+        {/* {popupInfo && (
         <Popup
           anchor="top"
           longitude={Number(popupInfo.location.coordinates.lon)}
@@ -65,6 +81,16 @@ export default function WebMap() {
           onClose={() => setPopupInfo(undefined)}
         >
           <MapSensorMeasurements sensorModule={popupInfo} />
+        </Popup>
+      )} */}
+              {popupInfo2 && (
+        <Popup
+          anchor="top"
+          longitude={Number(popupInfo2.location.coordinates.lon)}
+          latitude={Number(popupInfo2.location.coordinates.lat)}
+          onClose={() => setPopupInfo2(undefined)}
+        >
+          <MapSensorMeasurementsNew locationWithBoxes={popupInfo2} />
         </Popup>
       )}
       {/* <NavigationControl showCompass={true} showZoom={true} visualizePitch={true} key={"navigation-control"} /> */}

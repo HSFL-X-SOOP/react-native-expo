@@ -1,8 +1,8 @@
-import { SensorModule } from "@/data/sensor";
+import { LocationWithBoxes, SensorModule } from "@/data/sensor";
 import { Marker } from "@vis.gl/react-maplibre";
-import { MapSensorTemperatureText } from "./MapSensorTemperatureText";
+import { MapSensorTemperatureText, MapSensorTemperatureTextNew } from "./MapSensorTemperatureText";
 
-export default function WebMarker(sensorModule: SensorModule, setPopupInfo: (sensor: SensorModule) => void) {
+export function WebMarker(sensorModule: SensorModule, setPopupInfo: (sensor: SensorModule) => void) {
     return (
         <Marker key={sensorModule.location.id}
         longitude={sensorModule.location.coordinates.lon}
@@ -14,6 +14,22 @@ export default function WebMarker(sensorModule: SensorModule, setPopupInfo: (sen
         }}
         >
             <MapSensorTemperatureText sensorModule={sensorModule} />
+        </Marker>
+    );
+}
+
+export function WebMarkerNew(locationWithBoxes: LocationWithBoxes, setPopupInfo: (location: LocationWithBoxes) => void) {
+    return (
+        <Marker key={locationWithBoxes.location.id}
+        longitude={locationWithBoxes.location.coordinates.lon}
+        latitude={locationWithBoxes.location.coordinates.lat}
+        anchor="bottom"
+        onClick={e => {
+            e.originalEvent.stopPropagation();
+            setPopupInfo(locationWithBoxes);
+        }}
+        >
+            <MapSensorTemperatureTextNew locationWithBoxes={locationWithBoxes} />
         </Marker>
     );
 }

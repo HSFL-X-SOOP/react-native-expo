@@ -110,7 +110,7 @@ console.log(minValueWaterTemperature, maxValueWaterTemperature)
           flexDirection: "row",
           gap: cardGap,
           justifyContent: "space-between",
-          paddingHorizontal: 20,
+          paddingHorizontal: 80,
           flexWrap: "wrap",
         }}
       >
