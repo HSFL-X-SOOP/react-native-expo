@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Card, Icon } from 'react-native-paper';
 // Add the correct import for LineChart below. Adjust the path if you use a different chart library.
 import { GetGeomarData, GetGeomarDataTimeRange } from '@/data/geomar-data';
@@ -8,6 +8,10 @@ import { useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { Platform, ScrollView, useWindowDimensions } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
+import { XStack, YStack } from 'tamagui';
+
+const widthDivider = Platform.OS === "web" ? 2 : 1.5;
+
 export default function DashboardScreen() {
   const [showInfo, setShowInfo] = useState(false);
   const infoHeight = useRef(new Animated.Value(0)).current;
@@ -21,7 +25,8 @@ export default function DashboardScreen() {
   const [name, setName] = useState<string>("")
   const [content1, setContent1] = useState<SensorModule[]>([])
   const [dataPrecision, setDataPrecision] = useState<number>(3)
-  const { width } = useWindowDimensions();
+  const { screenWidth } = useWindowDimensions();
+  const cardChartWidth = Platform.OS === "web" ? screenWidth / 2 - 40 : screenWidth - 40; // 40 für Padding
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,17 +99,19 @@ console.log(minValueWaterTemperature, maxValueWaterTemperature)
 
 
   return (
+  <SafeAreaView style={{flex: 1}}>
     <ScrollView style={{ flex: 1 }}>
-      <View style={{ width: "100%" }}>
+      {/* <View style={{ width: "100%" }}> */}
         <Image
           style={{ width: 1920, height: 300, objectFit: 'contain', alignSelf: "center" }}
           source={{
             uri: "https://www.im-jaich.de/wp-content/uploads/2022/07/im-jaich-Flensburg-2019-0196-Kristina-Steiner.jpg",
           }}
         />
-      </View>
+      {/* </View> */}
 
-      <View
+
+      {/* <View
         style={{
           marginTop: -80, // Karten ins Bild schieben
           flexDirection: "row",
@@ -113,13 +120,15 @@ console.log(minValueWaterTemperature, maxValueWaterTemperature)
           paddingHorizontal: 80,
           flexWrap: "wrap",
         }}
-      >
+      > */}
+      <XStack flexWrap='wrap' gap={cardGap} justifyContent='center' alignItems='center' paddingHorizontal={20} marginTop={-60}>
+
         {/* Hafen-Card mit Button */}
-        <Card style={{ backgroundColor: "#e3f2fd" }}>
+        <Card style={{ backgroundColor: "#e3f2fd", width: Platform.OS === "web" ? 475 : 375, minWidth: 300, height: "auto", padding: 10 }}>
           <Card.Content>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10 }}>
               <Icon source={"home"} color={"black"} size={50} />
-              <View style={{ flexDirection: "column", width: "auto", gap: 10 }}>
+              <View style={{ flexDirection: "column", gap: 10 }}>
                 <Text style={{ fontSize: 16, color: "#504f4fff" }}>{"Hafen"}</Text>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Text style={{ fontSize: 24, color: "black" }}>{name}</Text>
@@ -140,14 +149,17 @@ console.log(minValueWaterTemperature, maxValueWaterTemperature)
           </Card.Content>
         </Card>
 
-        <View style={{flexDirection: "row", gap: 10, justifyContent: "center", paddingHorizontal: 20, flexWrap: "wrap", marginTop: 20 }}>
+        <XStack flexWrap='wrap' gap={cardGap} justifyContent='center' paddingHorizontal={20}>
+
+        {/* <View style={{flexDirection: "row", gap: 10, justifyContent: "center", paddingHorizontal: 20, flexWrap: "wrap", marginTop: 20 }}> */}
           {content[0] &&( content[0].latestMeasurements.map((a, index) => (
             !excludedMeasurements.includes(a.measurementType.name) && (
-            <MeasurementCard key={index} measurementType={a.measurementType.name} value={String(a.value)} />)
-          )))}
-        </View>
-
-      </View>
+              <MeasurementCard key={index} measurementType={a.measurementType.name} value={String(a.value)} />)
+            )))}
+        {/* </View> */}
+            </XStack>
+      </XStack>
+      {/* </View> */}
 
       <Animated.View
         style={{
@@ -167,13 +179,16 @@ console.log(minValueWaterTemperature, maxValueWaterTemperature)
       </Animated.View>
 
       {/* Der restliche Content wird jetzt nach unten geschoben */}
-      <View style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center', gap: 20, marginTop: 30}}>
-        <LineChartCard title="Wassertemperatur" chartData={chartWaterTemperature} minValue={10} maxValue={20} dataPrecision={dataPrecision} />
-        <LineChartCard title="Tide" chartData={chartTide} minValue={minValueTide} maxValue={50} dataPrecision={dataPrecision} />
-        <LineChartCard title="Wellenhöhe" chartData={chartWaveHeight} minValue={minValueWaveHeight} maxValue={10} dataPrecision={dataPrecision} />
+      <XStack flexWrap='wrap' gap={cardGap} justifyContent='center' paddingHorizontal={20} marginTop={20}>
+      {/* <View style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center', gap: 20, marginTop: 30}}> */}
+        <LineChartCard title="Wassertemperatur" chartData={chartWaterTemperature} minValue={10} maxValue={20} dataPrecision={dataPrecision} width={cardChartWidth} />
+        <LineChartCard title="Tide" chartData={chartTide} minValue={minValueTide} maxValue={50} dataPrecision={dataPrecision} width={cardChartWidth} />
+        <LineChartCard title="Wellenhöhe" chartData={chartWaveHeight} minValue={minValueWaveHeight} maxValue={10} dataPrecision={dataPrecision} width={cardChartWidth} />
         {/* <LineChartCard title="Batteriestatus" chartData={chartBatteryVoltage} minValue={minValueBatteryVoltage} maxValue={5} dataPrecision={dataPrecision} /> */}
-      </View>
+      {/* </View> */}
+      </XStack>
     </ScrollView>
+  </SafeAreaView>
   );
 }
 
@@ -207,17 +222,24 @@ const CreateMeasurementDictionary = (data: any) => {
 export const MeasurementCard: React.FC<MeasurementCardProps> =({measurementType, value}) =>  {
 
   return(
-    <Card style={{ backgroundColor: "#e3f2fd" }}>
+    <Card style={{ backgroundColor: "#e3f2fd", height: "auto"}}>
         <Card.Content>
-            <View style={{display: 'flex', flexDirection: 'row',  alignItems: 'center', gap: 10}}>
-            <Icon source={getMeasurementTypeIcon(measurementType)} color={"black"} size={30}/>
-                <View style={{flexDirection: "column", width: "100%"}}>
-                    <Text style={{fontSize: 16, color: "#504f4fff"}}>{getTextFromMeasurementType(measurementType)}</Text>
-                        <View style={{flexDirection: "row", alignItems: "center"}}>
-                            <Text style={{fontSize: 24, color: "black"}}>{value}{getMeasurementTypeSymbol(measurementType)} </Text>
-                        </View>
-                    </View>
-            </View>
+            <XStack
+              gap={10}
+              alignItems="center"
+              justifyContent="center" // horizontal zentrieren
+              width="100%"
+              height={80} // feste Höhe für vertikale Zentrierung
+            >
+              <Icon source={getMeasurementTypeIcon(measurementType)} color={"black"} size={30}/>
+              <YStack
+                alignItems="center" // horizontal zentrieren im Stack
+                justifyContent="center" // vertikal zentrieren im Stack
+              >
+                <Text style={{fontSize: 16, color: "#504f4fff", textAlign: "center"}}>{getTextFromMeasurementType(measurementType)}</Text>
+                <Text style={{fontSize: 24, color: "black", textAlign: "center"}}>{value}{getMeasurementTypeSymbol(measurementType)} </Text>
+              </YStack>
+            </XStack>
         </Card.Content>
     </Card>
   )
@@ -229,12 +251,13 @@ type LineChartCardProps = {
     minValue: number,
     maxValue: number,
     dataPrecision: number,
+    width: number,
 }
 
-export const LineChartCard: React.FC<LineChartCardProps> =({title, chartData, minValue, maxValue, dataPrecision}) =>  {
+export const LineChartCard: React.FC<LineChartCardProps> =({title, chartData, minValue, maxValue, dataPrecision, width}) =>  {
 
   return(
-    <Card style={{ width: 800, padding: 10, backgroundColor: 'white', borderRadius: 10, marginVertical: 10 }}>
+    <Card style={{ width: width  / widthDivider, padding: 10, backgroundColor: 'white', borderRadius: 10, marginVertical: 10 }}>
       <Card.Content>
         <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'black', marginBottom: 10 }}>{title}</Text>
         <LineChart
@@ -253,7 +276,7 @@ export const LineChartCard: React.FC<LineChartCardProps> =({title, chartData, mi
           rulesColor="gray"
           rulesType="solid"
           curved={true}
-          width={700} // Subtracting padding
+          width={width / widthDivider} // Subtracting padding
         />
         </Card.Content>
       </Card>

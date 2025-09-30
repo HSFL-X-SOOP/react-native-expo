@@ -13,6 +13,9 @@ export default function AndroidMarker(locationWithBoxes: LocationWithBoxes, inde
         coordinate={[ locationWithBoxes.location.coordinates.lon, locationWithBoxes.location.coordinates.lat]}
         title="Marker Title"
         selected={true}
+        // onSelected={() => {
+        //     router.push(`/dashboard/${locationWithBoxes.location.id}`);
+        // }}
         >
             <View>
                 <MapSensorTemperatureTextNew locationWithBoxes={locationWithBoxes} />
@@ -26,7 +29,8 @@ export default function AndroidMarker(locationWithBoxes: LocationWithBoxes, inde
                     height: "auto",
                     padding: 0 ,
                     zIndex: -1
-                }}  >
+                }}
+                >
                     <MapSensorMeasurementsNew locationWithBoxes={locationWithBoxes} />
             </Callout>
         </PointAnnotation>
