@@ -1,5 +1,5 @@
-import { GetGeomarData } from "@/data/geomar-data";
-import { SensorModule } from "@/data/sensor";
+import { GetGeomarData, GetGeomarDataNew } from "@/data/geomar-data";
+import { LocationWithBoxes, SensorModule } from "@/data/sensor";
 import { Camera, MapView } from "@maplibre/maplibre-react-native";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
@@ -8,6 +8,7 @@ import MapZoomControl from "./map/MapZoomControl";
 
 export default function AndroidMap() {
     const [content, setContent] = useState<SensorModule[]>([])
+    const [content2, setContent2] = useState<LocationWithBoxes[]>([])
     useEffect(() => {
       const fetchData = async () => {
         let data = await GetGeomarData()
@@ -16,9 +17,17 @@ export default function AndroidMap() {
     fetchData()
   }, [])
 
+      useEffect(() => {
+    const fetchData = async () => {
+    let data = await GetGeomarDataNew()
+    setContent2(data)
+    }
+    fetchData()
+  }, [])
+
   const pins =
-  content.map((sensorModule:SensorModule, index) => (
-    AndroidMarker(sensorModule, index)
+  content2.map((locationWithBoxes:LocationWithBoxes, index) => (
+    AndroidMarker(locationWithBoxes, index)
   ))
 
   const [zoomLevel, setZoomLevel] = useState(7);

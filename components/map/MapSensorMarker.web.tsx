@@ -18,7 +18,7 @@ export function WebMarker(sensorModule: SensorModule, setPopupInfo: (sensor: Sen
     );
 }
 
-export function WebMarkerNew(locationWithBoxes: LocationWithBoxes, setPopupInfo: (location: LocationWithBoxes) => void) {
+export default function WebMarkerNew(locationWithBoxes: LocationWithBoxes, setPopupInfo: (location: LocationWithBoxes) => void) {
     return (
         <Marker key={locationWithBoxes.location.id}
         longitude={locationWithBoxes.location.coordinates.lon}

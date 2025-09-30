@@ -1,21 +1,21 @@
-import { SensorModule } from "@/data/sensor";
+import { LocationWithBoxes } from "@/data/sensor";
 import { Callout, PointAnnotation } from "@maplibre/maplibre-react-native";
 import { useRouter } from "expo-router";
 import { View } from "react-native";
-import { MapSensorMeasurements } from "./MapSensorMeasurements";
-import { MapSensorTemperatureText } from "./MapSensorTemperatureText";
-export default function AndroidMarker(sensorModule: SensorModule, index: number, onClose?: () => void) {
+import { MapSensorMeasurementsNew } from "./MapSensorMeasurements";
+import { MapSensorTemperatureTextNew } from "./MapSensorTemperatureText";
+export default function AndroidMarker(locationWithBoxes: LocationWithBoxes, index: number, onClose?: () => void) {
     const router = useRouter();
     return (
         <PointAnnotation
         id={`marker-${index}`}
         key={`marker-${index}`}
-        coordinate={[ sensorModule.location.coordinates.lon, sensorModule.location.coordinates.lat]}
+        coordinate={[ locationWithBoxes.location.coordinates.lon, locationWithBoxes.location.coordinates.lat]}
         title="Marker Title"
         selected={true}
         >
             <View>
-                <MapSensorTemperatureText sensorModule={sensorModule} />
+                <MapSensorTemperatureTextNew locationWithBoxes={locationWithBoxes} />
             </View>
 
 
@@ -27,7 +27,7 @@ export default function AndroidMarker(sensorModule: SensorModule, index: number,
                     padding: 0 ,
                     zIndex: -1
                 }}  >
-                    <MapSensorMeasurements sensorModule={sensorModule} />
+                    <MapSensorMeasurementsNew locationWithBoxes={locationWithBoxes} />
             </Callout>
         </PointAnnotation>
     );
