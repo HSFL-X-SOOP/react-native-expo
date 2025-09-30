@@ -1,7 +1,7 @@
 {
   "about": {
     "title": "MARLIN",
-    "subtitle": "Marine Research & Live Information Network",
+    "subtitle": "Maritime Live Information",
     "description": "Echtzeitdaten zu Wetter und Meeresbedingungen aus verschiedenen Marinas",
     "ourFeatures": "Unsere Features",
     "ourTeam": "Unser Team",
@@ -21,29 +21,57 @@
   },
   "team": {
     "daniel": {
-      "role": "Backend-Entwicklung & API",
-      "description": "Verantwortlich für die Server-Infrastruktur und API-Entwicklung. Expertise in Node.js und Datenbank-Design.",
-      "skills": ["Node.js", "PostgreSQL", "REST APIs", "Docker"]
+      "role": "Projektmanagement",
+      "description": "Koordiniert das Team und überwacht den Projektfortschritt. Verantwortlich für Planung und Organisation.",
+      "skills": [
+        "Projektmanagement"
+      ]
     },
     "fatih": {
       "role": "Frontend & Mobile App",
       "description": "Entwickelt die Benutzeroberfläche und mobile Anwendung. Spezialisiert auf React Native und moderne UI/UX.",
-      "skills": ["React Native", "TypeScript", "Tamagui", "UI/UX Design"]
+      "skills": [
+        "React Native",
+        "TypeScript",
+        "Tamagui",
+        "UI/UX Design",
+        "Frontend Entwicklung",
+        "Mobile Entwicklung"
+      ]
     },
     "julian": {
-      "role": "Datenanalyse & Algorithmen",
-      "description": "Analysiert Sensordaten und entwickelt Algorithmen für Dateninterpolation und -vorhersage.",
-      "skills": ["Python", "Data Science", "Machine Learning", "Statistik"]
+      "role": "Frontend & Kartenvisualisierung",
+      "description": "Entwickelt die Kartenansicht und Frontend-Komponenten. Spezialisiert auf React Native und Visualisierung.",
+      "skills": [
+        "React Native",
+        "TypeScript",
+        "Tamagui",
+        "UI/UX Design",
+        "Frontend Development",
+        "Kartenvisualisierung"
+      ]
     },
     "krister": {
-      "role": "Hardware & IoT",
-      "description": "Entwickelt und wartet die Sensorkits. Expertise in Embedded Systems und IoT-Protokollen.",
-      "skills": ["Arduino", "Raspberry Pi", "Sensortechnik", "IoT"]
+      "role": "Backend & Datenanalyse",
+      "description": "Entwickelt Backend-Services und analysiert Sensordaten. Expertise in API-Entwicklung und Datenverarbeitung.",
+      "skills": [
+        "Backend Entwicklung",
+        "Datenanalyse",
+        "API Entwicklung"
+      ]
     },
     "tarek": {
-      "role": "DevOps & Infrastruktur",
-      "description": "Verwaltet die Cloud-Infrastruktur und CI/CD-Pipelines. Sorgt für Skalierbarkeit und Zuverlässigkeit.",
-      "skills": ["AWS", "Kubernetes", "CI/CD", "Monitoring"]
+      "role": "Backend & DevOps",
+      "description": "Entwickelt Backend-Systeme und verwaltet die Infrastruktur. Expertise in Cloud-Technologien und CI/CD.",
+      "skills": [
+        "AWS",
+        "Kubernetes",
+        "CI/CD",
+        "Monitoring",
+        "Backend Entwicklung",
+        "DEVOPS",
+        "Infrastruktur"
+      ]
     }
   }
 }

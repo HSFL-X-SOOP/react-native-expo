@@ -8,7 +8,10 @@
     "features": "API Features",
     "readyTitle": "Ready for API Access?",
     "readyDescription": "Contact us for detailed API documentation and pricing information.",
-    "viewPricing": "View Pricing"
+    "viewPricing": "View Pricing",
+    "documentation": "API Documentation",
+    "documentationDesc": "Explore our complete Swagger documentation for all API endpoints, request/response schemas, and authentication details.",
+    "viewDocs": "View Documentation"
   },
   "features": {
     "flexibleQuery": "Flexible Data Query",
@@ -23,6 +26,6 @@
     "restfulInterface": "RESTful Interface",
     "restfulDesc": "Standard HTTP methods with JSON responses. Complete documentation with examples and authentication available.",
     "realTimeData": "Real-time Data",
-    "realTimeDesc": "Live streaming of sensor data with WebSocket support for continuous updates."
+    "realTimeDesc": "Access to live sensor data with minimal latency for up-to-date measurements and monitoring."
   }
 }
