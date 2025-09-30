@@ -71,6 +71,7 @@
     "react-map-gl": "^8.0.4",
     "react-native": "0.79.5",
     "react-native-async-storage": "^0.0.1",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-gifted-charts": "^1.4.64",
     "react-native-reanimated": "~3.17.4",
@@ -85,6 +86,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@tamagui/babel-plugin": "^1.134.1",
+    "@types/d3-shape": "^3.1.7",
     "@types/react": "~19.0.10",
     "cross-env": "^10.1.0",
     "eslint": "^9.25.0",
