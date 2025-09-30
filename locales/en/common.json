@@ -48,7 +48,14 @@
     "creating": "Creating...",
     "passwordsDontMatch": "Passwords don't match",
     "signUpWithGoogle": "Sign up with Google",
-    "passwordsDoNotMatch": "Passwords do not match"
+    "passwordsDoNotMatch": "Passwords do not match",
+    "invalidEmail": "Invalid email address",
+    "passwordLength": "8-64 characters",
+    "passwordLowercase": "At least one lowercase letter",
+    "passwordUppercase": "At least one uppercase letter",
+    "passwordDigit": "At least one digit",
+    "passwordSpecial": "At least one special character (@$!%*?&#-)",
+    "passwordStrength": "Password Strength"
   },
   "profile": {
     "title": "Profile",

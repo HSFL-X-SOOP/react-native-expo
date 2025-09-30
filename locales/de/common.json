@@ -48,7 +48,14 @@
     "creating": "Erstelle...",
     "passwordsDontMatch": "Passwörter stimmen nicht überein",
     "signUpWithGoogle": "Mit Google registrieren",
-    "passwordsDoNotMatch": "Passwörter stimmen nicht überein"
+    "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+    "invalidEmail": "Ungültige E-Mail-Adresse",
+    "passwordLength": "8-64 Zeichen",
+    "passwordLowercase": "Mindestens ein Kleinbuchstabe",
+    "passwordUppercase": "Mindestens ein Großbuchstabe",
+    "passwordDigit": "Mindestens eine Ziffer",
+    "passwordSpecial": "Mindestens ein Sonderzeichen (@$!%*?&#-)",
+    "passwordStrength": "Passwortstärke"
   },
   "profile": {
     "title": "Profil",
