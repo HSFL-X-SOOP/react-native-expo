@@ -1,10 +1,13 @@
 import { useSession } from '@/context/SessionContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Link, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { SafeAreaView } from 'react-native';
 import { Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator, H1, Spinner } from 'tamagui';
-import { User, Mail, Lock, Eye, EyeOff } from '@tamagui/lucide-icons';
+import { User, Mail, Lock, Eye, EyeOff, Check, X } from '@tamagui/lucide-icons';
+
+const EMAIL_REGEX = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#\-])[A-Za-z\d@$!%*?&#\-]{8,64}$/;
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState("");
@@ -24,9 +27,65 @@ export default function RegisterScreen() {
       }
   }, [session, router]);
 
+  const passwordValidation = useMemo(() => {
+    const hasValidLength = password.length >= 8 && password.length <= 64;
+    const hasLowercase = /[a-z]/.test(password);
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasDigit = /\d/.test(password);
+    const hasSpecial = /[@$!%*?&#\-]/.test(password);
+    const hasOnlyValidChars = /^[A-Za-z\d@$!%*?&#\-]*$/.test(password);
+
+    return {
+      length: hasValidLength,
+      lowercase: hasLowercase,
+      uppercase: hasUppercase,
+      digit: hasDigit,
+      special: hasSpecial,
+      validChars: hasOnlyValidChars,
+    };
+  }, [password]);
+
+  const passwordStrength = useMemo(() => {
+    if (password.length === 0) return { count: 0, total: 5, percentage: 0 };
+
+    const validationValues = [
+      passwordValidation.length,
+      passwordValidation.lowercase,
+      passwordValidation.uppercase,
+      passwordValidation.digit,
+      passwordValidation.special,
+    ];
+    const validCount = validationValues.filter(Boolean).length;
+
+    const lengthScore = Math.min((password.length / 12) * 40, 40);
+    const criteriaScore = (validCount / validationValues.length) * 60;
+    const percentage = Math.min(lengthScore + criteriaScore, 100);
+
+    return {
+      count: validCount,
+      total: validationValues.length,
+      percentage,
+    };
+  }, [password, passwordValidation]);
+
+  const isPasswordValid = useMemo(() => {
+    return passwordValidation.length &&
+           passwordValidation.lowercase &&
+           passwordValidation.uppercase &&
+           passwordValidation.digit &&
+           passwordValidation.special &&
+           passwordValidation.validChars;
+  }, [passwordValidation]);
+
+  const isEmailValid = useMemo(() => {
+    return EMAIL_REGEX.test(email);
+  }, [email]);
+
   const handleSubmit = async () => {
       if (password !== confirmPassword) return;
       if (!agreeTermsOfService) return;
+      if (!isPasswordValid) return;
+      if (!isEmailValid) return;
 
       const res = await register({email, password, rememberMe: false});
       if (res) {
@@ -43,8 +102,21 @@ export default function RegisterScreen() {
       }
   };
 
-  const passwordsMatch = password === confirmPassword;
-  const isFormValid = email && password && passwordsMatch && agreeTermsOfService;
+  const passwordsMatch = password === confirmPassword && confirmPassword.length > 0;
+  const isFormValid = isEmailValid && isPasswordValid && passwordsMatch && agreeTermsOfService;
+
+  // Debug
+  console.log('DEBUG:', {
+    email,
+    password,
+    confirmPassword,
+    isEmailValid,
+    isPasswordValid,
+    passwordsMatch,
+    agreeTermsOfService,
+    isFormValid,
+    passwordValidation
+  });
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -83,10 +155,13 @@ export default function RegisterScreen() {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoComplete="email"
-                  borderColor="$borderColor"
-                  focusStyle={{ borderColor: "$accent7" }}
+                  borderColor={email && !isEmailValid ? "$red10" : "$borderColor"}
+                  focusStyle={{ borderColor: email && !isEmailValid ? "$red10" : "$accent7" }}
                   onSubmitEditing={handleSubmit}
                 />
+                {email && !isEmailValid && (
+                  <Text color="$red10" fontSize={12}>{t('auth.invalidEmail')}</Text>
+                )}
               </YStack>
 
               <YStack gap="$2">
@@ -119,6 +194,107 @@ export default function RegisterScreen() {
                     {showPassword ? <EyeOff size={16} color="$accent7" /> : <Eye size={16} color="$accent7" />}
                   </Button>
                 </XStack>
+                {password && (
+                  <YStack gap="$3" paddingTop="$2">
+                    <YStack gap="$2">
+                      <Text fontSize={12} fontWeight="600" color="$color">
+                        {t('auth.passwordStrength')}
+                      </Text>
+                      <View
+                        width="100%"
+                        height={8}
+                        backgroundColor="$gray5"
+                        borderRadius="$4"
+                        overflow="hidden"
+                      >
+                        <View
+                          width={`${passwordStrength.percentage}%`}
+                          height="100%"
+                          style={{
+                            backgroundColor:
+                              passwordStrength.percentage === 100
+                                ? '#22c55e'
+                                : passwordStrength.percentage >= 60
+                                ? '#eab308'
+                                : '#ef4444'
+                          }}
+                        />
+                      </View>
+                    </YStack>
+                    <YStack gap="$2" paddingLeft="$2">
+                    <XStack gap="$2" alignItems="center">
+                      {passwordValidation.length ? (
+                        <View width={14} height={14} alignItems="center" justifyContent="center">
+                          <Check size={14} style={{ color: '#22c55e' }} />
+                        </View>
+                      ) : (
+                        <View width={14} height={14} alignItems="center" justifyContent="center">
+                          <X size={14} style={{ color: '#ef4444' }} />
+                        </View>
+                      )}
+                      <Text fontSize={12} style={{ color: passwordValidation.length ? '#22c55e' : '#ef4444' }}>
+                        {t('auth.passwordLength')}
+                      </Text>
+                    </XStack>
+                    <XStack gap="$2" alignItems="center">
+                      {passwordValidation.lowercase ? (
+                        <View width={14} height={14} alignItems="center" justifyContent="center">
+                          <Check size={14} style={{ color: '#22c55e' }} />
+                        </View>
+                      ) : (
+                        <View width={14} height={14} alignItems="center" justifyContent="center">
+                          <X size={14} style={{ color: '#ef4444' }} />
+                        </View>
+                      )}
+                      <Text fontSize={12} style={{ color: passwordValidation.lowercase ? '#22c55e' : '#ef4444' }}>
+                        {t('auth.passwordLowercase')}
+                      </Text>
+                    </XStack>
+                    <XStack gap="$2" alignItems="center">
+                      {passwordValidation.uppercase ? (
+                        <View width={14} height={14} alignItems="center" justifyContent="center">
+                          <Check size={14} style={{ color: '#22c55e' }} />
+                        </View>
+                      ) : (
+                        <View width={14} height={14} alignItems="center" justifyContent="center">
+                          <X size={14} style={{ color: '#ef4444' }} />
+                        </View>
+                      )}
+                      <Text fontSize={12} style={{ color: passwordValidation.uppercase ? '#22c55e' : '#ef4444' }}>
+                        {t('auth.passwordUppercase')}
+                      </Text>
+                    </XStack>
+                    <XStack gap="$2" alignItems="center">
+                      {passwordValidation.digit ? (
+                        <View width={14} height={14} alignItems="center" justifyContent="center">
+                          <Check size={14} style={{ color: '#22c55e' }} />
+                        </View>
+                      ) : (
+                        <View width={14} height={14} alignItems="center" justifyContent="center">
+                          <X size={14} style={{ color: '#ef4444' }} />
+                        </View>
+                      )}
+                      <Text fontSize={12} style={{ color: passwordValidation.digit ? '#22c55e' : '#ef4444' }}>
+                        {t('auth.passwordDigit')}
+                      </Text>
+                    </XStack>
+                    <XStack gap="$2" alignItems="center">
+                      {passwordValidation.special ? (
+                        <View width={14} height={14} alignItems="center" justifyContent="center">
+                          <Check size={14} style={{ color: '#22c55e' }} />
+                        </View>
+                      ) : (
+                        <View width={14} height={14} alignItems="center" justifyContent="center">
+                          <X size={14} style={{ color: '#ef4444' }} />
+                        </View>
+                      )}
+                      <Text fontSize={12} style={{ color: passwordValidation.special ? '#22c55e' : '#ef4444' }}>
+                        {t('auth.passwordSpecial')}
+                      </Text>
+                    </XStack>
+                    </YStack>
+                  </YStack>
+                )}
               </YStack>
 
               <YStack gap="$2">

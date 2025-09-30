@@ -12,6 +12,13 @@
     "language": "Sprache",
     "theme": "Theme"
   },
+  "language": {
+    "name": "Deutsch"
+  },
+  "settings": {
+    "language": "Sprache",
+    "theme": "Design"
+  },
   "auth": {
     "login": "Anmelden",
     "register": "Registrieren",
@@ -39,7 +46,16 @@
     "privacyPolicy": "Datenschutzerklärung",
     "and": "und",
     "creating": "Erstelle...",
-    "passwordsDontMatch": "Passwörter stimmen nicht überein"
+    "passwordsDontMatch": "Passwörter stimmen nicht überein",
+    "signUpWithGoogle": "Mit Google registrieren",
+    "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+    "invalidEmail": "Ungültige E-Mail-Adresse",
+    "passwordLength": "8-64 Zeichen",
+    "passwordLowercase": "Mindestens ein Kleinbuchstabe",
+    "passwordUppercase": "Mindestens ein Großbuchstabe",
+    "passwordDigit": "Mindestens eine Ziffer",
+    "passwordSpecial": "Mindestens ein Sonderzeichen (@$!%*?&#-)",
+    "passwordStrength": "Passwortstärke"
   },
   "profile": {
     "title": "Profil",
