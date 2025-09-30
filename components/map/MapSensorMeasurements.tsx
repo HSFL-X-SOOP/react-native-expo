@@ -114,14 +114,16 @@ export const MapSensorMeasurementsNew: React.FC<MapSensorMeasurementsNewProps> =
               <MeasurementCard key={index + 1} index={index + 1} measurementType="Temperature, water" value={a.measurementTimes[0].measurements.waterTemperature}/>
               <MeasurementCard key={index + 2} index={index + 2} measurementType="Wave Height" value={a.measurementTimes[0].measurements.waveHeight}/>
               <MeasurementCard key={index + 3} index={index + 3} measurementType="Tide" value={a.measurementTimes[0].measurements.tide}/>
-              <MeasurementCard key={index + 4} index={index + 4} measurementType="Battery, voltage" value={a.measurementTimes[0].measurements.batteryVoltage}/>
+              {/* <MeasurementCard key={index + 4} index={index + 4} measurementType="Battery, voltage" value={a.measurementTimes[0].measurements.batteryVoltage}/> */}
               
               <XStack width={"100%"} justifyContent="space-between" alignItems="center">
                 <Text fontSize={14}>{t('last.measurement')}: {formatDateTime(a.measurementTimes[0].time)}</Text>
               </XStack>
             </XStack>
             )
-        ))}
+        )
+        
+        )}
 
         {locationWithBoxes.boxes.map((a, index) => (
           a.type === "WaterTemperatureOnlyBox" && (
