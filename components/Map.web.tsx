@@ -10,7 +10,7 @@ import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import '../Global.css';
-import { WebMarkerNew } from './map/MapSensorMarker.web';
+import WebMarkerNew from './map/MapSensorMarker.web';
 import { MapSensorMeasurementsNew } from './map/MapSensorMeasurements';
 import MapZoomControl from './map/MapZoomControl';
 export default function WebMap() {
@@ -35,10 +35,10 @@ export default function WebMap() {
 
   const [popupInfo, setPopupInfo] = useState<SensorModule>();
   const [popupInfo2, setPopupInfo2] = useState<LocationWithBoxes>();
-  const pins = useMemo(() => content.map((sensorModule) => (
-    WebMarker(sensorModule, setPopupInfo)
-    )
-  ), [content]);
+  // const pins = useMemo(() => content.map((sensorModule) => (
+  //   WebMarker(sensorModule, setPopupInfo)
+  //   )
+  // ), [content]);
 
   const pins2 = useMemo(() => content2.map((sensorModule) => (
     WebMarkerNew(sensorModule, setPopupInfo2)
