@@ -37,7 +37,8 @@ export default function RegisterScreen() {
               accessToken: res.accessToken,
               refreshToken: res.refreshToken,
               loggedInSince: new Date(),
-              lastTokenRefresh: null
+              lastTokenRefresh: null,
+              profile: res.profile
           });
           router.push("/");
       } else {
@@ -87,6 +88,7 @@ export default function RegisterScreen() {
                   autoComplete="email"
                   borderColor="$borderColor"
                   focusStyle={{ borderColor: "$accent7" }}
+                  onSubmitEditing={handleSubmit}
                 />
               </YStack>
 
@@ -106,6 +108,7 @@ export default function RegisterScreen() {
                     autoComplete="new-password"
                     borderColor="$borderColor"
                     focusStyle={{ borderColor: "$accent7" }}
+                    onSubmitEditing={handleSubmit}
                   />
                   <Button
                     position="absolute"
@@ -137,6 +140,7 @@ export default function RegisterScreen() {
                     autoComplete="new-password"
                     borderColor={confirmPassword && !passwordsMatch ? "$red10" : "$borderColor"}
                     focusStyle={{ borderColor: confirmPassword && !passwordsMatch ? "$red10" : "$accent7" }}
+                    onSubmitEditing={handleSubmit}
                   />
                   <Button
                     position="absolute"
@@ -161,12 +165,22 @@ export default function RegisterScreen() {
                 </Text>
               )}
 
-              <XStack gap="$2" alignItems="center" width="100%">
+              <XStack gap="$2" alignItems="center" width="100%" pressStyle={{ opacity: 0.7 }} onPress={() => setAgreeTermsOfService(!agreeTermsOfService)}>
                 <Checkbox
+                  id="agree-terms"
                   checked={agreeTermsOfService}
                   onCheckedChange={(checked) => setAgreeTermsOfService(checked === true)}
-                  size="$3"
-                />
+                  size="$4"
+                  borderWidth={2}
+                  borderColor={agreeTermsOfService ? "$accent7" : "$borderColor"}
+                  backgroundColor={agreeTermsOfService ? "$accent7" : "transparent"}
+                >
+                  <Checkbox.Indicator>
+                    <View width="100%" height="100%" alignItems="center" justifyContent="center">
+                      <Text color="white" fontWeight="bold">✓</Text>
+                    </View>
+                  </Checkbox.Indicator>
+                </Checkbox>
                 <Text fontSize={14} color="$color">
                   {t('auth.agreeToTerms').split(' ')[0]} {t('auth.agreeToTerms').split(' ').slice(1, -3).join(' ')}{' '}
                   <Link href="/(other)/terms-of-service">

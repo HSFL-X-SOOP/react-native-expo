@@ -1,19 +1,22 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, {createContext, ReactNode, useContext, useState} from 'react';
 
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { useRouter } from 'expo-router';
+import {useLocalStorage} from '@/hooks/useLocalStorage';
+import {useRouter} from 'expo-router';
+import {UserProfile} from '@/api/models/profile';
 
 export interface SessionInfo {
     accessToken: string;
     refreshToken: string | null;
     loggedInSince: Date;
     lastTokenRefresh: Date | null;
+    profile: UserProfile | null;
 }
 
 interface AuthContextType {
     session?: SessionInfo;
     login: (session: SessionInfo) => void;
     logout: () => void;
+    updateProfile: (profile: UserProfile | undefined) => void;
 }
 
 const SessionContext = createContext<AuthContextType>({
@@ -22,25 +25,31 @@ const SessionContext = createContext<AuthContextType>({
     },
     logout: () => {
     },
+    updateProfile: () => {
+    },
 });
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [stored, setStored] = useLocalStorage<SessionInfo>('session');
-    const [session, setSession] = useState<SessionInfo | undefined>(stored);
     const router = useRouter();
 
     const login = (newSession: SessionInfo) => {
-        setSession(newSession);
         setStored(newSession);
     };
+
     const logout = () => {
-        setSession(undefined);
         setStored(undefined);
-        router.push('/map');
+        router.push('/');
+    };
+
+    const updateProfile = (profile: UserProfile | undefined) => {
+        if (stored) {
+            setStored({...stored, profile: profile || null});
+        }
     };
 
     return (
-        <SessionContext.Provider value={{session, login, logout}}>
+        <SessionContext.Provider value={{session: stored, login, logout, updateProfile}}>
             {children}
         </SessionContext.Provider>
     );

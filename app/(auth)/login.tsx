@@ -7,6 +7,7 @@ import {Eye, EyeOff, Lock, Mail} from '@tamagui/lucide-icons';
 import {Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator, Spinner, H1} from 'tamagui';
 import {useTranslation} from '@/hooks/useTranslation';
 import {GoogleIcon} from '@/components/ui/Icons';
+import {ENV} from '@/config/environment';
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -32,7 +33,8 @@ export default function LoginScreen() {
                 accessToken: res.accessToken,
                 refreshToken: res.refreshToken,
                 loggedInSince: new Date(),
-                lastTokenRefresh: null
+                lastTokenRefresh: null,
+                profile: res.profile
             });
             router.push("/map");
         } else {
@@ -43,7 +45,11 @@ export default function LoginScreen() {
     const handleGoogleLogin = () => {
         // Web OAuth redirect
         if (typeof window !== 'undefined') {
-            window.location.assign("/api/login/google");
+            const loginUrl = ENV.mode === 'dev'
+                ? `${ENV.apiUrl}/login/google`
+                : "/api/login/google";
+
+            window.location.assign(loginUrl);
         }
     };
 
@@ -87,6 +93,7 @@ export default function LoginScreen() {
                                     autoComplete="email"
                                     borderColor="$borderColor"
                                     focusStyle={{borderColor: "$accent7"}}
+                                    onSubmitEditing={handleSubmit}
                                 />
                             </YStack>
 
@@ -106,6 +113,7 @@ export default function LoginScreen() {
                                         autoComplete="current-password"
                                         borderColor="$borderColor"
                                         focusStyle={{borderColor: "$accent7"}}
+                                        onSubmitEditing={handleSubmit}
                                     />
                                     <Button
                                         position="absolute"
@@ -129,12 +137,22 @@ export default function LoginScreen() {
                             )}
 
                             <XStack justifyContent="space-between" alignItems="center" width="100%">
-                                <XStack gap="$2" alignItems="center">
+                                <XStack gap="$2" alignItems="center" pressStyle={{ opacity: 0.7 }} onPress={() => setRememberMe(!rememberMe)}>
                                     <Checkbox
+                                        id="remember-me"
                                         checked={rememberMe}
                                         onCheckedChange={(checked) => setRememberMe(checked === true)}
-                                        size="$3"
-                                    />
+                                        size="$4"
+                                        borderWidth={2}
+                                        borderColor={rememberMe ? "$accent7" : "$borderColor"}
+                                        backgroundColor={rememberMe ? "$accent7" : "transparent"}
+                                    >
+                                        <Checkbox.Indicator>
+                                            <View width="100%" height="100%" alignItems="center" justifyContent="center">
+                                                <Text color="white" fontWeight="bold">✓</Text>
+                                            </View>
+                                        </Checkbox.Indicator>
+                                    </Checkbox>
                                     <Text fontSize={14} color="$color">{t('auth.rememberMe')}</Text>
                                 </XStack>
                                 <Link href="/">
@@ -212,7 +230,6 @@ export default function LoginScreen() {
                                 </Link>
                             </Text>
                         </YStack>
-
                     </YStack>
                 </Card>
             </YStack>

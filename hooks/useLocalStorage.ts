@@ -28,6 +28,22 @@ export function useLocalStorage<T>(key: string, initialValue?: T): [T | undefine
     loadStoredValue();
   }, [key]);
 
+  useEffect(() => {
+    const saveToStorage = async () => {
+      try {
+        if (value === undefined) {
+          await Storage.removeItem(key);
+        } else {
+          await Storage.setItem(key, JSON.stringify(value));
+        }
+      } catch (error) {
+        console.warn(`Error saving key "${key}" to storage`, error);
+      }
+    };
+
+    saveToStorage();
+  }, [key, value]);
+
   return [value, setValue];
 }
 
