@@ -38,11 +38,15 @@ export default function ProfileScreen() {
       setSelectedLanguage(session.profile.language);
       setSelectedRoles(session.profile.roles || []);
       setSelectedMeasurement(session.profile.measurementSystem);
+    }
+  }, [session?.profile]);
 
+  useEffect(() => {
+    if (session?.profile) {
       const langCode = session.profile.language === Language.DE ? 'de' : 'en';
       changeLanguage(langCode);
     }
-  }, [session?.profile, changeLanguage]);
+  }, [session?.profile?.language]);
 
   const handleRoleToggle = (role: ActivityRole) => {
     setSelectedRoles(prev =>
