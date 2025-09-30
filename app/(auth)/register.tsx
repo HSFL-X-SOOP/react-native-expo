@@ -85,6 +85,7 @@ export default function RegisterScreen() {
                   autoComplete="email"
                   borderColor="$borderColor"
                   focusStyle={{ borderColor: "$accent7" }}
+                  onSubmitEditing={handleSubmit}
                 />
               </YStack>
 
@@ -104,6 +105,7 @@ export default function RegisterScreen() {
                     autoComplete="new-password"
                     borderColor="$borderColor"
                     focusStyle={{ borderColor: "$accent7" }}
+                    onSubmitEditing={handleSubmit}
                   />
                   <Button
                     position="absolute"
@@ -135,6 +137,7 @@ export default function RegisterScreen() {
                     autoComplete="new-password"
                     borderColor={confirmPassword && !passwordsMatch ? "$red10" : "$borderColor"}
                     focusStyle={{ borderColor: confirmPassword && !passwordsMatch ? "$red10" : "$accent7" }}
+                    onSubmitEditing={handleSubmit}
                   />
                   <Button
                     position="absolute"

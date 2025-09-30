@@ -92,6 +92,7 @@ export default function LoginScreen() {
                                     autoComplete="email"
                                     borderColor="$borderColor"
                                     focusStyle={{borderColor: "$accent7"}}
+                                    onSubmitEditing={handleSubmit}
                                 />
                             </YStack>
 
@@ -111,6 +112,7 @@ export default function LoginScreen() {
                                         autoComplete="current-password"
                                         borderColor="$borderColor"
                                         focusStyle={{borderColor: "$accent7"}}
+                                        onSubmitEditing={handleSubmit}
                                     />
                                     <Button
                                         position="absolute"

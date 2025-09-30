@@ -1,8 +1,8 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, {createContext, ReactNode, useContext, useState} from 'react';
 
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { useRouter } from 'expo-router';
-import { UserProfile } from '@/api/models/profile';
+import {useLocalStorage} from '@/hooks/useLocalStorage';
+import {useRouter} from 'expo-router';
+import {UserProfile} from '@/api/models/profile';
 
 export interface SessionInfo {
     accessToken: string;
@@ -16,7 +16,7 @@ interface AuthContextType {
     session?: SessionInfo;
     login: (session: SessionInfo) => void;
     logout: () => void;
-    updateProfile: (profile: UserProfile) => void;
+    updateProfile: (profile: UserProfile | undefined) => void;
 }
 
 const SessionContext = createContext<AuthContextType>({
@@ -42,9 +42,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         router.push('/');
     };
 
-    const updateProfile = (profile: UserProfile) => {
+    const updateProfile = (profile: UserProfile | undefined) => {
         if (stored) {
-            setStored({ ...stored, profile });
+            setStored({...stored, profile: profile || null});
         }
     };
 

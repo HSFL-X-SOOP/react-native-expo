@@ -3,7 +3,7 @@ import {Button, Text, XStack, YStack, useTheme, Popover, Adapt} from 'tamagui';
 
 import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
 import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
-import {User, ChevronDown, Languages} from '@tamagui/lucide-icons';
+import {User, ChevronDown, Languages, LogOut} from '@tamagui/lucide-icons';
 import {useSession} from '@/context/SessionContext';
 import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
 import {useTranslation} from '@/hooks/useTranslation';
@@ -13,8 +13,13 @@ import {LanguageSelector} from '@/components/common/LanguageSelector';
 export function NavbarWeb() {
     const router = useRouter();
     const t = useTheme();
-    const {session} = useSession();
+    const {session, logout} = useSession();
     const {t: translate} = useTranslation();
+
+    const handleLogout = () => {
+        logout();
+        router.push('/map');
+    };
 
     return (
         <XStack jc={"space-between"} backgroundColor={"$background"} alignItems={"center"} px={"$10"} gap={"$9"}
@@ -177,11 +182,17 @@ export function NavbarWeb() {
                         <Link href="/(profile)/profile">
                             <Button variant="outlined">
                                 <XStack alignItems="center" gap="$2">
-                                    <User size={28} color={"$accent8"}/>
+                                    <User size={20} color={"$accent8"}/>
                                     <Text>{translate('navigation.profile')}</Text>
                                 </XStack>
                             </Button>
                         </Link>
+                        <Button variant="outlined" onPress={handleLogout}>
+                            <XStack alignItems="center" gap="$2">
+                                <LogOut size={20} color={"$accent8"}/>
+                                <Text>{translate('auth.logout')}</Text>
+                            </XStack>
+                        </Button>
                     </XStack>
                 )}
             </XStack>
