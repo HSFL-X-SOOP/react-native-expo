@@ -28,7 +28,7 @@ jobs:
         run: npm i
 
       - name: Build frontend artifacts
-        run: npm run web:build:test
+        run: npm run web:build:prod
 
       - name: Set up SSH key
         run: |
