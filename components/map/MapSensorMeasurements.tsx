@@ -1,8 +1,8 @@
 import { LocationWithBoxes, SensorModule } from "@/data/sensor";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ArrowLeft, Battery, HelpCircle, Thermometer, Waves } from "@tamagui/lucide-icons";
-import { Link } from "expo-router";
-import { Platform } from "react-native";
+import { Link, useRouter } from "expo-router";
+import { Platform, TouchableOpacity } from "react-native";
 import { Text, useTheme, XStack, YStack } from "tamagui";
 type MapSensorMeasurementsProps = {
     sensorModule: SensorModule
@@ -67,14 +67,15 @@ export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sens
 }
 
 type MapSensorMeasurementsNewProps = {
-    locationWithBoxes: LocationWithBoxes
+    locationWithBoxes: LocationWithBoxes,
+    closeOverlay?: () => void
 }
 
-export const MapSensorMeasurementsNew: React.FC<MapSensorMeasurementsNewProps> =({locationWithBoxes}) => {
+export const MapSensorMeasurementsNew: React.FC<MapSensorMeasurementsNewProps> =({locationWithBoxes, closeOverlay}) => {
   const {t} = useTranslation();
   const isAdmin = false; //TODO: Hier prüfen ob Admin
   const excludedMeasurements: string[] = [];
-
+  const router = useRouter();
   if (!isAdmin) {
     excludedMeasurements.push("Battery, voltage");
   }
@@ -83,6 +84,11 @@ export const MapSensorMeasurementsNew: React.FC<MapSensorMeasurementsNewProps> =
   // Wenn die Width/minWidth geändert wird, dann muss das in der global.css bei '.maplibregl-popup-content' auch angepasst werden, damit das Schließen-Kreuz richtig positioniert ist.
   const cardWidth = Platform.OS === "web" ? 300 : 320;
   const cardMinHeight = 200;
+
+  const close = () => {
+    closeOverlay ? closeOverlay() : null;
+    router.push(`/dashboard/${locationWithBoxes.location.id}`);
+  }
 
   return (
     <YStack
@@ -99,17 +105,19 @@ export const MapSensorMeasurementsNew: React.FC<MapSensorMeasurementsNewProps> =
     >
       <Text fontSize={16} color="$gray10">Name</Text>
 
-
-      <Link href={`/dashboard/${locationWithBoxes.location.id}`} style={{ zIndex: 10}} onPress={(e) => e.stopPropagation()}>
+      <TouchableOpacity onPress={close}>
         <Text fontSize={24} color="$color" fontWeight="600">
           {locationWithBoxes.location.name}
         </Text>
-      </Link>
+
+      </TouchableOpacity>
+      {/* <Link href={`/dashboard/${locationWithBoxes.location.id}`} style={{ zIndex: 10}}>
+      </Link> */}
 
 
         {locationWithBoxes.boxes.map((a, index) => (
           a.type === "WaterBox" && (
-            <XStack flexWrap="wrap" width="100%" justifyContent="space-between" marginTop="$3">
+            <XStack key={index} flexWrap="wrap" width="100%" justifyContent="space-between" marginTop="$3">
             
               <MeasurementCard key={index + 1} index={index + 1} measurementType="Temperature, water" value={a.measurementTimes[0].measurements.waterTemperature}/>
               <MeasurementCard key={index + 2} index={index + 2} measurementType="Wave Height" value={a.measurementTimes[0].measurements.waveHeight}/>
