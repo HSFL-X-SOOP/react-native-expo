@@ -155,7 +155,7 @@ export default function LoginScreen() {
                                     </Checkbox>
                                     <Text fontSize={14} color="$color">{t('auth.rememberMe')}</Text>
                                 </XStack>
-                                <Link href="/">
+                                <Link href="/(auth)/magic-link">
                                     <Text color="$accent7" fontSize={14} textDecorationLine="underline">
                                         {t('auth.forgotPassword')}
                                     </Text>
