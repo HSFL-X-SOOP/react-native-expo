@@ -4,8 +4,7 @@ import {useThemeContext} from '@/context/ThemeSwitch';
 import {GetGeomarData, GetGeomarDataTimeRange} from '@/data/geomar-data';
 import {SensorModule} from '@/data/sensor';
 import {useLocalSearchParams} from 'expo-router';
-import { LineChart } from 'react-native-chart-kit';
-import { Dimensions } from 'react-native';
+import {LineChart} from 'react-native-chart-kit';
 import {
     XStack,
     YStack,
@@ -42,7 +41,7 @@ export default function DashboardScreen() {
     let {id} = useLocalSearchParams();
 
     if (!id) {
-        id = "4"; // Default-Wert, falls id nicht vorhanden ist
+        id = "4";
     }
 
     const [content, setContent] = useState<SensorModule[]>([])
@@ -64,8 +63,8 @@ export default function DashboardScreen() {
         fetchData()
     }, [id, timeRange])
 
-  const isAdmin = false;
-  const excludedMeasurements: string[] = [];
+    const isAdmin = false;
+    const excludedMeasurements: string[] = [];
 
     if (!isAdmin) {
         excludedMeasurements.push("Battery, voltage");
@@ -104,7 +103,6 @@ export default function DashboardScreen() {
     return (
         <SafeAreaView style={{flex: 1}}>
             <ScrollView style={{flex: 1, backgroundColor: isDark ? '#0a0a0a' : '#ffffff'}}>
-                {/* Hero Section with Image */}
                 <Stack position="relative" width="100%" height={media.lg ? 350 : 250} overflow="hidden">
                     <Image
                         source={{
@@ -114,7 +112,6 @@ export default function DashboardScreen() {
                         height="100%"
                     />
 
-                    {/* Simple Gradient Overlay */}
                     <Stack
                         position="absolute"
                         bottom={0}
@@ -124,7 +121,6 @@ export default function DashboardScreen() {
                         background="linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%)"
                     />
 
-                    {/* Hero Content */}
                     <Stack position="absolute" bottom="$4" left="$4" right="$4">
                         <Text color="white" fontSize="$3" opacity={0.9} marginBottom="$1">
                             Sensor Dashboard
@@ -142,17 +138,15 @@ export default function DashboardScreen() {
                     </Stack>
                 </Stack>
 
-                {/* Main Content Container */}
                 <YStack
-                    padding="$4"
-                    gap="$5"
+                    padding={media.md ? "$3" : "$4"}
+                    gap={media.md ? "$4" : "$5"}
                     maxWidth={1400}
                     width="100%"
                     alignSelf="center"
-                    marginTop={-30}
+                    marginTop={media.md ? -20 : -30}
                 >
 
-                    {/* Harbor Info Card - Simple Clean Design */}
                     <Card
                         elevate
                         bordered
@@ -219,7 +213,6 @@ export default function DashboardScreen() {
                         </Animated.View>
                     </Card>
 
-                    {/* Quick Stats Cards - Clean Simple Design */}
                     <YStack gap="$3">
                         <XStack alignItems="center" justifyContent="space-between">
                             <H3 fontSize="$5" fontWeight="600">Aktuelle Messwerte</H3>
@@ -231,8 +224,8 @@ export default function DashboardScreen() {
                         <XStack
                             gap="$3"
                             width="100%"
-                            flexWrap="nowrap"
-                            justifyContent="space-between"
+                            flexWrap={media.md ? "wrap" : "nowrap"}
+                            justifyContent={media.md ? "center" : "space-between"}
                         >
                             {content[0] && content[0].latestMeasurements
                                 .filter(a => !excludedMeasurements.includes(a.measurementType.name))
@@ -243,7 +236,9 @@ export default function DashboardScreen() {
                                         elevate
                                         bordered
                                         backgroundColor={isDark ? '$gray1' : '$background'}
-                                        flex={1}
+                                        flex={media.md ? undefined : 1}
+                                        width={media.md ? "100%" : undefined}
+                                        minWidth={250}
                                         borderWidth={1}
                                         borderColor="$borderColor"
                                     >
@@ -285,7 +280,6 @@ export default function DashboardScreen() {
                     </YStack>
 
 
-                    {/* All Measurements Grid */}
                     {content[0] && content[0].latestMeasurements.filter(a => !excludedMeasurements.includes(a.measurementType.name)).length > 3 && (
                         <YStack gap="$3">
                             <H2 fontSize="$6">Weitere Messwerte</H2>
@@ -310,7 +304,6 @@ export default function DashboardScreen() {
 
                     <Separator marginVertical="$2"/>
 
-                    {/* Charts Section */}
                     <YStack gap="$4">
                         <XStack alignItems="center" justifyContent="space-between">
                             <YStack gap="$1">
@@ -357,8 +350,8 @@ export default function DashboardScreen() {
                         <XStack
                             gap="$3"
                             width="100%"
-                            justifyContent="space-between"
-                            flexWrap="nowrap"
+                            justifyContent={media.md ? "center" : "space-between"}
+                            flexWrap={media.md ? "wrap" : "nowrap"}
                         >
                             <LineChartCard
                                 title="Wassertemperatur"
@@ -396,7 +389,7 @@ const CreateMeasurementDictionary = (data: any) => {
     const measurementDict: Record<string, { label: string, value: number }[]> = {};
 
     measurementTimes.forEach((entry: any) => {
-        if (!entry.time) return; // Skip if no time available
+        if (!entry.time) return;
 
         Object.entries(entry.measurements || {}).forEach(([key, value]) => {
             if (!measurementDict[key]) {
@@ -472,7 +465,6 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
     const {isDark} = useThemeContext();
     const media = useMedia();
 
-    // Prepare data for charts
     const data = chartData.length > 0
         ? chartData.filter((_, idx) => idx % dataPrecision === 0).map(item => item.value)
         : [];
@@ -481,13 +473,12 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
         ? chartData.filter((_, idx) => idx % dataPrecision === 0).map(item => item.label)
         : [];
 
-    // Show max 6 labels
     const showEvery = Math.ceil(labels.length / 6);
     const displayLabels = labels.filter((_, index) => index % showEvery === 0);
 
-    // Get chart width based on card width
-    const chartWidth = media.lg ? 400 : 320;
-    const chartHeight = 220;
+    const chartWidth = media.md ? 320 : 400;
+    const chartHeight = media.md ? 180 : 220;
+
 
     const chartConfig = {
         backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
@@ -516,8 +507,10 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             elevate
             bordered
             backgroundColor={isDark ? '$gray1' : '$background'}
-            flex={1}
+            flex={media.md ? undefined : 1}
+            width={media.md ? "100%" : undefined}
             minWidth={280}
+            marginBottom={media.md ? "$3" : 0}
         >
             <Card.Header padded>
                 <XStack gap="$2" alignItems="center" justifyContent="space-between">
@@ -548,13 +541,13 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             </Card.Header>
             <Card.Footer padded paddingTop="$0">
                 {data.length > 0 ? (
-                    <View style={{ width: '100%', alignItems: 'center' }}>
+                    <View style={{width: '100%', alignItems: 'center'}}>
                         <LineChart
                             data={{
                                 labels: displayLabels,
                                 datasets: [{
                                     data: data.length > 0 ? data : [0],
-                                    color: (opacity = 1) => color,
+                                    color: () => color,
                                     strokeWidth: 2.5
                                 }]
                             }}
