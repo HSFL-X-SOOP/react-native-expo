@@ -1,6 +1,7 @@
 import { useThemeContext } from '@/context/ThemeSwitch';
 import { GetGeomarData, GetGeomarDataTimeRange } from '@/data/geomar-data';
 import { LocationWithBoxes, SensorModule } from '@/data/sensor';
+import { useTranslation } from '@/hooks/useTranslation';
 import {
     Activity,
     Battery,
@@ -43,6 +44,7 @@ import {
 export default function DashboardScreen() {
     const media = useMedia();
     const router = useRouter();
+    const { t, changeLanguage } = useTranslation();
     const {isDark} = useThemeContext();
     const [showInfo, setShowInfo] = useState(false);
     const infoHeight = useRef(new Animated.Value(0)).current;
@@ -133,7 +135,7 @@ export default function DashboardScreen() {
 
                     <Stack position="absolute" bottom="$4" left="$4" right="$4">
                         <Text color="white" fontSize="$3" opacity={0.9} marginBottom="$1">
-                            Sensor Dashboard
+                            {t('dashboard.sensorDashboard')}
                         </Text>
                         <View style={{width: 300}}>
                             <SelectDemoContents isDark={isDark} router={router}sensorLocations={sensorLocations} id="select-demo-2" native />
@@ -172,7 +174,7 @@ export default function DashboardScreen() {
                                         <Home size={24} color="$gray10"/>
                                     </Stack>
                                     <YStack flex={1}>
-                                        <Text color="$gray11" fontSize="$2">Hafen</Text>
+                                        <Text color="$gray11" fontSize="$2">{t('dashboard.harbor')}</Text>
                                         <H3 fontSize="$6" fontWeight="600">{name}</H3>
                                     </YStack>
                                 </XStack>
@@ -199,15 +201,15 @@ export default function DashboardScreen() {
                                         <XStack gap="$2" alignItems="center" minWidth={200}>
                                             <MapPin size={18} color="$gray10"/>
                                             <YStack>
-                                                <Text fontSize="$1" color="$gray11">Adresse</Text>
+                                                <Text fontSize="$1" color="$gray11">{t('dashboard.address')}</Text>
                                                 <Text fontSize="$3">Am Hafen 1, 24937 Flensburg</Text>
                                             </YStack>
                                         </XStack>
                                         <XStack gap="$2" alignItems="center" minWidth={200}>
                                             <Clock size={18} color="$gray10"/>
                                             <YStack>
-                                                <Text fontSize="$1" color="$gray11">Öffnungszeiten</Text>
-                                                <Text fontSize="$3">Täglich 06:00 - 22:00 Uhr</Text>
+                                                <Text fontSize="$1" color="$gray11">{t('dashboard.openingHours')}</Text>
+                                                <Text fontSize="$3">{t('dashboard.daily')} 06:00 - 22:00 Uhr</Text>
                                             </YStack>
                                         </XStack>
                                     </XStack>
@@ -218,10 +220,10 @@ export default function DashboardScreen() {
 
                     <YStack gap="$3">
                         <XStack alignItems="center" justifyContent="space-between">
-                            <H3 fontSize="$5" fontWeight="600">Aktuelle Messwerte</H3>
+                            <H3 fontSize="$5" fontWeight="600">{t('dashboard.currentMeasurements')}</H3>
                             <XStack gap="$1" alignItems="center">
                                 <Stack width={6} height={6} borderRadius="$5" backgroundColor="$green9"/>
-                                <Text fontSize="$2" color="$gray11">Live</Text>
+                                <Text fontSize="$2" color="$gray11">{t('dashboard.live')}</Text>
                             </XStack>
                         </XStack>
                         <XStack
@@ -264,7 +266,7 @@ export default function DashboardScreen() {
                                                         fontWeight="500"
                                                         textAlign="center"
                                                     >
-                                                        {getTextFromMeasurementType(measurement.measurementType.name)}
+                                                        {getTextFromMeasurementType(measurement.measurementType.name, t)}
                                                     </Text>
                                                     <XStack alignItems="baseline" gap="$1">
                                                         <H2 fontSize="$8" fontWeight="600" color="$color">
@@ -310,9 +312,9 @@ export default function DashboardScreen() {
                     <YStack gap="$4">
                         <XStack alignItems="center" justifyContent="space-between">
                             <YStack gap="$1">
-                                <H3 fontSize="$5" fontWeight="600">Verlaufsdaten</H3>
+                                <H3 fontSize="$5" fontWeight="600">{t('dashboard.historicalData')}</H3>
                                 <Text fontSize="$2" color="$gray11">
-                                    {timeRange === 'today' ? 'Heute' : timeRange === 'week' ? 'Letzte 7 Tage' : 'Letzter Monat'}
+                                    {timeRange === 'today' ? t('dashboard.today') : timeRange === 'week' ? t('dashboard.last7Days') : t('dashboard.lastMonth')}
                                 </Text>
                             </YStack>
                             <XStack gap="$2" backgroundColor={isDark ? '$gray8' : '$gray2'} padding="$1"
@@ -325,7 +327,7 @@ export default function DashboardScreen() {
                                     onPress={() => setTimeRange('today')}
                                     borderRadius="$2"
                                 >
-                                    Heute
+                                    {t('dashboard.today')}
                                 </Button>
                                 <Button
                                     size="$2"
@@ -335,7 +337,7 @@ export default function DashboardScreen() {
                                     onPress={() => setTimeRange('week')}
                                     borderRadius="$2"
                                 >
-                                    Woche
+                                    {t('dashboard.week')}
                                 </Button>
                                 <Button
                                     size="$2"
@@ -345,7 +347,7 @@ export default function DashboardScreen() {
                                     onPress={() => setTimeRange('month')}
                                     borderRadius="$2"
                                 >
-                                    Monat
+                                    {t('dashboard.month')}
                                 </Button>
                             </XStack>
                         </XStack>
@@ -357,21 +359,21 @@ export default function DashboardScreen() {
                             flexWrap={media.md ? "wrap" : "nowrap"}
                         >
                             <LineChartCard
-                                title="Wassertemperatur"
+                                title={t('measurements.waterTemperature')}
                                 icon={<Thermometer size={20} color="#F97316"/>}
                                 chartData={chartWaterTemperature}
                                 dataPrecision={dataPrecision}
                                 color="#F97316"
                             />
                             <LineChartCard
-                                title="Gezeiten"
+                                title={t('measurements.tide')}
                                 icon={<Waves size={20} color="#3B82F6"/>}
                                 chartData={chartTide}
                                 dataPrecision={dataPrecision}
                                 color="#3B82F6"
                             />
                             <LineChartCard
-                                title="Wellenhöhe"
+                                title={t('measurements.waveHeight')}
                                 icon={<Activity size={20} color="#10B981"/>}
                                 chartData={chartWaveHeight}
                                 dataPrecision={dataPrecision}
@@ -564,7 +566,7 @@ type MeasurementCardProps = {
 
 export const MeasurementCard: React.FC<MeasurementCardProps> = ({measurementType, value}) => {
     const media = useMedia();
-
+    const { t, changeLanguage } = useTranslation();
     return (
         <Card
             elevate
@@ -582,7 +584,7 @@ export const MeasurementCard: React.FC<MeasurementCardProps> = ({measurementType
                     {getMeasurementIcon(measurementType, 24)}
                     <YStack alignItems="center">
                         <Text fontSize="$1" color="$gray11" textAlign="center">
-                            {getTextFromMeasurementType(measurementType)}
+                            {getTextFromMeasurementType(measurementType, t)}
                         </Text>
                         <XStack alignItems="baseline" gap="$1">
                             <H4 fontSize="$6" color="$blue10">
@@ -616,7 +618,7 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                                                             }) => {
     const {isDark} = useThemeContext();
     const media = useMedia();
-
+    const { t, changeLanguage } = useTranslation();
     const data = chartData.length > 0
         ? chartData.filter((_, idx) => idx % dataPrecision === 0).map(item => item.value)
         : [];
@@ -671,13 +673,13 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                         <YStack>
                             <H3 fontSize="$5">{title}</H3>
                             <Text fontSize="$1" color="$gray11">
-                                {data.length} Datenpunkte
+                                {data.length} {t('dashboard.dataPoints')}
                             </Text>
                         </YStack>
                     </XStack>
                     {data.length > 0 && (
                         <YStack alignItems="flex-end">
-                            <Text fontSize="$1" color="$gray11">Aktuell</Text>
+                            <Text fontSize="$1" color="$gray11">{t('dashboard.current')}</Text>
                             <XStack alignItems="baseline" gap="$1">
                                 <Text fontSize="$6" fontWeight="600" color={color}>
                                     {data[data.length - 1]?.toFixed(1)}
@@ -727,7 +729,7 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                 ) : (
                     <YStack height={chartHeight} alignItems="center" justifyContent="center">
                         <Activity size={32} color="$gray8"/>
-                        <Text color="$gray10" marginTop="$2">Keine Daten verfügbar</Text>
+                        <Text color="$gray10" marginTop="$2">{t('dashboard.noDataAvailable')}</Text>
                     </YStack>
                 )}
             </Card.Footer>
@@ -785,17 +787,17 @@ const getValueColor = (measurementType: string): string => {
     }
 };
 
-const getTextFromMeasurementType = (measurementType: string): string => {
+const getTextFromMeasurementType = (measurementType: string, t: (key: string) => string): string => {
     switch (measurementType) {
         case "Wave Height":
-            return "Wellenhöhe";
+            return t("measurements.waveHeight");
         case "Temperature, water":
         case "WTemp":
-            return "Wassertemperatur";
+            return t("measurements.waterTemperature");
         case "Tide":
-            return "Tide";
+            return t("measurements.tide");
         case "Battery, voltage":
-            return "Batteriespannung";
+            return t("measurements.batteryVoltage");
         default:
             return measurementType;
     }
