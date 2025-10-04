@@ -55,7 +55,22 @@
     "passwordUppercase": "At least one uppercase letter",
     "passwordDigit": "At least one digit",
     "passwordSpecial": "At least one special character (@$!%*?&#-)",
-    "passwordStrength": "Password Strength"
+    "passwordStrength": "Password Strength",
+    "magicLink": {
+      "title": "Magic Link",
+      "description": "Enter your email and we'll send you a secure sign-in link.",
+      "emailAddress": "Email Address",
+      "sendMagicLink": "Send Magic Link",
+      "sending": "Sending...",
+      "checkYourEmail": "Check Your Email",
+      "emailSent": "We've sent a magic link to {email}. Click the link in the email to sign in.",
+      "backToSignIn": "Back to sign in",
+      "verifying": "Verifying Magic Link",
+      "verifyingMessage": "Please wait while we sign you in...",
+      "invalidOrExpired": "Invalid or Expired Link",
+      "requestNewLink": "Request a new magic link",
+      "validEmail": "Please enter a valid email address"
+    }
   },
   "profile": {
     "title": "Profile",
@@ -153,5 +168,47 @@
     "next": "Next",
     "finish": "Finish"
   },
-  "last.measurement": "Last Measurement"
+  "last.measurement": "Last Measurement",
+  "dashboard": {
+    "title": "Sensor Dashboard",
+    "loading": "Loading data...",
+    "harbor": "Harbor",
+    "address": "Address",
+    "addressValue": "Am Hafen 1, 24937 Flensburg",
+    "openingHours": "Opening Hours",
+    "openingHoursValue": "Daily 06:00 - 22:00",
+    "currentMeasurements": "Current Measurements",
+    "live": "Live",
+    "furtherMeasurements": "Further Measurements",
+    "historicalData": "Historical Data",
+    "timeRange": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "last7days": "Last 7 Days",
+      "last30days": "Last 30 Days",
+      "todayButton": "Today",
+      "yesterdayButton": "Yesterday",
+      "last7daysButton": "7 Days",
+      "last30daysButton": "30 Days"
+    },
+    "charts": {
+      "waterTemperature": "Water Temperature",
+      "waterLevel": "Water Level",
+      "waveHeight": "Wave Height",
+      "dataPoints": "Data Points",
+      "current": "Current",
+      "noData": "No data available"
+    },
+    "measurements": {
+      "waveHeight": "Wave Height",
+      "waterTemperature": "Water Temperature",
+      "waterLevel": "Water Level",
+      "batteryVoltage": "Battery Voltage"
+    },
+    "units": {
+      "celsius": "°C",
+      "centimeters": "cm",
+      "volts": "V"
+    }
+  }
 }

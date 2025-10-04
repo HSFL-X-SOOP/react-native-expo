@@ -1,11 +1,11 @@
 import MapWrapper from '@/components/Map';
 import MapFilterButton from '@/components/map/MapFilterButton';
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
+
 import { View } from 'tamagui';
 
 export default function HomeScreen() {
-  // State für die Map Filter - genau wie im Frontend
+
   const [temperatureVisible, setTemperatureVisible] = useState(false);
   const [windDirectionVisible, setWindDirectionVisible] = useState(false);
   const [module1Visible, setModule1Visible] = useState(true);
@@ -13,7 +13,7 @@ export default function HomeScreen() {
   const [module3Visible, setModule3Visible] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View pos={"relative"} flex={1} backgroundColor={"red"}>
       <MapWrapper
         module1Visible={module1Visible}
         module2Visible={module2Visible}
@@ -37,10 +37,3 @@ export default function HomeScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    position: 'relative',
-  },
-});

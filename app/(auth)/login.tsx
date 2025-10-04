@@ -1,6 +1,6 @@
 import {useSession} from '@/context/SessionContext';
 import {useAuth} from '@/hooks/useAuth';
-import {Link, useRouter} from 'expo-router';
+import {Link, useRouter, Href} from 'expo-router';
 import {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {Eye, EyeOff, Lock, Mail} from '@tamagui/lucide-icons';
@@ -155,7 +155,7 @@ export default function LoginScreen() {
                                     </Checkbox>
                                     <Text fontSize={14} color="$color">{t('auth.rememberMe')}</Text>
                                 </XStack>
-                                <Link href="/(auth)/magic-link">
+                                <Link href={"/(auth)/magic-link" as Href}>
                                     <Text color="$accent7" fontSize={14} textDecorationLine="underline">
                                         {t('auth.forgotPassword')}
                                     </Text>
@@ -223,7 +223,7 @@ export default function LoginScreen() {
                         <YStack alignItems="center">
                             <Text fontSize={14} color="$color">
                                 {t('auth.dontHaveAccount')}{' '}
-                                <Link href="/(auth)/register">
+                                <Link href={"/(auth)/register" as Href}>
                                     <Text color="$accent7" textDecorationLine="underline" fontWeight="600">
                                         {t('auth.signUp')}
                                     </Text>
