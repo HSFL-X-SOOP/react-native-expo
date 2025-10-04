@@ -2,12 +2,13 @@ import {useSession} from '@/context/SessionContext';
 import {useAuth} from '@/hooks/useAuth';
 import {Link, useRouter, Href} from 'expo-router';
 import {useEffect, useState} from 'react';
-import {SafeAreaView} from 'react-native';
+import {Platform, SafeAreaView} from 'react-native';
 import {Eye, EyeOff, Lock, Mail} from '@tamagui/lucide-icons';
 import {Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator, Spinner, H1} from 'tamagui';
 import {useTranslation} from '@/hooks/useTranslation';
 import {GoogleIcon} from '@/components/ui/Icons';
 import {ENV} from '@/config/environment';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -17,7 +18,7 @@ export default function LoginScreen() {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
 
-    const {login, loginStatus} = useAuth();
+    const {login, loginStatus, googleLogin, googleLoginStatus} = useAuth();
     const {login: logUserIn, session} = useSession()
 
     useEffect(() => {
@@ -25,6 +26,15 @@ export default function LoginScreen() {
             router.push("/");
         }
     }, [session, router]);
+
+    useEffect(() => {
+        if (Platform.OS !== 'web') {
+            GoogleSignin.configure({
+                webClientId: ENV.googleWebClientId,
+                offlineAccess: true
+            });
+        }
+    }, []);
 
     const handleSubmit = async () => {
         const res = await login({email, password, rememberMe});
@@ -42,14 +52,35 @@ export default function LoginScreen() {
         }
     };
 
-    const handleGoogleLogin = () => {
-        // Web OAuth redirect
-        if (typeof window !== 'undefined') {
-            const loginUrl = ENV.mode === 'dev'
-                ? `${ENV.apiUrl}/login/google`
-                : "/api/login/google";
+    const handleGoogleLogin = async () => {
+        try {
+            if (Platform.OS === 'web') {
+                const loginUrl = ENV.mode === 'dev'
+                    ? `${ENV.apiUrl}/login/google`
+                    : "/api/login/google";
+                window.location.assign(loginUrl);
+            } else {
+                await GoogleSignin.hasPlayServices();
+                const userInfo = await GoogleSignin.signIn();
 
-            window.location.assign(loginUrl);
+                const idToken = userInfo.data?.idToken;
+                if (idToken) {
+                    const res = await googleLogin({idToken});
+                    console.log("Google login response:", res);
+                    if (res) {
+                        logUserIn({
+                            accessToken: res.accessToken,
+                            refreshToken: res.refreshToken,
+                            loggedInSince: new Date(),
+                            lastTokenRefresh: null,
+                            profile: res.profile
+                        });
+                        router.push("/map");
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Google Sign-In Error:', error);
         }
     };
 
@@ -195,14 +226,23 @@ export default function LoginScreen() {
                                 variant="outlined"
                                 size="$4"
                                 onPress={handleGoogleLogin}
+                                disabled={googleLoginStatus?.loading}
+                                opacity={googleLoginStatus?.loading ? 0.6 : 1}
                                 borderColor="$borderColor"
                                 borderRadius="$6"
                                 hoverStyle={{backgroundColor: "$content2"}}
                             >
-                                <XStack gap="$3" alignItems="center">
-                                    <GoogleIcon size={20} />
-                                    <Text color="$color">{t('auth.signInWithGoogle')}</Text>
-                                </XStack>
+                                {googleLoginStatus?.loading ? (
+                                    <XStack gap="$2" alignItems="center">
+                                        <Spinner size="small" />
+                                        <Text color="$color">{t('auth.signingIn')}</Text>
+                                    </XStack>
+                                ) : (
+                                    <XStack gap="$3" alignItems="center">
+                                        <GoogleIcon size={20} />
+                                        <Text color="$color">{t('auth.signInWithGoogle')}</Text>
+                                    </XStack>
+                                )}
                             </Button>
 
                             <Button

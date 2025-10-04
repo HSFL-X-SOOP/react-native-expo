@@ -2,11 +2,13 @@ import {useSession} from '@/context/SessionContext';
 import {useAuth} from '@/hooks/useAuth';
 import {Link, useRouter, Href} from 'expo-router';
 import {useEffect, useState, useMemo} from 'react';
-import {SafeAreaView} from 'react-native';
+import {Platform, SafeAreaView} from 'react-native';
 import {Button, Card, Checkbox, Input, Text, View, YStack, XStack, Separator, H1, Spinner} from 'tamagui';
 import {User, Mail, Lock, Eye, EyeOff, Check, X} from '@tamagui/lucide-icons';
 import {useTranslation} from '@/hooks/useTranslation';
 import {GoogleIcon} from '@/components/ui/Icons';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {ENV} from '@/config/environment';
 
 const EMAIL_REGEX = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#\-])[A-Za-z\d@$!%*?&#\-]{8,64}$/;
@@ -18,8 +20,9 @@ export default function RegisterScreen() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [agreeTermsOfService, setAgreeTermsOfService] = useState(false);
+
     const router = useRouter();
-    const {register, registerStatus} = useAuth();
+    const {register, registerStatus, googleLogin, googleLoginStatus} = useAuth();
     const {login, session} = useSession();
     const {t} = useTranslation();
 
@@ -28,6 +31,15 @@ export default function RegisterScreen() {
             router.push("/");
         }
     }, [session, router]);
+
+    useEffect(() => {
+        if (Platform.OS !== 'web') {
+            GoogleSignin.configure({
+                webClientId: ENV.googleWebClientId,
+                offlineAccess: true
+            });
+        }
+    }, []);
 
     const passwordValidation = useMemo(() => {
         const hasValidLength = password.length >= 8 && password.length <= 64;
@@ -107,18 +119,33 @@ export default function RegisterScreen() {
     const passwordsMatch = password === confirmPassword && confirmPassword.length > 0;
     const isFormValid = isEmailValid && isPasswordValid && passwordsMatch && agreeTermsOfService;
 
-    // Debug
-    console.log('DEBUG:', {
-        email,
-        password,
-        confirmPassword,
-        isEmailValid,
-        isPasswordValid,
-        passwordsMatch,
-        agreeTermsOfService,
-        isFormValid,
-        passwordValidation
-    });
+    const handleGoogleSignup = async () => {
+        try {
+            if (Platform.OS === 'web') {
+                console.log("Google signup for web");
+            } else {
+                await GoogleSignin.hasPlayServices();
+                const userInfo = await GoogleSignin.signIn();
+
+                const idToken = userInfo.data?.idToken;
+                if (idToken) {
+                    const res = await googleLogin({idToken});
+                    if (res) {
+                        login({
+                            accessToken: res.accessToken,
+                            refreshToken: res.refreshToken,
+                            loggedInSince: new Date(),
+                            lastTokenRefresh: null,
+                            profile: res.profile
+                        });
+                        router.push("/");
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Google Sign-Up Error:', error);
+        }
+    };
 
     return (
         <SafeAreaView style={{flex: 1}}>
@@ -231,16 +258,16 @@ export default function RegisterScreen() {
                                                 {passwordValidation.length ? (
                                                     <View width={14} height={14} alignItems="center"
                                                           justifyContent="center">
-                                                        <Check size={14} color="#22c55e"/>
+                                                        <Check size={14} style={{color: '#22c55e'}}/>
                                                     </View>
                                                 ) : (
                                                     <View width={14} height={14} alignItems="center"
                                                           justifyContent="center">
-                                                        <X size={14} color="#ef4444"/>
+                                                        <X size={14} style={{color: '#ef4444'}}/>
                                                     </View>
                                                 )}
                                                 <Text fontSize={12}
-                                                      color={passwordValidation.length ? '#22c55e' : '#ef4444'}>
+                                                      style={{color: passwordValidation.length ? '#22c55e' : '#ef4444'}}>
                                                     {t('auth.passwordLength')}
                                                 </Text>
                                             </XStack>
@@ -248,16 +275,16 @@ export default function RegisterScreen() {
                                                 {passwordValidation.lowercase ? (
                                                     <View width={14} height={14} alignItems="center"
                                                           justifyContent="center">
-                                                        <Check size={14} color="#22c55e"/>
+                                                        <Check size={14} style={{color: '#22c55e'}}/>
                                                     </View>
                                                 ) : (
                                                     <View width={14} height={14} alignItems="center"
                                                           justifyContent="center">
-                                                        <X size={14} color="#ef4444"/>
+                                                        <X size={14} style={{color: '#ef4444'}}/>
                                                     </View>
                                                 )}
                                                 <Text fontSize={12}
-                                                      color={passwordValidation.lowercase ? '#22c55e' : '#ef4444'}>
+                                                      style={{color: passwordValidation.lowercase ? '#22c55e' : '#ef4444'}}>
                                                     {t('auth.passwordLowercase')}
                                                 </Text>
                                             </XStack>
@@ -265,16 +292,16 @@ export default function RegisterScreen() {
                                                 {passwordValidation.uppercase ? (
                                                     <View width={14} height={14} alignItems="center"
                                                           justifyContent="center">
-                                                        <Check size={14} color="#22c55e"/>
+                                                        <Check size={14} style={{color: '#22c55e'}}/>
                                                     </View>
                                                 ) : (
                                                     <View width={14} height={14} alignItems="center"
                                                           justifyContent="center">
-                                                        <X size={14} color="#ef4444"/>
+                                                        <X size={14} style={{color: '#ef4444'}}/>
                                                     </View>
                                                 )}
                                                 <Text fontSize={12}
-                                                      color={passwordValidation.uppercase ? '#22c55e' : '#ef4444'}>
+                                                      style={{color: passwordValidation.uppercase ? '#22c55e' : '#ef4444'}}>
                                                     {t('auth.passwordUppercase')}
                                                 </Text>
                                             </XStack>
@@ -282,16 +309,16 @@ export default function RegisterScreen() {
                                                 {passwordValidation.digit ? (
                                                     <View width={14} height={14} alignItems="center"
                                                           justifyContent="center">
-                                                        <Check size={14} color="#22c55e"/>
+                                                        <Check size={14} style={{color: '#22c55e'}}/>
                                                     </View>
                                                 ) : (
                                                     <View width={14} height={14} alignItems="center"
                                                           justifyContent="center">
-                                                        <X size={14} color="#ef4444"/>
+                                                        <X size={14} style={{color: '#ef4444'}}/>
                                                     </View>
                                                 )}
                                                 <Text fontSize={12}
-                                                      color={passwordValidation.digit ? '#22c55e' : '#ef4444'}>
+                                                      style={{color: passwordValidation.digit ? '#22c55e' : '#ef4444'}}>
                                                     {t('auth.passwordDigit')}
                                                 </Text>
                                             </XStack>
@@ -299,16 +326,16 @@ export default function RegisterScreen() {
                                                 {passwordValidation.special ? (
                                                     <View width={14} height={14} alignItems="center"
                                                           justifyContent="center">
-                                                        <Check size={14} color="#22c55e"/>
+                                                        <Check size={14} style={{color: '#22c55e'}}/>
                                                     </View>
                                                 ) : (
                                                     <View width={14} height={14} alignItems="center"
                                                           justifyContent="center">
-                                                        <X size={14} color="#ef4444"/>
+                                                        <X size={14} style={{color: '#ef4444'}}/>
                                                     </View>
                                                 )}
                                                 <Text fontSize={12}
-                                                      color={passwordValidation.special ? '#22c55e' : '#ef4444'}>
+                                                      style={{color: passwordValidation.special ? '#22c55e' : '#ef4444'}}>
                                                     {t('auth.passwordSpecial')}
                                                 </Text>
                                             </XStack>
@@ -379,7 +406,7 @@ export default function RegisterScreen() {
                                 </Checkbox>
                                 <Text fontSize={14} color="$color">
                                     {t('auth.agreeToTerms').split(' ')[0]} {t('auth.agreeToTerms').split(' ').slice(1, -3).join(' ')}{' '}
-                                    <Link href={"/(other)/terms-of-service" as Href}>
+                                    <Link href="/(other)/terms-of-service">
                                         <Text color="$accent7"
                                               textDecorationLine="underline">{t('auth.termsOfService')}</Text>
                                     </Link>
@@ -417,21 +444,30 @@ export default function RegisterScreen() {
                         <Button
                             variant="outlined"
                             size="$4"
-                            onPress={() => console.log("Google signup")}
+                            onPress={handleGoogleSignup}
+                            disabled={googleLoginStatus?.loading}
+                            opacity={googleLoginStatus?.loading ? 0.6 : 1}
                             borderColor="$borderColor"
                             borderRadius="$6"
                             hoverStyle={{backgroundColor: "$content2"}}
                             width="100%"
                         >
-                            <XStack gap="$3" alignItems="center">
-                                <GoogleIcon size={20}/>
-                                <Text color="$color">{t('auth.signUpWithGoogle')}</Text>
-                            </XStack>
+                            {googleLoginStatus?.loading ? (
+                                <XStack gap="$2" alignItems="center">
+                                    <Spinner size="small"/>
+                                    <Text color="$color">{t('auth.signingIn')}</Text>
+                                </XStack>
+                            ) : (
+                                <XStack gap="$3" alignItems="center">
+                                    <GoogleIcon size={20}/>
+                                    <Text color="$color">{t('auth.signUpWithGoogle')}</Text>
+                                </XStack>
+                            )}
                         </Button>
 
                         <Text fontSize={14} color="$color">
                             {t('auth.alreadyHaveAccount')}{' '}
-                            <Link href={"/(auth)/login" as Href}>
+                            <Link href="/(auth)/login">
                                 <Text color="$accent7" textDecorationLine="underline"
                                       fontWeight="600">{t('auth.signIn')}</Text>
                             </Link>
