@@ -1,40 +1,48 @@
-import {useRef, useState, useEffect} from 'react';
-import {Animated, SafeAreaView, ScrollView, View} from 'react-native';
-import {useThemeContext} from '@/context/ThemeSwitch';
-import {GetGeomarData, GetGeomarDataTimeRange} from '@/data/geomar-data';
-import {SensorModule} from '@/data/sensor';
-import {useLocalSearchParams} from 'expo-router';
-import {LineChart} from 'react-native-chart-kit';
+import { useThemeContext } from '@/context/ThemeSwitch';
+import { GetGeomarData, GetGeomarDataTimeRange } from '@/data/geomar-data';
+import { LocationWithBoxes, SensorModule } from '@/data/sensor';
 import {
-    XStack,
-    YStack,
+    Activity,
+    Battery,
+    Check,
+    ChevronDown,
+    ChevronUp,
+    Clock,
+    HelpCircle,
+    Home,
+    MapPin,
+    Thermometer,
+    Waves
+} from '@tamagui/lucide-icons';
+import { Router, useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Animated, SafeAreaView, ScrollView, View } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
+import { LinearGradient } from 'react-native-svg';
+import {
+    Adapt,
+    Button,
     Card,
-    H1,
+    FontSizeTokens,
     H2,
     H3,
     H4,
-    Text,
-    Button,
     Image,
-    Stack,
+    Select,
+    SelectProps,
     Separator,
+    Sheet,
+    Stack,
+    Text,
+    XStack,
+    YStack,
+    getFontSize,
     useMedia
 } from 'tamagui';
-import {
-    ChevronDown,
-    ChevronUp,
-    Home,
-    Thermometer,
-    Waves,
-    Battery,
-    HelpCircle,
-    MapPin,
-    Clock,
-    Activity
-} from '@tamagui/lucide-icons';
 
 export default function DashboardScreen() {
     const media = useMedia();
+    const router = useRouter();
     const {isDark} = useThemeContext();
     const [showInfo, setShowInfo] = useState(false);
     const infoHeight = useRef(new Animated.Value(0)).current;
@@ -45,6 +53,7 @@ export default function DashboardScreen() {
     }
 
     const [content, setContent] = useState<SensorModule[]>([])
+    const [sensorLocations, setSensorLocations] = useState<string[]>([])
     const [name, setName] = useState<string>("")
     const [, setLoading] = useState(true)
     const [dataPrecision] = useState<number>(3)
@@ -87,6 +96,7 @@ export default function DashboardScreen() {
             setChartTide(tideData);
             setChartWaveHeight(waveData);
             setChartWaterTemperature(tempData);
+            setSensorLocations(GetAllAvailableSensorLocations(data));
         }
         fetchData()
     }, [id, timeRange])
@@ -125,16 +135,9 @@ export default function DashboardScreen() {
                         <Text color="white" fontSize="$3" opacity={0.9} marginBottom="$1">
                             Sensor Dashboard
                         </Text>
-                        <H1
-                            color="white"
-                            fontSize={media.lg ? "$10" : "$8"}
-                            fontWeight="700"
-                            textShadowColor="rgba(0,0,0,0.5)"
-                            textShadowOffset={{width: 0, height: 2}}
-                            textShadowRadius={4}
-                        >
-                            {name || 'Lade Daten...'}
-                        </H1>
+                        <View style={{width: 300}}>
+                            <SelectDemoContents isDark={isDark} router={router}sensorLocations={sensorLocations} id="select-demo-2" native />
+                        </View>
                     </Stack>
                 </Stack>
 
@@ -382,6 +385,153 @@ export default function DashboardScreen() {
     );
 }
 
+{/* <H1
+    color="white"
+    // fontSize={media.lg ? "$10" : "$8"}
+    fontWeight="700"
+    textShadowColor="rgba(0,0,0,0.5)"
+    textShadowOffset={{width: 0, height: 2}}
+    textShadowRadius={4}
+>
+    {item || 'Lade Daten...'}
+</H1> */}
+
+
+export function SelectDemoContents(props: {router: Router} & { sensorLocations: string[]} & { isDark: boolean } & SelectProps & { trigger?: React.ReactNode }) {
+  const [val, setVal] = useState('')
+  const { router, isDark, sensorLocations, ...restProps } = props;
+
+  return (
+    <Select value={val} onValueChange={(e) => {router.push(`/dashboard/${e}`)}} disablePreventBodyScroll {...restProps}>
+      {props?.trigger || (
+        <Select.Trigger maxWidth={220} iconAfter={ChevronDown}>
+          <Select.Value placeholder="Something" />
+        </Select.Trigger>
+      )}
+
+      <Adapt platform="touch">
+        <Sheet native={!!props.native} modal dismissOnSnapToBottom animation="medium">
+          <Sheet.Frame>
+            <Sheet.ScrollView>
+              <Adapt.Contents />
+            </Sheet.ScrollView>
+          </Sheet.Frame>
+          <Sheet.Overlay
+            backgroundColor={isDark ? '$gray8' : '$gray2'}
+            animation="lazy"
+            enterStyle={{ opacity: 0 }}
+            exitStyle={{ opacity: 0 }}
+          />
+        </Sheet>
+      </Adapt>
+
+      <Select.Content zIndex={200000}>
+        <Select.ScrollUpButton
+          alignItems="center"
+          justifyContent="center"
+          position="relative"
+          width="100%"
+          height="$3"
+        >
+          <YStack zIndex={10}>
+            <ChevronUp size={20} />
+          </YStack>
+          <LinearGradient
+            x1={0}
+            y1={0}
+            x2={0}
+            y2={1}
+          />
+        </Select.ScrollUpButton>
+
+        <Select.Viewport
+          // to do animations:
+          // animation="quick"
+          // animateOnly={['transform', 'opacity']}
+          // enterStyle={{ o: 0, y: -10 }}
+          // exitStyle={{ o: 0, y: 10 }}
+          minWidth={200}
+        >
+          <Select.Group>
+            <Select.Label>Sensors</Select.Label>
+            {/* for longer lists memoizing these is useful */}
+            {useMemo(
+              () =>
+                sensorLocations.map((item, i) => {
+                  return (
+                    <Select.Item
+                      index={i}
+                      key={item}
+                      value={item.toLowerCase()}
+                    >
+                      <Select.ItemText>
+                        {item}
+                        </Select.ItemText>
+                      <Select.ItemIndicator marginLeft="auto">
+                        <Check size={16} />
+                      </Select.ItemIndicator>
+                    </Select.Item>
+                                            
+                  )
+                }),
+              [sensorLocations]
+            )}
+          </Select.Group>
+          {/* Native gets an extra icon */}
+          {props.native && (
+            <YStack
+              position="absolute"
+              right={0}
+              top={0}
+              bottom={0}
+              alignItems="center"
+              justifyContent="center"
+              width={'$4'}
+              pointerEvents="none"
+            >
+              <ChevronDown
+                size={getFontSize((props.size as FontSizeTokens) ?? '$true')}
+              />
+            </YStack>
+          )}
+        </Select.Viewport>
+
+        <Select.ScrollDownButton
+          alignItems="center"
+          justifyContent="center"
+          position="relative"
+          width="100%"
+          height="$3"
+        >
+          <YStack zIndex={10}>
+            <ChevronDown size={20} />
+          </YStack>
+          <LinearGradient
+            x1={0}
+            y1={0}
+            x2={0}
+            y2={1}
+          />
+        </Select.ScrollDownButton>
+      </Select.Content>
+    </Select>
+  )
+}
+
+const GetAllAvailableSensorLocations = (data: LocationWithBoxes[] | LocationWithBoxes) => {
+    const locations: string[] = [];
+    if (Array.isArray(data)) {
+        data.forEach((element: LocationWithBoxes) => {
+            locations.push(element.location.name);
+            });
+        }
+        else {
+            locations.push(data.location.name);
+        }
+
+    return locations;
+}
+
 const CreateMeasurementDictionary = (data: any) => {
     if (!data?.boxes?.[0]?.measurementTimes) return {};
 
@@ -390,6 +540,8 @@ const CreateMeasurementDictionary = (data: any) => {
 
     measurementTimes.forEach((entry: any) => {
         if (!entry.time) return;
+        
+        
 
         Object.entries(entry.measurements || {}).forEach(([key, value]) => {
             if (!measurementDict[key]) {
