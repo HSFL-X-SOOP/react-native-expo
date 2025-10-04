@@ -1,7 +1,7 @@
 import { useSession } from '@/context/SessionContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Link, useRouter } from 'expo-router';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import { Button, Checkbox, Text, View, YStack, XStack, Separator, Spinner } from 'tamagui';
 import { User } from '@tamagui/lucide-icons';
