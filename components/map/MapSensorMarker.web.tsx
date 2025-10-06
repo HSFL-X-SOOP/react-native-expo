@@ -1,6 +1,6 @@
 import { LocationWithBoxes, SensorModule } from "@/api/models/sensor";
 import { Marker } from "@vis.gl/react-maplibre";
-import { MapSensorTemperatureText, MapSensorTemperatureTextNew } from "./MapSensorTemperatureText";
+import { MapSensorTemperatureText, MapSensorTemperatureNew } from "./MapSensorTemperatureText";
 
 export function WebMarker(sensorModule: SensorModule, setPopupInfo: (sensor: SensorModule) => void) {
     return (
@@ -29,7 +29,7 @@ export default function WebMarkerNew(locationWithBoxes: LocationWithBoxes, setPo
             setPopupInfo(locationWithBoxes);
         }}
         >
-            <MapSensorTemperatureTextNew locationWithBoxes={locationWithBoxes} />
+            <MapSensorTemperatureNew locationWithBoxes={locationWithBoxes} />
         </Marker>
     );
 }

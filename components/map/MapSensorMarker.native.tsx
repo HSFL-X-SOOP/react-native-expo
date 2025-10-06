@@ -3,7 +3,7 @@ import { PointAnnotation } from "@maplibre/maplibre-react-native";
 import React, { useState } from "react";
 import { Modal, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import { MapSensorMeasurementsNew } from "./MapSensorMeasurements";
-import { MapSensorTemperatureTextNew } from "./MapSensorTemperatureText";
+import { MapSensorTemperatureNew } from "./MapSensorTemperatureText";
 
 export default function AndroidMarker({
     locationWithBoxes,
@@ -30,7 +30,7 @@ export default function AndroidMarker({
                 onSelected={() => setOverlayVisible(true)}
             >
                 <View>
-                    <MapSensorTemperatureTextNew locationWithBoxes={locationWithBoxes} />
+                    <MapSensorTemperatureNew locationWithBoxes={locationWithBoxes} />
                 </View>
             </PointAnnotation>
 
