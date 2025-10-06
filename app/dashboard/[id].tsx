@@ -49,16 +49,14 @@ export default function DashboardScreen() {
 
     const [timeRange, setTimeRange] = useState<'today' | 'yesterday' | 'last7days' | 'last30days'>('today')
 
-    // Use hooks to fetch sensor data
     const { data: allSensorData } = useSensorData();
     const content = allSensorData.filter((sensor: SensorModule) => String(sensor.location.id) === id);
     const name = content[0]?.location.name || "";
 
-    // Adjust data precision based on time range
     const dataPrecision = timeRange === 'last30days' ? 6 :
         timeRange === 'last7days' ? 3 :
             timeRange === 'yesterday' ? 3 :
-                3; // today
+                3;
 
     const isAdmin = false;
     const excludedMeasurements: string[] = [];
@@ -73,12 +71,10 @@ export default function DashboardScreen() {
     const [chartTide, setChartTide] = useState<any>([])
     const [chartWaveHeight, setChartWaveHeight] = useState<any>([])
 
-    // Map timeRange to API format
     const apiTimeRange = timeRange === 'last7days' ? 'WEEK' :
         timeRange === 'last30days' ? 'MONTH' :
         'DAY';
 
-    // Use hook for time range data
     const { data: timeRangeData } = useSensorDataTimeRange(Number(id), apiTimeRange);
 
     useEffect(() => {
@@ -411,7 +407,6 @@ const CreateMeasurementDictionary = (data: any, timeRange: string) => {
 
     measurementTimes.forEach((entry: any) => {
         if (!entry.time) return;
-
 
         let label: string;
         if (timeRange === 'last7days' || timeRange === 'last30days') {
