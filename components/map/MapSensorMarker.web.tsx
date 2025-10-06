@@ -1,4 +1,4 @@
-import { LocationWithBoxes, SensorModule } from "@/data/sensor";
+import { LocationWithBoxes, SensorModule } from "@/api/models/sensor";
 import { Marker } from "@vis.gl/react-maplibre";
 import { MapSensorTemperatureText, MapSensorTemperatureTextNew } from "./MapSensorTemperatureText";
 

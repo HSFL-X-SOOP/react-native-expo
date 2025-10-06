@@ -1,5 +1,5 @@
-import { GetGeomarData, GetGeomarDataNew } from '@/data/geomar-data';
-import { LocationWithBoxes, SensorModule } from '@/data/sensor';
+import { LocationWithBoxes, SensorModule } from '@/api/models/sensor';
+import { useSensorData, useSensorDataNew } from '@/hooks/useSensors';
 import {
   LngLatBoundsLike,
   Map,
@@ -7,7 +7,7 @@ import {
 } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import '../Global.css';
 import WebMarkerNew from './map/MapSensorMarker.web';
@@ -15,23 +15,8 @@ import { MapSensorMeasurementsNew } from './map/MapSensorMeasurements';
 import MapZoomControl from './map/MapZoomControl';
 export default function WebMap() {
 
-  const [content, setContent] = useState<SensorModule[]>([])
-  const [content2, setContent2] = useState<LocationWithBoxes[]>([])
-  useEffect(() => {
-    const fetchData = async () => {
-    let data = await GetGeomarData()
-    setContent(data)
-    }
-    fetchData()
-  }, [])
-
-    useEffect(() => {
-    const fetchData = async () => {
-    let data = await GetGeomarDataNew()
-    setContent2(data)
-    }
-    fetchData()
-  }, [])
+  const { data: content } = useSensorData();
+  const { data: content2 } = useSensorDataNew();
 
   const [popupInfo, setPopupInfo] = useState<SensorModule>();
   const [popupInfo2, setPopupInfo2] = useState<LocationWithBoxes>();

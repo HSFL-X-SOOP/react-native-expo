@@ -1,4 +1,4 @@
-import { LocationWithBoxes, SensorModule } from "@/data/sensor";
+import { LocationWithBoxes, SensorModule } from "@/api/models/sensor";
 import { Text } from "react-native";
 
 type MapSensorTemperatureTextProps = {

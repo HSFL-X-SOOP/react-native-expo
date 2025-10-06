@@ -1,51 +1,40 @@
 export interface SensorModule {
-    location:           Location;
+    location: Location;
     latestMeasurements: LatestMeasurement[];
 }
 
 export interface LatestMeasurement {
-    sensor:          Sensor;
+    sensor: Sensor;
     measurementType: MeasurementType;
-    time:            Date;
-    value:           number;
+    time: Date;
+    value: number;
 }
 
 export interface MeasurementType {
-    id:             number;
-    name:           string;
-    description:    string;
-    unitName:       string;
-    unitSymbol:     string;
+    id: number;
+    name: string;
+    description: string;
+    unitName: string;
+    unitSymbol: string;
     unitDefinition: string;
 }
 
 export interface Sensor {
-    id:          number;
-    name:        string;
+    id: number;
+    name: string;
     description: string;
-    isMoving:    boolean;
-}
-
-export interface Location {
-    id:          number;
-    name:        string;
-    coordinates: Coordinates;
-}
-
-export interface Coordinates {
-    lat: number;
-    lon: number;
-}
-
-export interface Coordinates {
-    lat: number;
-    lon: number;
+    isMoving: boolean;
 }
 
 export interface Location {
     id: number;
     name: string;
     coordinates: Coordinates;
+}
+
+export interface Coordinates {
+    lat: number;
+    lon: number;
 }
 
 export interface WaterTemperatureOnlyMeasurements {
@@ -74,6 +63,7 @@ export interface MeasurementTime<T> {
     time: string;
     measurements: T;
 }
+
 
 export type Box =
     | {
@@ -104,4 +94,22 @@ export type Box =
 export interface LocationWithBoxes {
     location: Location;
     boxes: Box[];
+}
+
+export interface SensorDataResponse {
+    success: boolean;
+    data: SensorModule[];
+    error?: string;
+}
+
+export interface LocationBoxesResponse {
+    success: boolean;
+    data: LocationWithBoxes[];
+    error?: string;
+}
+
+export interface TimeRangeDataResponse {
+    success: boolean;
+    data: LocationWithBoxes | null;
+    error?: string;
 }

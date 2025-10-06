@@ -1,4 +1,4 @@
-import { LocationWithBoxes, SensorModule } from "@/data/sensor";
+import { LocationWithBoxes, SensorModule } from "@/api/models/sensor";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ArrowLeft, Battery, HelpCircle, Thermometer, Waves } from "@tamagui/lucide-icons";
 import { Link, useRouter } from "expo-router";

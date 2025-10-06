@@ -1,10 +1,10 @@
-import { LocationWithBoxes } from "@/data/sensor";
+import { LocationWithBoxes } from "@/api/models/sensor";
 import { PointAnnotation } from "@maplibre/maplibre-react-native";
-import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Modal, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import { MapSensorMeasurementsNew } from "./MapSensorMeasurements";
 import { MapSensorTemperatureTextNew } from "./MapSensorTemperatureText";
+
 export default function AndroidMarker({
     locationWithBoxes,
     index,
@@ -14,7 +14,6 @@ export default function AndroidMarker({
     index?: number;
     onClose?: () => void;
 }) {
-    const router = useRouter();
     const [overlayVisible, setOverlayVisible] = useState(false);
 
     return (

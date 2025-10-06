@@ -1,8 +1,8 @@
 import {useRef, useState, useEffect} from 'react';
 import {Animated, SafeAreaView, ScrollView, View} from 'react-native';
 import {useThemeContext} from '@/context/ThemeSwitch';
-import {GetGeomarData, GetGeomarDataTimeRange} from '@/data/geomar-data';
-import {SensorModule} from '@/data/sensor';
+import {useSensorData, useSensorDataTimeRange} from '@/hooks/useSensors';
+import {SensorModule} from '@/api/models/sensor';
 import {useLocalSearchParams} from 'expo-router';
 import {LineChart} from 'react-native-chart-kit';
 import {useTranslation} from '@/hooks/useTranslation';
@@ -47,29 +47,18 @@ export default function DashboardScreen() {
         id = "4";
     }
 
-    const [content, setContent] = useState<SensorModule[]>([])
-    const [name, setName] = useState<string>("")
-    const [, setLoading] = useState(true)
     const [timeRange, setTimeRange] = useState<'today' | 'yesterday' | 'last7days' | 'last30days'>('today')
+
+    // Use hooks to fetch sensor data
+    const { data: allSensorData } = useSensorData();
+    const content = allSensorData.filter((sensor: SensorModule) => String(sensor.location.id) === id);
+    const name = content[0]?.location.name || "";
 
     // Adjust data precision based on time range
     const dataPrecision = timeRange === 'last30days' ? 6 :
         timeRange === 'last7days' ? 3 :
             timeRange === 'yesterday' ? 3 :
                 3; // today
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                let data = await GetGeomarData()
-                setContent(data.filter((sensor: SensorModule) => String(sensor.location.id) === id))
-                setName(data.filter((sensor: SensorModule) => String(sensor.location.id) === id)[0]?.location.name || "")
-            } finally {
-                setLoading(false)
-            }
-        }
-        fetchData()
-    }, [id, timeRange])
 
     const isAdmin = false;
     const excludedMeasurements: string[] = [];
@@ -84,14 +73,17 @@ export default function DashboardScreen() {
     const [chartTide, setChartTide] = useState<any>([])
     const [chartWaveHeight, setChartWaveHeight] = useState<any>([])
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const apiTimeRange = timeRange === 'last7days' ? 'week' :
-                timeRange === 'last30days' ? 'month' :
-                    timeRange;
+    // Map timeRange to API format
+    const apiTimeRange = timeRange === 'last7days' ? 'WEEK' :
+        timeRange === 'last30days' ? 'MONTH' :
+        'DAY';
 
-            let data = await GetGeomarDataTimeRange(id, apiTimeRange)
-            const measurementDict = CreateMeasurementDictionary(data, timeRange);
+    // Use hook for time range data
+    const { data: timeRangeData } = useSensorDataTimeRange(Number(id), apiTimeRange);
+
+    useEffect(() => {
+        if (timeRangeData) {
+            const measurementDict = CreateMeasurementDictionary(timeRangeData, timeRange);
 
             const tideData = measurementDict["tide"]?.reverse() || [];
             const waveData = measurementDict["waveHeight"]?.reverse() || [];
@@ -100,8 +92,7 @@ export default function DashboardScreen() {
             setChartWaveHeight(waveData);
             setChartWaterTemperature(tempData);
         }
-        fetchData()
-    }, [id, timeRange])
+    }, [timeRangeData, timeRange])
 
     const toggleInfo = () => {
         setShowInfo((prev) => !prev);

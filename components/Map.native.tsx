@@ -1,29 +1,14 @@
-import { GetGeomarData, GetGeomarDataNew } from "@/data/geomar-data";
-import { LocationWithBoxes, SensorModule } from "@/data/sensor";
+import { LocationWithBoxes, SensorModule } from "@/api/models/sensor";
+import { useSensorData, useSensorDataNew } from "@/hooks/useSensors";
 import { Camera, MapView } from "@maplibre/maplibre-react-native";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 import AndroidMarker from "./map/MapSensorMarker.native";
 import MapZoomControl from "./map/MapZoomControl";
 
 export default function AndroidMap() {
-    const [content, setContent] = useState<SensorModule[]>([])
-    const [content2, setContent2] = useState<LocationWithBoxes[]>([])
-    useEffect(() => {
-      const fetchData = async () => {
-        let data = await GetGeomarData()
-        setContent(data)
-    }
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    const fetchData = async () => {
-    let data = await GetGeomarDataNew()
-    setContent2(data)
-    }
-    fetchData()
-  }, [])
+    const { data: content } = useSensorData();
+    const { data: content2 } = useSensorDataNew();
 
   const [selectedLocation, setSelectedLocation] = useState<LocationWithBoxes | null>(null);
   const pins =
