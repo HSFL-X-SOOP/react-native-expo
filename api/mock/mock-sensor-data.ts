@@ -299,6 +299,91 @@ export const mockLocationWithBoxes: LocationWithBoxes[] = [
         measurementTimes: generateAirBoxMeasurements()
       } as Box
     ]
+  },
+  {
+    location: {
+      id: 8,
+      name: "Eckernförde",
+      coordinates: { lat: 54.4635, lon: 9.8357 }
+    },
+    boxes: [
+      {
+        type: "AirBox",
+        id: 12,
+        name: "Harbor Air Station",
+        description: "Harbor weather monitoring",
+        isMoving: false,
+        measurementTimes: generateAirBoxMeasurements()
+      } as Box
+    ]
+  },
+  {
+    location: {
+      id: 9,
+      name: "Kappeln",
+      coordinates: { lat: 54.6597, lon: 9.9356 }
+    },
+    boxes: [
+      {
+        type: "AirBox",
+        id: 13,
+        name: "City Weather",
+        description: "Urban weather station",
+        isMoving: false,
+        measurementTimes: generateAirBoxMeasurements()
+      } as Box
+    ]
+  },
+  {
+    location: {
+      id: 10,
+      name: "Rendsburg",
+      coordinates: { lat: 54.3030, lon: 9.6636 }
+    },
+    boxes: [
+      {
+        type: "AirBox",
+        id: 14,
+        name: "Canal Weather",
+        description: "Canal area weather monitoring",
+        isMoving: false,
+        measurementTimes: generateAirBoxMeasurements()
+      } as Box
+    ]
+  },
+  {
+    location: {
+      id: 11,
+      name: "Flensburg",
+      coordinates: { lat: 54.7836, lon: 9.4321 }
+    },
+    boxes: [
+      {
+        type: "AirBox",
+        id: 15,
+        name: "Port Weather",
+        description: "Port area weather monitoring",
+        isMoving: false,
+        measurementTimes: generateAirBoxMeasurements()
+      } as Box
+    ]
+  },
+  {
+    location: {
+      id: 12,
+      name: "Schleswig",
+      coordinates: { lat: 54.5141, lon: 9.5554 }
+    },
+    boxes: [
+      {
+        type: "AirBox",
+        id: 16,
+        name: "City Air Monitor",
+        description: "City air quality and weather",
+        isMoving: false,
+        measurementTimes: generateAirBoxMeasurements()
+      } as Box
+    ]
   }
 ];
 

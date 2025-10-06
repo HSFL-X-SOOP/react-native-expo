@@ -8,9 +8,19 @@ type SensorMarkerContentProps = {
 
 export const SensorMarkerContent: React.FC<SensorMarkerContentProps> = ({locationWithBoxes}) => {
     const {isDark} = useThemeContext();
+    const box = locationWithBoxes.boxes.find(box =>
+        box.type === BoxType.WaterBox ||
+        box.type === BoxType.WaterTemperatureOnlyBox ||
+        box.type === BoxType.AirBox
+    );
 
-    const waterBox = locationWithBoxes.boxes.find(box => box.type === BoxType.WaterBox || box.type === BoxType.WaterTemperatureOnlyBox);
-    const tempValue = waterBox?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature;
+    let tempValue: number | undefined;
+    if (box?.type === BoxType.AirBox) {
+        tempValue = box.measurementTimes.find(measurement => measurement.measurements.airTemperature)?.measurements.airTemperature;
+    } else {
+        tempValue = box?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature;
+    }
+
     const temperature = tempValue !== undefined ? Math.round(Number(tempValue)) : "N/A";
 
     const accentColor = !isDark ? '#006e99' : '#7db07d';
@@ -36,7 +46,7 @@ export const SensorMarkerContent: React.FC<SensorMarkerContentProps> = ({locatio
             accentColor={accentColor}
             backgroundColor={backgroundColor}
             textColor={textColor}
-            indicatorColor={getIndicatorColor(waterBox?.type)}
+            indicatorColor={getIndicatorColor(box?.type)}
         />
     );
 }
