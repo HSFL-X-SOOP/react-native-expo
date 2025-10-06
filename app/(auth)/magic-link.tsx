@@ -1,7 +1,7 @@
 import {Link, useRouter, useLocalSearchParams, Href} from 'expo-router';
 import {useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native';
-import {Button, Text, View, YStack, XStack, Spinner} from 'tamagui';
+import {Button, Text, YStack, XStack, Spinner, ScrollView} from 'tamagui';
 import {Sparkles, CheckCircle, AlertCircle} from '@tamagui/lucide-icons';
 import {useAuth} from '@/hooks/useAuth';
 import {useSession} from '@/context/SessionContext';
@@ -61,13 +61,13 @@ export default function MagicLinkScreen() {
     if (token && magicLinkLoginStatus.loading) {
         return (
             <SafeAreaView style={{flex: 1}}>
-                <YStack flex={1} backgroundColor="$content3" alignItems="center" justifyContent="center" padding="$4">
-                    <AuthCard title={t('auth.verifyingMagicLink')} subtitle={t('auth.pleaseWait')} icon={Sparkles}>
+                <ScrollView flex={1} backgroundColor="$content3" contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 16}}>
+                    <AuthCard title={t('auth.magicLink.verifying')} subtitle={t('auth.magicLink.verifyingMessage')} icon={Sparkles}>
                         <YStack gap="$4" alignItems="center">
                             <Spinner size="large" color="$accent7"/>
                         </YStack>
                     </AuthCard>
-                </YStack>
+                </ScrollView>
             </SafeAreaView>
         );
     }
@@ -75,16 +75,16 @@ export default function MagicLinkScreen() {
     if (token && magicLinkLoginStatus.error) {
         return (
             <SafeAreaView style={{flex: 1}}>
-                <YStack flex={1} backgroundColor="$content3" alignItems="center" justifyContent="center" padding="$4">
-                    <AuthCard title={t('auth.invalidOrExpiredLink')} subtitle={magicLinkLoginStatus.error.message}
+                <ScrollView flex={1} backgroundColor="$content3" contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 16}}>
+                    <AuthCard title={t('auth.magicLink.invalidOrExpired')} subtitle={magicLinkLoginStatus.error.message}
                               icon={AlertCircle}>
                         <Link href={"/(auth)/magic-link" as Href}>
                             <Text color="$accent7" textDecorationLine="underline" fontWeight="600">
-                                {t('auth.requestNewMagicLink')}
+                                {t('auth.magicLink.requestNewLink')}
                             </Text>
                         </Link>
                     </AuthCard>
-                </YStack>
+                </ScrollView>
             </SafeAreaView>
         );
     }
@@ -92,26 +92,26 @@ export default function MagicLinkScreen() {
     if (sent) {
         return (
             <SafeAreaView style={{flex: 1}}>
-                <YStack flex={1} backgroundColor="$content3" alignItems="center" justifyContent="center" padding="$4">
-                    <AuthCard title={t('auth.checkYourEmail')} subtitle={t('auth.magicLinkSent', {email})}
+                <ScrollView flex={1} backgroundColor="$content3" contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 16}}>
+                    <AuthCard title={t('auth.magicLink.checkYourEmail')} subtitle={t('auth.magicLink.emailSent', {email})}
                               icon={CheckCircle}>
                         <Link href={"/(auth)/login" as Href}>
                             <Text color="$accent7" textDecorationLine="underline" fontWeight="600">
-                                {t('auth.backToSignIn')}
+                                {t('auth.magicLink.backToSignIn')}
                             </Text>
                         </Link>
                     </AuthCard>
-                </YStack>
+                </ScrollView>
             </SafeAreaView>
         );
     }
 
     return (
         <SafeAreaView style={{flex: 1}}>
-            <YStack flex={1} backgroundColor="$content3" alignItems="center" justifyContent="center" padding="$4">
+            <ScrollView flex={1} backgroundColor="$content3" contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 16}}>
                 <AuthCard
-                    title={t('auth.magicLink')}
-                    subtitle={t('auth.magicLinkDescription')}
+                    title={t('auth.magicLink.title')}
+                    subtitle={t('auth.magicLink.description')}
                     icon={Sparkles}
                 >
                     <YStack gap="$4" width="100%">
@@ -120,7 +120,7 @@ export default function MagicLinkScreen() {
                                 value={email}
                                 onChangeText={setEmail}
                                 placeholder={t('auth.emailPlaceholder')}
-                                label={t('auth.emailAddress')}
+                                label={t('auth.magicLink.emailAddress')}
                                 onSubmitEditing={handleSendMagicLink}
                                 hasError={hasErrors()}
                                 errorMessage={t('auth.invalidEmail')}
@@ -144,12 +144,12 @@ export default function MagicLinkScreen() {
                             {requestMagicLinkStatus.loading ? (
                                 <XStack alignItems="center" gap="$2">
                                     <Spinner size="small" color="white"/>
-                                    <Text color="white" fontWeight="600">{t('auth.sending')}</Text>
+                                    <Text color="white" fontWeight="600">{t('auth.magicLink.sending')}</Text>
                                 </XStack>
                             ) : (
                                 <XStack alignItems="center" gap="$2">
                                     <Sparkles size={16} color="white"/>
-                                    <Text color="white" fontWeight="600">{t('auth.sendMagicLink')}</Text>
+                                    <Text color="white" fontWeight="600">{t('auth.magicLink.sendMagicLink')}</Text>
                                 </XStack>
                             )}
                         </Button>
@@ -158,21 +158,21 @@ export default function MagicLinkScreen() {
                     <YStack gap="$2" alignItems="center">
                         <Text fontSize={14} color="$color">
                             {t('auth.dontHaveAccount')}{' '}
-                            <Link href="/(auth)/register">
+                            <Link href={"/(auth)/register" as Href}>
                                 <Text color="$accent7" textDecorationLine="underline"
                                       fontWeight="600">{t('auth.signUp')}</Text>
                             </Link>
                         </Text>
                         <Text fontSize={14} color="$color">
                             {t('auth.alreadyHaveAccount')}{' '}
-                            <Link href="/(auth)/login">
+                            <Link href={"/(auth)/register" as Href}>
                                 <Text color="$accent7" textDecorationLine="underline"
                                       fontWeight="600">{t('auth.signIn')}</Text>
                             </Link>
                         </Text>
                     </YStack>
                 </AuthCard>
-            </YStack>
+            </ScrollView>
         </SafeAreaView>
     );
 }

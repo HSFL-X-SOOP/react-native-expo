@@ -1,24 +1,28 @@
-import { LocationWithBoxes, SensorModule } from "@/api/models/sensor";
-import { Text } from "react-native";
+import {LocationWithBoxes, SensorModule} from "@/api/models/sensor";
+import {SensorMarkerSvg} from "./SensorMarkerSvg";
 
 type MapSensorTemperatureTextProps = {
     sensorModule: SensorModule
 }
 
-export const MapSensorTemperatureText: React.FC<MapSensorTemperatureTextProps> =({sensorModule}) => {
+export const MapSensorTemperatureText: React.FC<MapSensorTemperatureTextProps> = ({sensorModule}) => {
+    const tempValue = sensorModule.latestMeasurements.find(measurement => measurement.measurementType.name === "Temperature, water" || measurement.measurementType.name === "WTemp")?.value;
+    const temperature = tempValue !== undefined ? Math.round(Number(tempValue)) : "N/A";
 
-  return (
-    <Text style={{ color: 'black', fontSize: 24, fontWeight: "700"}}>{sensorModule.latestMeasurements.find(measurement => measurement.measurementType.name === "Temperature, water" || measurement.measurementType.name === "WTemp")?.value}°C</Text>
-  );
+    return (
+        <SensorMarkerSvg temperature={temperature}/>
+    );
 }
 
 type MapSensorTemperatureTextNewProps = {
     locationWithBoxes: LocationWithBoxes
 }
 
-export const MapSensorTemperatureTextNew: React.FC<MapSensorTemperatureTextNewProps> =({locationWithBoxes}) => {
+export const MapSensorTemperatureTextNew: React.FC<MapSensorTemperatureTextNewProps> = ({locationWithBoxes}) => {
+    const tempValue = locationWithBoxes.boxes.find(box => box.type === "WaterBox" || box.type === "WaterTemperatureOnlyBox")?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature;
+    const temperature = tempValue !== undefined ? Math.round(Number(tempValue)) : "N/A";
 
-  return (
-    <Text style={{ color: 'black', fontSize: 24, fontWeight: "700"}}>{locationWithBoxes.boxes.find(box => box.type === "WaterBox" || box.type === "WaterTemperatureOnlyBox")?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature}°C</Text>
-  );
+    return (
+        <SensorMarkerSvg temperature={temperature}/>
+    );
 }

@@ -1,5 +1,5 @@
-import {Link, useRouter} from 'expo-router';
-import {Button, Text, XStack, YStack, useTheme, Popover, Adapt, Sheet, useMedia} from 'tamagui';
+import {Link, useRouter, Href} from 'expo-router';
+import {Button, Text, XStack, YStack, useTheme, Popover, Sheet, useMedia, ScrollView} from 'tamagui';
 
 import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
 import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
@@ -28,7 +28,7 @@ export function NavbarWeb() {
         <XStack jc={"space-between"} backgroundColor={"$background"} alignItems={"center"} px={"$14"} $md={{px: "$4"}}
                 gap={"$4"}
                 py={"$1"}>
-            <Link href="/map">
+            <Link href={"/map" as Href}>
                 <XStack ac="center" jc="flex-start" gap="$2">
                     <LOGO size={media.gtMd ? 55 : 50} color={t.accent8?.val}/>
                     <Text fontSize={media.gtMd ? 32 : 28} fontFamily={"$oswald"} alignSelf={"center"} fontWeight="bold"
@@ -38,7 +38,7 @@ export function NavbarWeb() {
 
             {media.gtMd && (
                 <XStack alignItems={"center"} gap={"$8"}>
-                    <Link href="/map">
+                    <Link href={"/map" as Href}>
                         <XStack alignItems="center" gap="$3">
                             <MapIcon color={t.accent8?.val} size={26}/>
                             <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
@@ -83,7 +83,7 @@ export function NavbarWeb() {
                                 >
                                     <XStack alignItems="center" gap="$3" width="100%">
                                         <InfoIcon size={26} color={t.accent6?.val}/>
-                                        <Text color="$color" >{translate('navigation.aboutUs')}</Text>
+                                        <Text color="$color">{translate('navigation.aboutUs')}</Text>
                                     </XStack>
                                 </Button>
 
@@ -145,13 +145,13 @@ export function NavbarWeb() {
                     <ThemeSwitch size={24} color={"$background"}/>
                     {!session && (
                         <XStack gap="$2">
-                            <Link href="/login">
+                            <Link href={"/login" as Href}>
                                 <PrimaryButton>
                                     <Text color="#ffffff">{translate('auth.login')}</Text>
                                 </PrimaryButton>
                             </Link>
 
-                            <Link href="/register">
+                            <Link href={"/register" as Href}>
                                 <SecondaryButton>
                                     <Text>{translate('auth.register')}</Text>
                                 </SecondaryButton>
@@ -160,7 +160,7 @@ export function NavbarWeb() {
                     )}
                     {session && (
                         <XStack gap="$2">
-                            <Link href="/(profile)/profile">
+                            <Link href={"/(profile)/profile" as Href}>
                                 <Button variant="outlined">
                                     <XStack alignItems="center" gap="$2">
                                         <User size={20} color={"$accent8"}/>
@@ -222,154 +222,156 @@ export function NavbarWeb() {
                 >
                     <Sheet.Handle backgroundColor="$borderColor"/>
 
-                    <YStack padding="$4" gap="$2">
-                        <XStack justifyContent="space-between" alignItems="center" paddingBottom="$4"
-                                borderBottomWidth={1} borderBottomColor="$borderColor">
-                            <Text fontSize="$7" fontWeight="bold" color="$accent8" fontFamily="$oswald">
-                                Menu
-                            </Text>
-                            <Button
-                                circular
-                                size="$3"
-                                chromeless
-                                onPress={() => setIsMenuOpen(false)}
-                            >
-                                <Text fontSize="$6" color="$color">✕</Text>
-                            </Button>
-                        </XStack>
-
-                        <YStack gap="$2" paddingTop="$3">
-                            <Link href="/map" onPress={() => setIsMenuOpen(false)}>
-                                <XStack
-                                    alignItems="center"
-                                    gap="$3"
-                                    padding="$3"
-                                    borderRadius="$3"
-                                    hoverStyle={{
-                                        backgroundColor: "$backgroundHover"
-                                    }}
-                                    pressStyle={{
-                                        backgroundColor: "$backgroundPress"
-                                    }}
+                    <ScrollView>
+                        <YStack padding="$4" gap="$2">
+                            <XStack justifyContent="space-between" alignItems="center" paddingBottom="$4"
+                                    borderBottomWidth={1} borderBottomColor="$borderColor">
+                                <Text fontSize="$7" fontWeight="bold" color="$accent8" fontFamily="$oswald">
+                                    Menu
+                                </Text>
+                                <Button
+                                    circular
+                                    size="$3"
+                                    chromeless
+                                    onPress={() => setIsMenuOpen(false)}
                                 >
-                                    <MapIcon color={t.accent8?.val} size={24}/>
-                                    <Text fontSize="$5" fontWeight="500" color="$accent8">
-                                        {translate('navigation.map')}
-                                    </Text>
-                                </XStack>
-                            </Link>
+                                    <Text fontSize="$6" color="$color">✕</Text>
+                                </Button>
+                            </XStack>
 
-                            <Link href="/about" onPress={() => setIsMenuOpen(false)}>
-                                <XStack
-                                    alignItems="center"
-                                    gap="$3"
-                                    padding="$3"
-                                    borderRadius="$3"
-                                    hoverStyle={{
-                                        backgroundColor: "$backgroundHover"
-                                    }}
-                                    pressStyle={{
-                                        backgroundColor: "$backgroundPress"
-                                    }}
-                                >
-                                    <InfoIcon size={24} color={t.accent8?.val}/>
-                                    <Text fontSize="$5" fontWeight="500"
-                                          color="$accent8">{translate('navigation.aboutUs')}</Text>
-                                </XStack>
-                            </Link>
+                            <YStack gap="$2" paddingTop="$3">
+                                <Link href={"/map" as Href} onPress={() => setIsMenuOpen(false)}>
+                                    <XStack
+                                        alignItems="center"
+                                        gap="$3"
+                                        padding="$3"
+                                        borderRadius="$3"
+                                        hoverStyle={{
+                                            backgroundColor: "$backgroundHover"
+                                        }}
+                                        pressStyle={{
+                                            backgroundColor: "$backgroundPress"
+                                        }}
+                                    >
+                                        <MapIcon color={t.accent8?.val} size={24}/>
+                                        <Text fontSize="$5" fontWeight="500" color="$accent8">
+                                            {translate('navigation.map')}
+                                        </Text>
+                                    </XStack>
+                                </Link>
 
-                            <Link href="/sensors" onPress={() => setIsMenuOpen(false)}>
-                                <XStack
-                                    alignItems="center"
-                                    gap="$3"
-                                    padding="$3"
-                                    borderRadius="$3"
-                                    hoverStyle={{
-                                        backgroundColor: "$backgroundHover"
-                                    }}
-                                    pressStyle={{
-                                        backgroundColor: "$backgroundPress"
-                                    }}
-                                >
-                                    <LOGO size={24} color={t.accent8?.val}/>
-                                    <Text fontSize="$5" fontWeight="500"
-                                          color="$accent8">{translate('navigation.sensors')}</Text>
-                                </XStack>
-                            </Link>
+                                <Link href={"/about" as Href} onPress={() => setIsMenuOpen(false)}>
+                                    <XStack
+                                        alignItems="center"
+                                        gap="$3"
+                                        padding="$3"
+                                        borderRadius="$3"
+                                        hoverStyle={{
+                                            backgroundColor: "$backgroundHover"
+                                        }}
+                                        pressStyle={{
+                                            backgroundColor: "$backgroundPress"
+                                        }}
+                                    >
+                                        <InfoIcon size={24} color={t.accent8?.val}/>
+                                        <Text fontSize="$5" fontWeight="500"
+                                              color="$accent8">{translate('navigation.aboutUs')}</Text>
+                                    </XStack>
+                                </Link>
 
-                            <Link href="/api" onPress={() => setIsMenuOpen(false)}>
-                                <XStack
-                                    alignItems="center"
-                                    gap="$3"
-                                    padding="$3"
-                                    borderRadius="$3"
-                                    hoverStyle={{
-                                        backgroundColor: "$backgroundHover"
-                                    }}
-                                    pressStyle={{
-                                        backgroundColor: "$backgroundPress"
-                                    }}
-                                >
-                                    <CloudIcon size={24} color={t.accent8?.val}/>
-                                    <Text fontSize="$5" fontWeight="500"
-                                          color="$accent8">{translate('navigation.api')}</Text>
-                                </XStack>
-                            </Link>
-                        </YStack>
+                                <Link href={"/sensors" as Href} onPress={() => setIsMenuOpen(false)}>
+                                    <XStack
+                                        alignItems="center"
+                                        gap="$3"
+                                        padding="$3"
+                                        borderRadius="$3"
+                                        hoverStyle={{
+                                            backgroundColor: "$backgroundHover"
+                                        }}
+                                        pressStyle={{
+                                            backgroundColor: "$backgroundPress"
+                                        }}
+                                    >
+                                        <LOGO size={24} color={t.accent8?.val}/>
+                                        <Text fontSize="$5" fontWeight="500"
+                                              color="$accent8">{translate('navigation.sensors')}</Text>
+                                    </XStack>
+                                </Link>
 
-                        <YStack gap="$3" paddingTop="$4" borderTopWidth={1} borderTopColor="$borderColor"
-                                marginTop="$3">
-                            <YStack gap="$2">
+                                <Link href={"/api" as Href} onPress={() => setIsMenuOpen(false)}>
+                                    <XStack
+                                        alignItems="center"
+                                        gap="$3"
+                                        padding="$3"
+                                        borderRadius="$3"
+                                        hoverStyle={{
+                                            backgroundColor: "$backgroundHover"
+                                        }}
+                                        pressStyle={{
+                                            backgroundColor: "$backgroundPress"
+                                        }}
+                                    >
+                                        <CloudIcon size={24} color={t.accent8?.val}/>
+                                        <Text fontSize="$5" fontWeight="500"
+                                              color="$accent8">{translate('navigation.api')}</Text>
+                                    </XStack>
+                                </Link>
+                            </YStack>
+
+                            <YStack gap="$3" paddingTop="$4" borderTopWidth={1} borderTopColor="$borderColor"
+                                    marginTop="$3">
+                                <YStack gap="$2">
+                                    <XStack gap="$3" padding="$3" alignItems="center" justifyContent="space-between">
+                                        <XStack gap="$2" alignItems="center">
+                                            <Languages color={t.accent8?.val} size={22}/>
+                                            <Text fontSize="$4" fontWeight="500"
+                                                  color="$color">{translate('settings.language')}</Text>
+                                        </XStack>
+                                        <Text fontSize="$3" color="$color">{translate('language.name')}</Text>
+                                    </XStack>
+                                    <YStack paddingHorizontal="$3">
+                                        <LanguageSelector/>
+                                    </YStack>
+                                </YStack>
+
                                 <XStack gap="$3" padding="$3" alignItems="center" justifyContent="space-between">
                                     <XStack gap="$2" alignItems="center">
-                                        <Languages color={t.accent8?.val} size={22}/>
                                         <Text fontSize="$4" fontWeight="500"
-                                              color="$color">{translate('settings.language')}</Text>
+                                              color="$color">{translate('settings.theme')}</Text>
                                     </XStack>
-                                    <Text fontSize="$3" color="$color">{translate('language.name')}</Text>
+                                    <ThemeSwitch size={24}/>
                                 </XStack>
-                                <YStack paddingHorizontal="$3">
-                                    <LanguageSelector/>
+                            </YStack>
+
+                            {!session && (
+                                <YStack gap="$3" paddingTop="$4">
+                                    <Link href={"/login" as Href} onPress={() => setIsMenuOpen(false)}>
+                                        <PrimaryButton width="100%">
+                                            <Text color="#ffffff" fontSize="$5">{translate('auth.login')}</Text>
+                                        </PrimaryButton>
+                                    </Link>
+                                    <Link href={"/register" as Href} onPress={() => setIsMenuOpen(false)}>
+                                        <SecondaryButton width="100%">
+                                            <Text fontSize="$5">{translate('auth.register')}</Text>
+                                        </SecondaryButton>
+                                    </Link>
                                 </YStack>
-                            </YStack>
+                            )}
 
-                            <XStack gap="$3" padding="$3" alignItems="center" justifyContent="space-between">
-                                <XStack gap="$2" alignItems="center">
-                                    <Text fontSize="$4" fontWeight="500"
-                                          color="$color">{translate('settings.theme')}</Text>
-                                </XStack>
-                                <ThemeSwitch size={24}/>
-                            </XStack>
+                            {session && (
+                                <YStack paddingTop="$4">
+                                    <Link href={"/(profile)/profile" as Href} onPress={() => setIsMenuOpen(false)}>
+                                        <Button variant="outlined" width="100%">
+                                            <XStack alignItems="center" gap="$2">
+                                                <User size={24} color={"$accent8"}/>
+                                                <Text fontSize="$5">{translate('navigation.profile')}</Text>
+                                            </XStack>
+                                        </Button>
+                                    </Link>
+                                </YStack>
+                            )}
                         </YStack>
-
-                        {!session && (
-                            <YStack gap="$3" paddingTop="$4">
-                                <Link href="/login" onPress={() => setIsMenuOpen(false)}>
-                                    <PrimaryButton width="100%">
-                                        <Text color="#ffffff" fontSize="$5">{translate('auth.login')}</Text>
-                                    </PrimaryButton>
-                                </Link>
-                                <Link href="/register" onPress={() => setIsMenuOpen(false)}>
-                                    <SecondaryButton width="100%">
-                                        <Text fontSize="$5">{translate('auth.register')}</Text>
-                                    </SecondaryButton>
-                                </Link>
-                            </YStack>
-                        )}
-
-                        {session && (
-                            <YStack paddingTop="$4">
-                                <Link href="/(profile)/profile" onPress={() => setIsMenuOpen(false)}>
-                                    <Button variant="outlined" width="100%">
-                                        <XStack alignItems="center" gap="$2">
-                                            <User size={24} color={"$accent8"}/>
-                                            <Text fontSize="$5">{translate('navigation.profile')}</Text>
-                                        </XStack>
-                                    </Button>
-                                </Link>
-                            </YStack>
-                        )}
-                    </YStack>
+                    </ScrollView>
                 </Sheet.Frame>
             </Sheet>
         </XStack>
