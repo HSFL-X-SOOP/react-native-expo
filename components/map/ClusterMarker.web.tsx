@@ -11,7 +11,7 @@ interface ClusterMarkerProps {
 
 export default function ClusterMarker({ latitude, longitude, pointCount, onClick }: ClusterMarkerProps) {
     const { isDark } = useThemeContext();
-    const accentColor = isDark ? '#0794d9' : '#7db07d';
+    const accentColor = !isDark ? '#006e99' : '#7db07d';
 
     return (
         <Marker
