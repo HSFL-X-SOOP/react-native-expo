@@ -99,7 +99,7 @@ export const ClusterMarkerSvg: React.FC<ClusterMarkerSvgProps> = ({
                         cx="48"
                         cy="48"
                         fill="none"
-                        stroke="#7EE3FF"
+                        stroke={accentColor}
                         strokeWidth="2"
                         animatedProps={pulseAnimatedProps}
                     />
