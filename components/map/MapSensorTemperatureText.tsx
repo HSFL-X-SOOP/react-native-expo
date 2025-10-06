@@ -8,12 +8,27 @@ type SensorMarkerContentProps = {
 
 export const SensorMarkerContent: React.FC<SensorMarkerContentProps> = ({locationWithBoxes}) => {
     const {isDark} = useThemeContext();
-    const tempValue = locationWithBoxes.boxes.find(box => box.type === BoxType.WaterBox || box.type === BoxType.WaterTemperatureOnlyBox)?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature;
+
+    const waterBox = locationWithBoxes.boxes.find(box => box.type === BoxType.WaterBox || box.type === BoxType.WaterTemperatureOnlyBox);
+    const tempValue = waterBox?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature;
     const temperature = tempValue !== undefined ? Math.round(Number(tempValue)) : "N/A";
 
     const accentColor = isDark ? '#0794d9' : '#7db07d';
     const backgroundColor = isDark ? '#edf5f2' : '#1c1c1c';
     const textColor = isDark ? 'black' : 'white';
+
+    const getIndicatorColor = (boxType?: string): string => {
+        switch (boxType) {
+            case BoxType.WaterBox:
+                return '#1565C0';
+            case BoxType.WaterTemperatureOnlyBox:
+                return '#5E35B1';
+            case BoxType.AirBox:
+                return '#F57C00';
+            default:
+                return '#1565C0';
+        }
+    };
 
     return (
         <SensorMarkerSvg
@@ -21,6 +36,7 @@ export const SensorMarkerContent: React.FC<SensorMarkerContentProps> = ({locatio
             accentColor={accentColor}
             backgroundColor={backgroundColor}
             textColor={textColor}
+            indicatorColor={getIndicatorColor(waterBox?.type)}
         />
     );
 }

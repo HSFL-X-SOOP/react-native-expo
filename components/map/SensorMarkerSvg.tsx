@@ -31,6 +31,7 @@ interface SensorMarkerSvgProps {
     accentColor?: string;
     backgroundColor?: string;
     textColor?: string;
+    indicatorColor?: string;
 }
 
 export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
@@ -39,7 +40,8 @@ export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
                                                                     height = 160,
                                                                     accentColor = '#7db07d',
                                                                     backgroundColor = '#000000',
-                                                                    textColor = 'white'
+                                                                    textColor = 'white',
+                                                                    indicatorColor = '#1976D2'
                                                                 }) => {
     const path1T = useSharedValue(0);
     const path2T = useSharedValue(0);
@@ -110,8 +112,8 @@ export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
                     />
                     <Path
                         d="M18.9847 29.6609C18.4881 29.2239 17.7331 28.7471 17.2961 28.6279C14.8326 27.8928 12.2499 28.9855 11.0381 31.2701C10.4421 32.4025 10.4421 34.707 11.0381 35.8593C12.4486 38.5016 15.6074 39.4552 18.2298 38.0049C21.3886 36.2964 21.766 32.1045 18.9847 29.6609Z"
-                        fill="red"
-                        stroke="red"
+                        fill={indicatorColor}
+                        stroke={indicatorColor}
                         strokeWidth="1"
                         strokeOpacity="1"
                     />

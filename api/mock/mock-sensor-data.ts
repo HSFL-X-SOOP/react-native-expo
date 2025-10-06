@@ -1,12 +1,10 @@
 import { SensorModule, LocationWithBoxes, Box, MeasurementTime, WaterBoxMeasurements, AirBoxMeasurements, WaterTemperatureOnlyMeasurements, BoxType } from '@/api/models/sensor.ts';
 
-// Helper function to generate random values within a range
 const randomInRange = (min: number, max: number, decimals: number = 2): number => {
   const value = Math.random() * (max - min) + min;
   return Number(value.toFixed(decimals));
 };
 
-// Helper function to generate time stamps for the last 24 hours
 const generateTimeStamps = (count: number = 24): string[] => {
   const times: string[] = [];
   const now = new Date();
@@ -17,7 +15,7 @@ const generateTimeStamps = (count: number = 24): string[] => {
   return times.reverse();
 };
 
-// Mock data for SensorModule (old API format)
+
 export const mockSensorModules: SensorModule[] = [
   {
     location: {
@@ -113,7 +111,6 @@ export const mockSensorModules: SensorModule[] = [
   }
 ];
 
-// Generate mock water box measurements
 const generateWaterBoxMeasurements = (): MeasurementTime<WaterBoxMeasurements>[] => {
   return generateTimeStamps().map(time => ({
     time,
@@ -127,7 +124,6 @@ const generateWaterBoxMeasurements = (): MeasurementTime<WaterBoxMeasurements>[]
   }));
 };
 
-// Generate mock air box measurements
 const generateAirBoxMeasurements = (): MeasurementTime<AirBoxMeasurements>[] => {
   return generateTimeStamps().map(time => ({
     time,
@@ -143,7 +139,6 @@ const generateAirBoxMeasurements = (): MeasurementTime<AirBoxMeasurements>[] => 
   }));
 };
 
-// Generate mock water temperature only measurements
 const generateWaterTempOnlyMeasurements = (): MeasurementTime<WaterTemperatureOnlyMeasurements>[] => {
   return generateTimeStamps().map(time => ({
     time,
@@ -153,7 +148,6 @@ const generateWaterTempOnlyMeasurements = (): MeasurementTime<WaterTemperatureOn
   }));
 };
 
-// Mock data for LocationWithBoxes (new API format)
 export const mockLocationWithBoxes: LocationWithBoxes[] = [
   {
     location: {
@@ -308,16 +302,14 @@ export const mockLocationWithBoxes: LocationWithBoxes[] = [
   }
 ];
 
-// Mock function for time range data
 export const mockTimeRangeData = (id: number, timeRange: string): LocationWithBoxes | null => {
   const location = mockLocationWithBoxes.find(loc => loc.location.id === id);
   if (!location) {
     return null;
   }
 
-  // Generate mock data based on time range
   const hours = timeRange === 'DAY' ? 24 : timeRange === 'WEEK' ? 168 : 720;
-  const dataPoints = Math.min(hours, 100); // Limit data points for performance
+  const dataPoints = Math.min(hours, 100);
 
   return {
     location: location.location,
