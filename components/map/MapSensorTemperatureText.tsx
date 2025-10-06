@@ -14,7 +14,7 @@ export const SensorMarkerContent: React.FC<SensorMarkerContentProps> = ({locatio
     const temperature = tempValue !== undefined ? Math.round(Number(tempValue)) : "N/A";
 
     const accentColor = isDark ? '#0794d9' : '#7db07d';
-    const backgroundColor = isDark ? '#1c1c1c' : '#1c1c1c';
+    const backgroundColor = isDark ? '#1a1a1a' : '#1c1c1c';
     const textColor = 'white';
 
     const getIndicatorColor = (boxType?: string): string => {
