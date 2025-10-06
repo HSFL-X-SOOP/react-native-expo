@@ -49,6 +49,7 @@ export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
     const path1T = useSharedValue(0);
     const path2T = useSharedValue(0);
     const pulseT = useSharedValue(0);
+    const indicatorT = useSharedValue(0);
 
     useEffect(() => {
         const loop = (dur: number) =>
@@ -57,7 +58,8 @@ export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
         path1T.value = withDelay(700, loop(1800));
         path2T.value = loop(1800);
         pulseT.value = loop(2800);
-    }, [path1T, path2T, pulseT]);
+        indicatorT.value = loop(2800);
+    }, [path1T, path2T, pulseT, indicatorT]);
 
     const path1AnimatedProps = useAnimatedProps(() => {
         const opacity = interpolate(path1T.value, [0, 0.5, 1], [1, 0.5, 1]);
@@ -73,6 +75,11 @@ export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
         const r = interpolate(pulseT.value, [0, 0.5, 1], [26, 32, 26]);
         const opacity = interpolate(pulseT.value, [0, 0.5, 1], [0, 0.5, 0]);
         return {r, opacity};
+    });
+
+    const indicatorAnimatedProps = useAnimatedProps(() => {
+        const opacity = interpolate(indicatorT.value, [0, 0.5, 1], [0.6, 1, 0.6]);
+        return {opacity};
     });
 
     return (
@@ -121,12 +128,12 @@ export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
                         stroke="black"
                         strokeWidth="0.5"
                     />
-                    <Path
+                    <AnimatedPath
                         d="M18.9847 29.6609C18.4881 29.2239 17.7331 28.7471 17.2961 28.6279C14.8326 27.8928 12.2499 28.9855 11.0381 31.2701C10.4421 32.4025 10.4421 34.707 11.0381 35.8593C12.4486 38.5016 15.6074 39.4552 18.2298 38.0049C21.3886 36.2964 21.766 32.1045 18.9847 29.6609Z"
                         fill={indicatorColor}
                         stroke={indicatorColor}
                         strokeWidth="1"
-                        strokeOpacity="1"
+                        animatedProps={indicatorAnimatedProps}
                     />
                 </G>
 

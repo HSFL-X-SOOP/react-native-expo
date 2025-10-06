@@ -20,13 +20,13 @@ export const SensorMarkerContent: React.FC<SensorMarkerContentProps> = ({locatio
     const getIndicatorColor = (boxType?: string): string => {
         switch (boxType) {
             case BoxType.WaterBox:
-                return '#1565C0';
+                return '#0052ff';
             case BoxType.WaterTemperatureOnlyBox:
-                return '#5E35B1';
+                return '#d900ff';
             case BoxType.AirBox:
-                return '#F57C00';
+                return '#ff9a00';
             default:
-                return '#1565C0';
+                return '#90CAF9';
         }
     };
 
