@@ -33,7 +33,7 @@ export default function AndroidMap() {
     <View style={{flex: 1}}>
       <MapView style={{ flex: 1}} 
       // mapStyle="https://tiles.openfreemap.org/styles/positron"
-      mapStyle={require('../assets/images/style.json')}
+      mapStyle={require('../assets/style.json')}
       compassEnabled={true}
       zoomEnabled={true}
       onRegionDidChange={(region: any) => {

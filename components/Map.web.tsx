@@ -51,7 +51,7 @@ export default function WebMap() {
       key={"map"}
       //style={{width: 1600, height: 1200}}
       // mapStyle="https://demotiles.maplibre.org/style.json"
-      mapStyle={require('../assets/images/style.txt')}
+      mapStyle={require('../assets/style.txt')}
       maxBounds={mapBoundariesLongLat} // Germany
       longitude={currentCoordinate[0]}
       latitude={currentCoordinate[1]}
