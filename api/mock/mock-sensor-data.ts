@@ -1,4 +1,4 @@
-import { SensorModule, LocationWithBoxes, Box, MeasurementTime, WaterBoxMeasurements, AirBoxMeasurements, WaterTemperatureOnlyMeasurements } from '@/api/models/sensor.ts';
+import { SensorModule, LocationWithBoxes, Box, MeasurementTime, WaterBoxMeasurements, AirBoxMeasurements, WaterTemperatureOnlyMeasurements, BoxType } from '@/api/models/sensor.ts';
 
 // Helper function to generate random values within a range
 const randomInRange = (min: number, max: number, decimals: number = 2): number => {
@@ -322,14 +322,13 @@ export const mockTimeRangeData = (id: number, timeRange: string): LocationWithBo
   return {
     location: location.location,
     boxes: location.boxes.map(box => {
-      // Preserve the discriminated union type
-      if (box.type === 'WaterTemperatureOnlyBox') {
+      if (box.type === BoxType.WaterTemperatureOnlyBox) {
         return {
           ...box,
           type: 'WaterTemperatureOnlyBox' as const,
           measurementTimes: box.measurementTimes.slice(0, dataPoints)
         } as Box;
-      } else if (box.type === 'WaterBox') {
+      } else if (box.type === BoxType.WaterBox) {
         return {
           ...box,
           type: 'WaterBox' as const,

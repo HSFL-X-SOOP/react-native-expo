@@ -1,4 +1,4 @@
-import {LocationWithBoxes} from "@/api/models/sensor";
+import {LocationWithBoxes, BoxType} from "@/api/models/sensor";
 import {SensorMarkerSvg} from "./SensorMarkerSvg";
 import {useThemeContext} from "@/context/ThemeSwitch.tsx";
 
@@ -8,7 +8,7 @@ type SensorMarkerContentProps = {
 
 export const SensorMarkerContent: React.FC<SensorMarkerContentProps> = ({locationWithBoxes}) => {
     const {isDark} = useThemeContext();
-    const tempValue = locationWithBoxes.boxes.find(box => box.type === "WaterBox" || box.type === "WaterTemperatureOnlyBox")?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature;
+    const tempValue = locationWithBoxes.boxes.find(box => box.type === BoxType.WaterBox || box.type === BoxType.WaterTemperatureOnlyBox)?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature;
     const temperature = tempValue !== undefined ? Math.round(Number(tempValue)) : "N/A";
 
     const accentColor = isDark ? '#0794d9' : '#7db07d';

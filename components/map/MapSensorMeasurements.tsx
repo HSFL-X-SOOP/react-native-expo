@@ -1,4 +1,4 @@
-import {LocationWithBoxes} from "@/api/models/sensor";
+import {LocationWithBoxes, BoxType} from "@/api/models/sensor";
 import {useTranslation} from "@/hooks/useTranslation";
 import {ArrowLeft, Battery, HelpCircle, Thermometer, Waves} from "@tamagui/lucide-icons";
 import {useRouter} from "expo-router";
@@ -66,7 +66,7 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
 
     return (
         <XStack flexWrap="wrap" width="100%" justifyContent="space-between" marginTop="$3">
-            {box.type === "WaterBox" && (
+            {box.type === BoxType.WaterBox && (
                 <>
                     <MeasurementCard
                         measurementType="Temperature, water"
@@ -83,7 +83,7 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
                 </>
             )}
 
-            {box.type === "WaterTemperatureOnlyBox" && (
+            {box.type === BoxType.WaterTemperatureOnlyBox && (
                 <MeasurementCard
                     measurementType="Temperature, water"
                     value={box.measurementTimes[0].measurements.waterTemperature}

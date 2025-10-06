@@ -64,6 +64,11 @@ export interface MeasurementTime<T> {
     measurements: T;
 }
 
+export enum BoxType {
+    WaterTemperatureOnlyBox = "WaterTemperatureOnlyBox",
+    WaterBox = "WaterBox",
+    AirBox = "AirBox"
+}
 
 export type Box =
     | {
