@@ -65,6 +65,7 @@ export default function DashboardScreen() {
         const fetchData = async () => {
             try {
                 let data = await GetGeomarData()
+                setSensorLocations(GetAllAvailableSensorLocations(data));
                 setContent(data.filter((sensor: SensorModule) => String(sensor.location.id) === id))
                 setName(data.filter((sensor: SensorModule) => String(sensor.location.id) === id)[0]?.location.name || "")
             } finally {
@@ -98,7 +99,6 @@ export default function DashboardScreen() {
             setChartTide(tideData);
             setChartWaveHeight(waveData);
             setChartWaterTemperature(tempData);
-            setSensorLocations(GetAllAvailableSensorLocations(data));
         }
         fetchData()
     }, [id, timeRange])
@@ -464,7 +464,8 @@ export function SelectDemoContents(props: {router: Router} & { sensorLocations: 
                     <Select.Item
                       index={i}
                       key={item}
-                      value={item.toLowerCase()}
+                      //value={item.toLowerCase()}
+                      value={item}
                     >
                       <Select.ItemText>
                         {item}
@@ -520,18 +521,17 @@ export function SelectDemoContents(props: {router: Router} & { sensorLocations: 
   )
 }
 
-const GetAllAvailableSensorLocations = (data: LocationWithBoxes[] | LocationWithBoxes) => {
-    const locations: string[] = [];
-    if (Array.isArray(data)) {
-        data.forEach((element: LocationWithBoxes) => {
-            locations.push(element.location.name);
-            });
-        }
-        else {
-            locations.push(data.location.name);
-        }
+const GetAllAvailableSensorLocations = (data: LocationWithBoxes[]) => {
+    const locations: number[] = [];
+    console.log(data)
 
-    return locations;
+    data.forEach((element: LocationWithBoxes) => {
+        locations.push(element.location.id);
+        });
+
+    return locations
+
+
 }
 
 const CreateMeasurementDictionary = (data: any) => {
