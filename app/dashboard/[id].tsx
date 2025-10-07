@@ -1,12 +1,7 @@
-import {useRef, useState, useEffect} from 'react';
-import {Animated, SafeAreaView, ScrollView, View} from 'react-native';
-import {useThemeContext} from '@/context/ThemeSwitch';
-import {GetGeomarData, GetGeomarDataTimeRange} from '@/data/geomar-data';
-import {SensorModule} from '@/data/sensor';
-import {useLocalSearchParams} from 'expo-router';
-import {LineChart} from 'react-native-chart-kit';
-import {useTranslation} from '@/hooks/useTranslation';
-import {LinearGradient} from 'expo-linear-gradient';
+import { useThemeContext } from '@/context/ThemeSwitch';
+import { GetGeomarData, GetGeomarDataTimeRange } from '@/data/geomar-data';
+import { SensorModule } from '@/data/sensor';
+import { useTranslation } from '@/hooks/useTranslation';
 import {
     Activity,
     Battery,
@@ -20,16 +15,19 @@ import {
     Thermometer,
     Waves
 } from '@tamagui/lucide-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Router, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, SafeAreaView, ScrollView, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { LinearGradient } from 'react-native-svg';
+import { LinearGradient as LinearG } from 'react-native-svg';
+//import { LinearGradient } from 'react-native-svg';
 import {
     Adapt,
     Button,
     Card,
     FontSizeTokens,
+    H1,
     H2,
     H3,
     H4,
@@ -46,12 +44,12 @@ import {
     useMedia
 } from 'tamagui';
 
+
 export default function DashboardScreen() {
     const media = useMedia();
     const router = useRouter();
     const { t, changeLanguage } = useTranslation();
     const {isDark} = useThemeContext();
-    const {t} = useTranslation();
     const [showInfo, setShowInfo] = useState(false);
     const infoHeight = useRef(new Animated.Value(0)).current;
     let {id} = useLocalSearchParams();
@@ -61,7 +59,7 @@ export default function DashboardScreen() {
     }
 
     const [content, setContent] = useState<SensorModule[]>([])
-    const [sensorLocations, setSensorLocations] = useState<string[]>([])
+    const [sensorLocations, setSensorLocations] = useState<MarinaNameWithId[]>([])
     const [name, setName] = useState<string>("")
     const [, setLoading] = useState(true)
     const [timeRange, setTimeRange] = useState<'today' | 'yesterday' | 'last7days' | 'last30days'>('today')
@@ -165,7 +163,7 @@ export default function DashboardScreen() {
                             {name || t('dashboard.loading')}
                         </H1>
                         <View style={{width: 300}}>
-                            <SelectDemoContents isDark={isDark} router={router}sensorLocations={sensorLocations} id="select-demo-2" native />
+                            <SelectDemoContents isDark={isDark} router={router} sensorLocations={sensorLocations} id="select-demo-2" native />
                         </View>
                     </Stack>
                 </Stack>
@@ -442,7 +440,7 @@ export default function DashboardScreen() {
 </H1> */}
 
 
-export function SelectDemoContents(props: {router: Router} & { sensorLocations: string[]} & { isDark: boolean } & SelectProps & { trigger?: React.ReactNode }) {
+export function SelectDemoContents(props: {router: Router} & { sensorLocations: MarinaNameWithId[]} & { isDark: boolean } & SelectProps & { trigger?: React.ReactNode }) {
   const [val, setVal] = useState('')
   const { router, isDark, sensorLocations, ...restProps } = props;
 
@@ -481,7 +479,7 @@ export function SelectDemoContents(props: {router: Router} & { sensorLocations: 
           <YStack zIndex={10}>
             <ChevronUp size={20} />
           </YStack>
-          <LinearGradient
+          <LinearG
             x1={0}
             y1={0}
             x2={0}
@@ -506,12 +504,12 @@ export function SelectDemoContents(props: {router: Router} & { sensorLocations: 
                   return (
                     <Select.Item
                       index={i}
-                      key={item}
+                      key={item.id}
                       //value={item.toLowerCase()}
-                      value={item}
+                      value={item.id.toString()}
                     >
                       <Select.ItemText>
-                        {item}
+                        {item.name}
                         </Select.ItemText>
                       <Select.ItemIndicator marginLeft="auto">
                         <Check size={16} />
@@ -552,7 +550,7 @@ export function SelectDemoContents(props: {router: Router} & { sensorLocations: 
           <YStack zIndex={10}>
             <ChevronDown size={20} />
           </YStack>
-          <LinearGradient
+          <LinearG
             x1={0}
             y1={0}
             x2={0}
@@ -564,20 +562,27 @@ export function SelectDemoContents(props: {router: Router} & { sensorLocations: 
   )
 }
 
-const GetAllAvailableSensorLocations = (data: LocationWithBoxes[]) => {
-    const locations: number[] = [];
+interface MarinaNameWithId {
+    name: string;
+    id: number;
+}
+
+const GetAllAvailableSensorLocations = (data: any) => {
+    const locations: MarinaNameWithId[] = [];
     console.log(data)
 
-    data.forEach((element: LocationWithBoxes) => {
-        locations.push(element.location.id);
+    data.forEach((element: any) => {
+        locations.push({
+            id: element.location.id,
+            name: element.location.name
         });
+    });
 
     return locations
 
 
 }
 
-const CreateMeasurementDictionary = (data: any) => {
 const CreateMeasurementDictionary = (data: any, timeRange: string) => {
     if (!data?.boxes?.[0]?.measurementTimes) return {};
 
@@ -674,7 +679,6 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
     const {isDark} = useThemeContext();
     const {t} = useTranslation();
     const media = useMedia();
-    const { t, changeLanguage } = useTranslation();
     const data = chartData.length > 0
         ? chartData.filter((_, idx) => idx % dataPrecision === 0).map(item => item.value)
         : [];
