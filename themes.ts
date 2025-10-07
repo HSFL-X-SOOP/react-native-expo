@@ -10,8 +10,8 @@ const defaultDark = [
     '#65656b', '#8c8c90', '#b2b2b5', '#d9d9da', '#efeff0', '#ffffff',
 ]
 const primaryLight = [
-    '#eff6ff', '#dbeafe', '#bfdbfe', '#93c5fd', '#60a5fa', '#3b82f6',
-    '#2563eb', '#1d4ed8', '#1e40af', '#1e3a8a', '#1e3a8a', '#172554',
+    '#e0e5e8', '#b4c2c8', '#889ea7', '#5d7a87', '#315666', '#053246',
+    '#04293a', '#03212e', '#021821', '#020f15', '#010b10', '#00080a',
 ]
 
 const primaryDark = [
@@ -24,8 +24,8 @@ const secondaryLight = [
 ]
 
 const secondaryDark = [
-    '#172554', '#1e3a8a', '#1e40af', '#1d4ed8', '#2563eb', '#3b82f6',
-    '#60a5fa', '#93c5fd', '#bfdbfe', '#dbeafe', '#eff6ff', '#f0f9ff',
+    '#e0e5e8', '#b4c2c8', '#889ea7', '#5d7a87', '#315666', '#053246',
+    '#04293a', '#03212e', '#021821', '#020f15', '#010b10', '#00080a',
 ]
 const successLight = [
     '#e2f8ec', '#b9efd1', '#91e5b5', '#68dc9a', '#40d27f', '#17c964',
