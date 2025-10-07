@@ -1,7 +1,3 @@
-import { useThemeContext } from '@/context/ThemeSwitch';
-import { GetGeomarData, GetGeomarDataTimeRange } from '@/data/geomar-data';
-import { SensorModule } from '@/data/sensor';
-import { useTranslation } from '@/hooks/useTranslation';
 import {
     Activity,
     Battery,
@@ -15,22 +11,16 @@ import {
     Thermometer,
     Waves
 } from '@tamagui/lucide-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Router, useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, SafeAreaView, ScrollView, View } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
-import { LinearGradient as LinearG } from 'react-native-svg';
-//import { LinearGradient } from 'react-native-svg';
-import {useRef, useState, useEffect} from 'react';
-import {Animated, SafeAreaView, ScrollView, View} from 'react-native';
-import {useThemeContext} from '@/context/ThemeSwitch';
-import {useSensorData, useSensorDataTimeRange} from '@/hooks/useSensors';
-import {SensorModule} from '@/api/models/sensor';
-import {useLocalSearchParams} from 'expo-router';
-import {LineChart} from 'react-native-chart-kit';
-import {useTranslation} from '@/hooks/useTranslation';
 import {LinearGradient} from 'expo-linear-gradient';
+import {Router, useLocalSearchParams, useRouter} from 'expo-router';
+import {useEffect, useMemo, useRef, useState} from 'react';
+import {Animated, SafeAreaView, ScrollView, View} from 'react-native';
+import {LineChart} from 'react-native-chart-kit';
+import {LinearGradient as LinearG} from 'react-native-svg';
+import {useThemeContext} from '@/context/ThemeSwitch';
+import {useSensorDataNew, useSensorDataTimeRange} from '@/hooks/useSensors';
+import {LocationWithBoxes, Box} from '@/api/models/sensor';
+import {useTranslation} from '@/hooks/useTranslation';
 import {
     Adapt,
     Button,
@@ -53,11 +43,25 @@ import {
     useMedia
 } from 'tamagui';
 
+interface MarinaNameWithId {
+    name: string;
+    id: number;
+}
+
+interface ChartDataPoint {
+    label: string;
+    value: number;
+}
+
+interface MeasurementDictionary {
+    [key: string]: ChartDataPoint[];
+}
+
 
 export default function DashboardScreen() {
     const media = useMedia();
     const router = useRouter();
-    const { t, changeLanguage } = useTranslation();
+    const {t} = useTranslation();
     const {isDark} = useThemeContext();
     const [showInfo, setShowInfo] = useState(false);
     const infoHeight = useRef(new Animated.Value(0)).current;
@@ -67,52 +71,55 @@ export default function DashboardScreen() {
         id = "4";
     }
 
-    const [content, setContent] = useState<SensorModule[]>([])
-    const [sensorLocations, setSensorLocations] = useState<MarinaNameWithId[]>([])
-    const [, setLoading] = useState(true)
-    const [timeRange, setTimeRange] = useState<'today' | 'yesterday' | 'last7days' | 'last30days'>('today')
+    const [timeRange, setTimeRange] = useState<'today' | 'yesterday' | 'last7days' | 'last30days'>('today');
 
-    const { data: allSensorData } = useSensorData();
-    const content = allSensorData.filter((sensor: SensorModule) => String(sensor.location.id) === id);
-    const name = content[0]?.location.name || "";
+    const {data: allSensorData} = useSensorDataNew();
 
-    const dataPrecision = timeRange === 'last30days' ? 6 :
-        timeRange === 'last7days' ? 3 :
-            timeRange === 'yesterday' ? 3 :
-                3; // today
+    const content = useMemo(
+        () => allSensorData.filter((location: LocationWithBoxes) => String(location.location.id) === id),
+        [allSensorData, id]
+    );
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                let data = await GetGeomarData()
-                setSensorLocations(GetAllAvailableSensorLocations(data));
-                setContent(data.filter((sensor: SensorModule) => String(sensor.location.id) === id))
-                setName(data.filter((sensor: SensorModule) => String(sensor.location.id) === id)[0]?.location.name || "")
-            } finally {
-                setLoading(false)
-            }
+    const name = useMemo(() => content[0]?.location.name || "", [content]);
+
+    const sensorLocations = useMemo(
+        () => GetAllAvailableSensorLocations(allSensorData),
+        [allSensorData]
+    );
+
+    const dataPrecision = useMemo(() => {
+        switch (timeRange) {
+            case 'last30days': return 6;
+            case 'last7days': return 3;
+            case 'yesterday': return 3;
+            default: return 3;
         }
-        fetchData()
-    }, [id, timeRange])
+    }, [timeRange]);
 
     const isAdmin = false;
-    const excludedMeasurements: string[] = [];
 
-    if (!isAdmin) {
-        excludedMeasurements.push("Battery, voltage");
-    }
-    excludedMeasurements.push("Standard deviation");
+    const excludedMeasurements = useMemo(() => {
+        const excluded = ["Standard deviation"];
+        if (!isAdmin) {
+            excluded.push("Battery, voltage");
+        }
+        return excluded;
+    }, [isAdmin]);
 
 
-    const [chartWaterTemperature, setChartWaterTemperature] = useState<any>([])
-    const [chartTide, setChartTide] = useState<any>([])
-    const [chartWaveHeight, setChartWaveHeight] = useState<any>([])
+    const [chartWaterTemperature, setChartWaterTemperature] = useState<ChartDataPoint[]>([])
+    const [chartTide, setChartTide] = useState<ChartDataPoint[]>([])
+    const [chartWaveHeight, setChartWaveHeight] = useState<ChartDataPoint[]>([])
 
-    const apiTimeRange = timeRange === 'last7days' ? 'WEEK' :
-        timeRange === 'last30days' ? 'MONTH' :
-        'DAY';
+    const apiTimeRange = useMemo(() => {
+        switch (timeRange) {
+            case 'last7days': return 'WEEK';
+            case 'last30days': return 'MONTH';
+            default: return 'DAY';
+        }
+    }, [timeRange]);
 
-    const { data: timeRangeData } = useSensorDataTimeRange(Number(id), apiTimeRange);
+    const {data: timeRangeData} = useSensorDataTimeRange(Number(id), apiTimeRange);
 
     useEffect(() => {
         if (timeRangeData) {
@@ -126,6 +133,14 @@ export default function DashboardScreen() {
             setChartWaterTemperature(tempData);
         }
     }, [timeRangeData, timeRange])
+
+    const filteredMeasurements = useMemo(() => {
+        if (!content[0]?.boxes) return [];
+        const latestMeasurements = GetLatestMeasurements(content[0].boxes);
+        return latestMeasurements.filter(
+            m => !excludedMeasurements.includes(m.measurementType)
+        );
+    }, [content, excludedMeasurements]);
 
     const toggleInfo = () => {
         setShowInfo((prev) => !prev);
@@ -174,7 +189,9 @@ export default function DashboardScreen() {
                             {name || t('dashboard.loading')}
                         </H1>
                         <View style={{width: 300}}>
-                            <NavigateDashboardDropdownMenu isDark={isDark} router={router} sensorLocations={sensorLocations} selectedMarinaId={Number(id)} id="select-demo-2" native />
+                            <NavigateDashboardDropdownMenu isDark={isDark} router={router}
+                                                           sensorLocations={sensorLocations}
+                                                           selectedMarinaId={Number(id)} id="select-demo-2" native/>
                         </View>
                     </Stack>
                 </Stack>
@@ -268,8 +285,7 @@ export default function DashboardScreen() {
                             flexWrap={media.md ? "wrap" : "nowrap"}
                             justifyContent={media.md ? "center" : "space-between"}
                         >
-                            {content[0] && content[0].latestMeasurements
-                                .filter(a => !excludedMeasurements.includes(a.measurementType.name))
+                            {filteredMeasurements
                                 .slice(0, 3)
                                 .map((measurement, index) => (
                                     <Card
@@ -289,11 +305,11 @@ export default function DashboardScreen() {
                                                     width={56}
                                                     height={56}
                                                     borderRadius="$4"
-                                                    backgroundColor={getIconBackground(measurement.measurementType.name)}
+                                                    backgroundColor={getIconBackground(measurement.measurementType)}
                                                     alignItems="center"
                                                     justifyContent="center"
                                                 >
-                                                    {getMeasurementIcon(measurement.measurementType.name, 32)}
+                                                    {getMeasurementIcon(measurement.measurementType, 32)}
                                                 </Stack>
                                                 <YStack alignItems="center" gap="$2">
                                                     <Text
@@ -302,17 +318,17 @@ export default function DashboardScreen() {
                                                         fontWeight="600"
                                                         textAlign="center"
                                                     >
-                                                        {getTextFromMeasurementType(measurement.measurementType.name, t)}
+                                                        {getTextFromMeasurementType(measurement.measurementType, t)}
                                                     </Text>
                                                     <XStack alignItems="baseline" gap="$2">
                                                         <H2 fontSize="$10" fontWeight="700"
-                                                            color={getMeasurementColor(measurement.measurementType.name)}>
+                                                            color={getMeasurementColor(measurement.measurementType)}>
                                                             {measurement.value}
                                                         </H2>
                                                         <Text fontSize="$6"
-                                                              color={getMeasurementColor(measurement.measurementType.name)}
+                                                              color={getMeasurementColor(measurement.measurementType)}
                                                               fontWeight="600">
-                                                            {getMeasurementTypeSymbol(measurement.measurementType.name, t)}
+                                                            {getMeasurementTypeSymbol(measurement.measurementType, t)}
                                                         </Text>
                                                     </XStack>
                                                 </YStack>
@@ -324,7 +340,7 @@ export default function DashboardScreen() {
                     </YStack>
 
 
-                    {content[0] && content[0].latestMeasurements.filter(a => !excludedMeasurements.includes(a.measurementType.name)).length > 3 && (
+                    {filteredMeasurements.length > 3 && (
                         <YStack gap="$3">
                             <H2 fontSize="$6">{t('dashboard.furtherMeasurements')}</H2>
                             <XStack
@@ -332,13 +348,12 @@ export default function DashboardScreen() {
                                 gap="$3"
                                 justifyContent={media.lg ? 'flex-start' : 'center'}
                             >
-                                {content[0].latestMeasurements
-                                    .filter(a => !excludedMeasurements.includes(a.measurementType.name))
+                                {filteredMeasurements
                                     .slice(3)
                                     .map((a, index) => (
                                         <MeasurementCard
                                             key={index}
-                                            measurementType={a.measurementType.name}
+                                            measurementType={a.measurementType}
                                             value={String(a.value)}
                                         />
                                     ))}
@@ -439,181 +454,236 @@ export default function DashboardScreen() {
     );
 }
 
-{/* <H1
-    color="white"
-    // fontSize={media.lg ? "$10" : "$8"}
-    fontWeight="700"
-    textShadowColor="rgba(0,0,0,0.5)"
-    textShadowOffset={{width: 0, height: 2}}
-    textShadowRadius={4}
->
-    {item || 'Lade Daten...'}
-</H1> */}
+interface NavigateDashboardDropdownMenuProps extends SelectProps {
+    router: Router;
+    sensorLocations: MarinaNameWithId[];
+    isDark: boolean;
+    selectedMarinaId: number;
+    trigger?: React.ReactNode;
+}
 
+export function NavigateDashboardDropdownMenu(props: NavigateDashboardDropdownMenuProps) {
+    const {router, isDark, sensorLocations, selectedMarinaId, ...restProps} = props;
 
-export function NavigateDashboardDropdownMenu(props: {router: Router} & { sensorLocations: MarinaNameWithId[]} & { isDark: boolean } & {selectedMarinaId: number} & SelectProps & { trigger?: React.ReactNode }) {
-  const { router, isDark, sensorLocations, selectedMarinaId, ...restProps } = props;
-  const selectedMarina = sensorLocations.filter(item => item.id === selectedMarinaId)[0] || {id: 0, name: "Unknown"}
-  const marinasWithIds: MarinaNameWithId[] = [{id: selectedMarina.id, name: selectedMarina.name}, ...sensorLocations]
+    const handleValueChange = (value: string) => {
+        router.push(`/dashboard/${value}`);
+    };
 
-  return (
-    <Select value={""} onValueChange={(e) => {router.push(`/dashboard/${e}`);}} disablePreventBodyScroll {...restProps}>
-      {props?.trigger || (
-        <Select.Trigger maxWidth={220} iconAfter={ChevronDown}>
-          <Select.Value placeholder="Something" />
-        </Select.Trigger>
-      )}
-
-      <Adapt platform="touch">
-        <Sheet native={!!props.native} modal dismissOnSnapToBottom animation="medium">
-          <Sheet.Frame>
-            <Sheet.ScrollView>
-              <Adapt.Contents />
-            </Sheet.ScrollView>
-          </Sheet.Frame>
-          <Sheet.Overlay
-            backgroundColor={isDark ? '$gray8' : '$gray2'}
-            animation="lazy"
-            enterStyle={{ opacity: 0 }}
-            exitStyle={{ opacity: 0 }}
-          />
-        </Sheet>
-      </Adapt>
-
-      <Select.Content zIndex={200000}>
-        <Select.ScrollUpButton
-          alignItems="center"
-          justifyContent="center"
-          position="relative"
-          width="100%"
-          height="$3"
-        >
-          <YStack zIndex={10}>
-            <ChevronUp size={20} />
-          </YStack>
-          <LinearG
-            x1={0}
-            y1={0}
-            x2={0}
-            y2={1}
-          />
-        </Select.ScrollUpButton>
-
-        <Select.Viewport
-          minWidth={200}
-        >
-          <Select.Group>
-            <Select.Label>Sensors</Select.Label>
-            {useMemo(
-              () =>
-                marinasWithIds.map((item, i) => {
-                  return (
-                    <Select.Item
-                      index={i}
-                      key={item.id}
-                      //value={item.toLowerCase()}
-                      value={item.id.toString()}
-                    >
-                      <Select.ItemText>
-                        {item.name}
-                        </Select.ItemText>
-                      <Select.ItemIndicator marginLeft="auto">
-                        <Check size={16} />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-
-                  )
-                }),
-              [sensorLocations]
+    return (
+        <Select value={String(selectedMarinaId)} onValueChange={handleValueChange} disablePreventBodyScroll {...restProps}>
+            {props?.trigger || (
+                <Select.Trigger maxWidth={220} iconAfter={ChevronDown}>
+                    <Select.Value placeholder="Something"/>
+                </Select.Trigger>
             )}
-          </Select.Group>
-          {props.native && (
-            <YStack
-              position="absolute"
-              right={0}
-              top={0}
-              bottom={0}
-              alignItems="center"
-              justifyContent="center"
-              width={'$4'}
-              pointerEvents="none"
-            >
-              <ChevronDown
-                size={getFontSize((props.size as FontSizeTokens) ?? '$true')}
-              />
-            </YStack>
-          )}
-        </Select.Viewport>
 
-        <Select.ScrollDownButton
-          alignItems="center"
-          justifyContent="center"
-          position="relative"
-          width="100%"
-          height="$3"
-        >
-          <YStack zIndex={10}>
-            <ChevronDown size={20} />
-          </YStack>
-          <LinearG
-            x1={0}
-            y1={0}
-            x2={0}
-            y2={1}
-          />
-        </Select.ScrollDownButton>
-      </Select.Content>
-    </Select>
-  )
+            <Adapt platform="touch">
+                <Sheet native={!!props.native} modal dismissOnSnapToBottom animation="medium">
+                    <Sheet.Frame>
+                        <Sheet.ScrollView>
+                            <Adapt.Contents/>
+                        </Sheet.ScrollView>
+                    </Sheet.Frame>
+                    <Sheet.Overlay
+                        backgroundColor={isDark ? '$gray8' : '$gray2'}
+                        animation="lazy"
+                        enterStyle={{opacity: 0}}
+                        exitStyle={{opacity: 0}}
+                    />
+                </Sheet>
+            </Adapt>
+
+            <Select.Content zIndex={200000}>
+                <Select.ScrollUpButton
+                    alignItems="center"
+                    justifyContent="center"
+                    position="relative"
+                    width="100%"
+                    height="$3"
+                >
+                    <YStack zIndex={10}>
+                        <ChevronUp size={20}/>
+                    </YStack>
+                    <LinearG
+                        x1={0}
+                        y1={0}
+                        x2={0}
+                        y2={1}
+                    />
+                </Select.ScrollUpButton>
+
+                <Select.Viewport
+                    minWidth={200}
+                >
+                    <Select.Group>
+                        <Select.Label>Sensors</Select.Label>
+                        {useMemo(
+                            () =>
+                                sensorLocations.map((item, i) => (
+                                    <Select.Item
+                                        index={i}
+                                        key={item.id}
+                                        value={item.id.toString()}
+                                    >
+                                        <Select.ItemText>
+                                            {item.name}
+                                        </Select.ItemText>
+                                        <Select.ItemIndicator marginLeft="auto">
+                                            <Check size={16}/>
+                                        </Select.ItemIndicator>
+                                    </Select.Item>
+                                )),
+                            [sensorLocations]
+                        )}
+                    </Select.Group>
+                    {props.native && (
+                        <YStack
+                            position="absolute"
+                            right={0}
+                            top={0}
+                            bottom={0}
+                            alignItems="center"
+                            justifyContent="center"
+                            width={'$4'}
+                            pointerEvents="none"
+                        >
+                            <ChevronDown
+                                size={getFontSize((props.size as FontSizeTokens) ?? '$true')}
+                            />
+                        </YStack>
+                    )}
+                </Select.Viewport>
+
+                <Select.ScrollDownButton
+                    alignItems="center"
+                    justifyContent="center"
+                    position="relative"
+                    width="100%"
+                    height="$3"
+                >
+                    <YStack zIndex={10}>
+                        <ChevronDown size={20}/>
+                    </YStack>
+                    <LinearG
+                        x1={0}
+                        y1={0}
+                        x2={0}
+                        y2={1}
+                    />
+                </Select.ScrollDownButton>
+            </Select.Content>
+        </Select>
+    )
 }
 
-interface MarinaNameWithId {
-    name: string;
-    id: number;
+const GetAllAvailableSensorLocations = (data: LocationWithBoxes[]): MarinaNameWithId[] => {
+    const locationMap = new Map<number, MarinaNameWithId>();
+
+    data.forEach((element) => {
+        if (element.location?.id && element.location?.name) {
+            locationMap.set(element.location.id, {
+                id: element.location.id,
+                name: element.location.name
+            });
+        }
+    });
+
+    return Array.from(locationMap.values());
 }
 
-const GetAllAvailableSensorLocations = (data: any) => {
-    const locations: MarinaNameWithId[] = [];
-    console.log(data)
+interface LatestMeasurement {
+    measurementType: string;
+    value: number;
+}
 
-    data.forEach((element: any) => {
-        locations.push({
-            id: element.location.id,
-            name: element.location.name
+const GetLatestMeasurements = (boxes: Box[]): LatestMeasurement[] => {
+    const measurements: LatestMeasurement[] = [];
+
+    boxes.forEach((box) => {
+        if (box.measurementTimes.length === 0) return;
+
+        // Nimm die neueste Messung (letzter Eintrag)
+        const latestTime = box.measurementTimes[box.measurementTimes.length - 1];
+        const measurementData = latestTime.measurements;
+
+        // Konvertiere die Messungen basierend auf dem Box-Typ
+        Object.entries(measurementData).forEach(([key, value]) => {
+            let measurementType = '';
+
+            // Mapping von camelCase zu Display-Namen
+            switch (key) {
+                case 'waterTemperature':
+                    measurementType = 'Temperature, water';
+                    break;
+                case 'waveHeight':
+                    measurementType = 'Wave Height';
+                    break;
+                case 'tide':
+                    measurementType = 'Tide';
+                    break;
+                case 'standardDeviation':
+                    measurementType = 'Standard deviation';
+                    break;
+                case 'batteryVoltage':
+                    measurementType = 'Battery, voltage';
+                    break;
+                case 'airTemperature':
+                    measurementType = 'Temperature, air';
+                    break;
+                case 'windSpeed':
+                    measurementType = 'Wind Speed';
+                    break;
+                case 'windDirection':
+                    measurementType = 'Wind Direction';
+                    break;
+                case 'gustSpeed':
+                    measurementType = 'Gust Speed';
+                    break;
+                case 'gustDirection':
+                    measurementType = 'Gust Direction';
+                    break;
+                case 'humidity':
+                    measurementType = 'Humidity';
+                    break;
+                case 'airPressure':
+                    measurementType = 'Air Pressure';
+                    break;
+                default:
+                    measurementType = key;
+            }
+
+            measurements.push({
+                measurementType,
+                value: typeof value === 'number' ? value : Number(value)
+            });
         });
     });
 
-    return locations
-
-
+    return measurements;
 }
 
-const CreateMeasurementDictionary = (data: any, timeRange: string) => {
+const CreateMeasurementDictionary = (
+    data: any,
+    timeRange: string
+): MeasurementDictionary => {
     if (!data?.boxes?.[0]?.measurementTimes) return {};
 
     const measurementTimes = data.boxes[0].measurementTimes;
-    const measurementDict: Record<string, { label: string, value: number }[]> = {};
+    const measurementDict: MeasurementDictionary = {};
 
     measurementTimes.forEach((entry: any) => {
         if (!entry.time) return;
 
-
-
-        let label: string;
-        if (timeRange === 'last7days' || timeRange === 'last30days') {
-            const date = new Date(entry.time);
-            label = `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}`;
-        } else {
-
-            label = entry.time.slice(11, 16);
-        }
+        const label = timeRange === 'last7days' || timeRange === 'last30days'
+            ? new Date(entry.time).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })
+            : entry.time.slice(11, 16);
 
         Object.entries(entry.measurements || {}).forEach(([key, value]) => {
             if (!measurementDict[key]) {
                 measurementDict[key] = [];
             }
             measurementDict[key].push({
-                label: label,
+                label,
                 value: Math.ceil(Number(value))
             });
         });
@@ -683,22 +753,31 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
     const {isDark} = useThemeContext();
     const {t} = useTranslation();
     const media = useMedia();
-    const data = chartData.length > 0
-        ? chartData.filter((_, idx) => idx % dataPrecision === 0).map(item => item.value)
-        : [];
 
-    const labels = chartData.length > 0
-        ? chartData.filter((_, idx) => idx % dataPrecision === 0).map(item => item.label)
-        : [];
+    const {data, displayLabels} = useMemo(() => {
+        if (chartData.length === 0) {
+            return {data: [], displayLabels: []};
+        }
 
-    const showEvery = Math.ceil(labels.length / 6);
-    const displayLabels = labels.filter((_, index) => index % showEvery === 0);
+        const filteredData = chartData.filter((_, idx) => idx % dataPrecision === 0);
+        const dataValues = filteredData.map(item => item.value);
+        const labelValues = filteredData.map(item => item.label);
+        const showEvery = Math.ceil(labelValues.length / 6);
+        const displayLabelValues = labelValues.filter((_, index) => index % showEvery === 0);
+
+        return {data: dataValues, displayLabels: displayLabelValues};
+    }, [chartData, dataPrecision]);
 
     const chartWidth = media.md ? 320 : 400;
     const chartHeight = media.md ? 180 : 220;
 
+    const unit = useMemo(() => {
+        if (title === t('dashboard.charts.waterTemperature')) return t('dashboard.units.celsius');
+        if (title === t('dashboard.charts.waveHeight')) return t('dashboard.units.centimeters');
+        return t('dashboard.units.centimeters');
+    }, [title, t]);
 
-    const chartConfig = {
+    const chartConfig = useMemo(() => ({
         backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
         backgroundGradientFrom: isDark ? '#1a1a1a' : '#ffffff',
         backgroundGradientTo: isDark ? '#1a1a1a' : '#ffffff',
@@ -718,7 +797,7 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             stroke: isDark ? '#333' : '#e5e5e5',
             strokeWidth: 1
         }
-    };
+    }), [isDark, color]);
 
     return (
         <Card
@@ -749,8 +828,7 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                                     {data[data.length - 1]?.toFixed(1)}
                                 </Text>
                                 <Text fontSize="$3" color="$gray10">
-                                    {title === t('dashboard.charts.waterTemperature') ? t('dashboard.units.celsius') :
-                                        title === t('dashboard.charts.waveHeight') ? t('dashboard.units.centimeters') : t('dashboard.units.centimeters')}
+                                    {unit}
                                 </Text>
                             </XStack>
                         </YStack>

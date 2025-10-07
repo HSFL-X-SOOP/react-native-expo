@@ -7,7 +7,6 @@ import AndroidMarker from "./map/MapSensorMarker.native";
 import MapZoomControl from "./map/MapZoomControl";
 
 export default function AndroidMap() {
-    const { data: content } = useSensorData();
     const { data: content2 } = useSensorDataNew();
 
   const [selectedLocation, setSelectedLocation] = useState<LocationWithBoxes | null>(null);
