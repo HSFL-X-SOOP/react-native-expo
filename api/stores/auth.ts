@@ -1,6 +1,6 @@
 import {
     LoginRequest, LoginResponse, MagicLinkLoginRequest,
-    MagicLinkRequest, RegisterRequest, VerifyEmailRequest,
+    MagicLinkRequest, RegisterRequest, VerifyEmailRequest, GoogleLoginRequest,
 } from "@/api/models/auth.ts";
 import { useHttpClient } from "@/api/client.ts";
 
@@ -25,5 +25,8 @@ export function useAuthStore() {
 
         sendVerificationEmail: () =>
             httpClient.post<void>("/send-verification-email").then(r => r.data),
+
+        googleLogin: (body: GoogleLoginRequest) =>
+            httpClient.post<LoginResponse>("/login/google/android", body).then(r => r.data),
     };
 }

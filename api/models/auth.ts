@@ -29,3 +29,7 @@ export interface RegisterRequest {
 export interface VerifyEmailRequest {
     token: string;
 }
+
+export interface GoogleLoginRequest {
+    idToken: string;
+}

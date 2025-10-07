@@ -1,15 +1,17 @@
+import { useThemeContext } from "@/context/ThemeSwitch";
 import { LocationWithBoxes, SensorModule } from "@/data/sensor";
 import { useTranslation } from "@/hooks/useTranslation";
-import { ArrowLeft, Battery, HelpCircle, Thermometer, Waves } from "@tamagui/lucide-icons";
+import { Activity, Battery, HelpCircle, Thermometer, Waves } from "@tamagui/lucide-icons";
 import { Link, useRouter } from "expo-router";
 import { Platform, TouchableOpacity } from "react-native";
-import { Text, useTheme, XStack, YStack } from "tamagui";
+import { Text, XStack, YStack } from "tamagui";
 type MapSensorMeasurementsProps = {
     sensorModule: SensorModule
 }
 
 export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sensorModule}) => {
-  const t = useTheme();
+  const {isDark} = useThemeContext();
+  const {t, i18n} = useTranslation();
   const isAdmin = false; //TODO: Hier prüfen ob Admin
   const excludedMeasurements: string[] = [];
 
@@ -50,13 +52,13 @@ export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sens
           !excludedMeasurements.includes(a.measurementType.name) && (
             <YStack key={index} width="48%" marginBottom="$2">
               <Text fontSize={16} color="$gray10">
-                {getTextFromMeasurementType(a.measurementType.name)}
+                {getTextFromMeasurementType(a.measurementType.name, t)}
               </Text>
               <XStack alignItems="center">
                 <Text fontSize={24} color="$color">
                   {a.value}{getMeasurementTypeSymbol(a.measurementType.name)}{" "}
                 </Text>
-                {getMeasurementTypeIcon(a.measurementType.name, t.color?.val)}
+                {getMeasurementIcon(a.measurementType.name, 22)}
               </XStack>
             </YStack>
           )
@@ -103,7 +105,7 @@ export const MapSensorMeasurementsNew: React.FC<MapSensorMeasurementsNewProps> =
       shadowRadius={4}
       elevation={3}
     >
-      <Text fontSize={16} color="$gray10">Name</Text>
+      <Text fontSize={16} color="$gray10">{t('map.location')}</Text>
 
       <TouchableOpacity onPress={close}>
         <Text fontSize={24} color="$color" fontWeight="600">
@@ -140,7 +142,7 @@ export const MapSensorMeasurementsNew: React.FC<MapSensorMeasurementsNewProps> =
               <MeasurementCard key={index + 1} index={index + 1} measurementType="Temperature, water" value={a.measurementTimes[0].measurements.waterTemperature}/>
 
               <XStack width={"100%"} justifyContent="space-between" alignItems="center">
-                <Text fontSize={14}>t{'last.measurement'}: {formatDateTime(a.measurementTimes[0].time)}</Text>
+                <Text fontSize={14}>{t('last.measurement')}: {formatDateTime(a.measurementTimes[0].time)}</Text>
               </XStack>
             </XStack>
             )
@@ -156,17 +158,17 @@ type MeasurementCardProps = {
 }
 
 function MeasurementCard({index, measurementType, value}: MeasurementCardProps) {
-  const t = useTheme();
+  const {t, i18n} = useTranslation();
   return (              
       <YStack key={index} width="48%" marginBottom="$2">
         <Text fontSize={16} color="$gray10">
-          {getTextFromMeasurementType(measurementType)}
+          {getTextFromMeasurementType(measurementType, t)}
         </Text>
         <XStack alignItems="center">
           <Text fontSize={24} color="$color">
             {value}{getMeasurementTypeSymbol(measurementType)}{" "}
           </Text>
-          {getMeasurementTypeIcon(measurementType, "$color")}
+          {getMeasurementIcon(measurementType, 22)}
         </XStack>
       </YStack>  
   );
@@ -183,43 +185,38 @@ function formatDateTime(dateString: string): string {
   return `${hh}:${mm} Uhr · ${dd}.${MM}.${yyyy}`;
 }
 
-const getMeasurementTypeIcon = (measurementType: string, color?: string) => {
-  const iconColor = color || "#000000";
-  const size = 24;
-
-  switch (measurementType) {
-    case "Wave Height":
-      return <Waves color={iconColor} size={size} />;
-    case "Temperature, water":
-      return <Thermometer color={iconColor} size={size} />;
-    case "WTemp":
-      return <Thermometer color={iconColor} size={size} />;
-    case "Tide":
-      //TODO: Hier noch überprüfen ob Flut oder Ebbe und den Pfeil dementsprechend anpassen?
-      return <ArrowLeft color={iconColor} size={size} />;
-    case "Battery, voltage":
-      return <Battery color={iconColor} size={size} />;
-    default:
-      return <HelpCircle color={iconColor} size={size} />;
-  }
+const getMeasurementIcon = (measurementType: string, size: number = 24) => {
+    const color = getValueColor(measurementType);
+    const props = {size, color};
+    switch (measurementType) {
+        case "Wave Height":
+            return <Waves {...props}/>;
+        case "Temperature, water":
+        case "WTemp":
+            return <Thermometer {...props}/>;
+        case "Tide":
+            return <Activity {...props}/>;
+        case "Battery, voltage":
+            return <Battery {...props}/>;
+        default:
+            return <HelpCircle {...props}/>;
+    }
 };
 
-const getTextFromMeasurementType = (measurementType: string): string => {
-  switch (measurementType) {
-    case "Wave Height":
-      return "Wellenhöhe";
-    case "Temperature, water":
-      return "Wassertemperatur";
-    case "WTemp":
-      return "Wassertemperatur";
-    case "Tide":
-      //TODO: Hier noch überprüfen ob Flut oder Ebbe und den Pfeil dementsprechend anpassen?
-      return "Tide";
-    case "Battery, voltage":
-      return "Batteriespannung";
-    default:
-      return "help-circle";
-  }
+const getTextFromMeasurementType = (measurementType: string, t: (key: string) => string): string => {
+    switch (measurementType) {
+        case "Wave Height":
+            return t("measurements.waveHeight");
+        case "Temperature, water":
+        case "WTemp":
+            return t("measurements.waterTemperature");
+        case "Tide":
+            return t("measurements.tide");
+        case "Battery, voltage":
+            return t("measurements.batteryVoltage");
+        default:
+            return measurementType;
+    }
 };
 
 const getMeasurementTypeSymbol = (measurementType: string): string => {
@@ -238,4 +235,20 @@ const getMeasurementTypeSymbol = (measurementType: string): string => {
     default:
       return "help-circle";
   }
+};
+
+const getValueColor = (measurementType: string): string => {
+    switch (measurementType) {
+        case "Wave Height":
+            return "$green10";
+        case "Temperature, water":
+        case "WTemp":
+            return "$orange10";
+        case "Tide":
+            return "$blue10";
+        case "Battery, voltage":
+            return "$yellow10";
+        default:
+            return "$gray10";
+    }
 };

@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { Link, Href } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import { Text, View } from 'tamagui';
@@ -7,7 +7,7 @@ export default function NotFoundScreen() {
   return (
     <View style={styles.container} backgroundColor="$background">
       <Text fontSize="$8" fontWeight="bold">This screen does not exist.</Text>
-      <Link href="/" style={styles.link}>
+      <Link href={"/" as Href} style={styles.link}>
         <Text fontSize="$4" color="$blue10">Go to home screen!</Text>
       </Link>
     </View>

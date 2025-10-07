@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    backgroundColor: '#2c3538ff', 
+    backgroundColor: '#2c3538ff',
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -19,11 +19,11 @@ export const styles = StyleSheet.create({
     fontSize: 18,
   },
   largeHeadline: {
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
     marginTop: 30
   },
   mediumHeadline: {
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
     marginBottom: 8,
     marginTop: 20
   },

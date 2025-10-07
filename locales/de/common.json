@@ -55,7 +55,22 @@
     "passwordUppercase": "Mindestens ein Großbuchstabe",
     "passwordDigit": "Mindestens eine Ziffer",
     "passwordSpecial": "Mindestens ein Sonderzeichen (@$!%*?&#-)",
-    "passwordStrength": "Passwortstärke"
+    "passwordStrength": "Passwortstärke",
+    "magicLink": {
+      "title": "Magic Link",
+      "description": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen sicheren Anmeldelink.",
+      "emailAddress": "E-Mail-Adresse",
+      "sendMagicLink": "Magic Link senden",
+      "sending": "Senden...",
+      "checkYourEmail": "Überprüfen Sie Ihre E-Mails",
+      "emailSent": "Wir haben einen Magic Link an {email} gesendet. Klicken Sie auf den Link in der E-Mail, um sich anzumelden.",
+      "backToSignIn": "Zurück zur Anmeldung",
+      "verifying": "Magic Link wird überprüft",
+      "verifyingMessage": "Bitte warten Sie, während wir Sie anmelden...",
+      "invalidOrExpired": "Ungültiger oder abgelaufener Link",
+      "requestNewLink": "Neuen Magic Link anfordern",
+      "validEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+    }
   },
   "profile": {
     "title": "Profil",
@@ -153,5 +168,47 @@
     "next": "Weiter",
     "finish": "Fertig"
   },
-  "last.measurement": "Letzte Messung"
+  "last.measurement": "Letzte Messung",
+  "dashboard": {
+    "title": "Sensor Dashboard",
+    "loading": "Lade Daten...",
+    "harbor": "Hafen",
+    "address": "Adresse",
+    "addressValue": "Am Hafen 1, 24937 Flensburg",
+    "openingHours": "Öffnungszeiten",
+    "openingHoursValue": "Täglich 06:00 - 22:00 Uhr",
+    "currentMeasurements": "Aktuelle Messwerte",
+    "live": "Live",
+    "furtherMeasurements": "Weitere Messwerte",
+    "historicalData": "Verlaufsdaten",
+    "timeRange": {
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "last7days": "Letzte 7 Tage",
+      "last30days": "Letzte 30 Tage",
+      "todayButton": "Heute",
+      "yesterdayButton": "Gestern",
+      "last7daysButton": "7 Tage",
+      "last30daysButton": "30 Tage"
+    },
+    "charts": {
+      "waterTemperature": "Wassertemperatur",
+      "waterLevel": "Wasserstand",
+      "waveHeight": "Wellenhöhe",
+      "dataPoints": "Datenpunkte",
+      "current": "Aktuell",
+      "noData": "Keine Daten verfügbar"
+    },
+    "measurements": {
+      "waveHeight": "Wellenhöhe",
+      "waterTemperature": "Wassertemperatur",
+      "waterLevel": "Wasserstand",
+      "batteryVoltage": "Batteriespannung"
+    },
+    "units": {
+      "celsius": "°C",
+      "centimeters": "cm",
+      "volts": "V"
+    }
+  }
 }

@@ -3,6 +3,9 @@ import {useRouter, useLocalSearchParams} from 'expo-router';
 import {useSession} from '@/context/SessionContext';
 import {SafeAreaView, Platform} from 'react-native';
 import {YStack, Text, Spinner} from 'tamagui';
+import {createLogger} from '@/utils/logger';
+
+const logger = createLogger('Auth:OAuthCallback');
 
 export default function OAuthCallbackHandler() {
     const router = useRouter();
@@ -12,19 +15,25 @@ export default function OAuthCallbackHandler() {
 
     useEffect(() => {
         if (session) {
+            logger.debug('User already logged in, redirecting to home');
             router.push("/");
         }
     }, [session, router]);
 
     useEffect(() => {
-        if (hasProcessed.current) return;
+        if (hasProcessed.current) {
+            logger.debug('Callback already processed, skipping');
+            return;
+        }
 
         const handleCallback = () => {
+            logger.info('Processing OAuth callback', { platform: Platform.OS });
             let accessToken: string | null = null;
             let refreshToken: string | null = null;
 
             if (Platform.OS === 'web' && typeof window !== 'undefined') {
                 const hash = window.location.hash;
+                logger.debug('Parsing tokens from URL hash');
 
                 const hashParams = new URLSearchParams(hash.substring(1));
                 accessToken = hashParams.get('access_token');
@@ -32,12 +41,14 @@ export default function OAuthCallbackHandler() {
             }
 
             if (!accessToken) {
+                logger.debug('Parsing tokens from URL params');
                 accessToken = params.access_token as string;
                 refreshToken = params.refresh_token as string;
             }
 
             if (accessToken) {
                 hasProcessed.current = true;
+                logger.info('OAuth tokens received, logging in user');
 
                 login({
                     accessToken: accessToken,
@@ -48,10 +59,11 @@ export default function OAuthCallbackHandler() {
                 });
 
                 if (Platform.OS === 'web' && typeof window !== 'undefined') {
+                    logger.debug('Cleaning up URL after OAuth callback');
                     window.history.replaceState({}, document.title, '/map');
                 }
             } else {
-                console.error('No tokens found in callback URL');
+                logger.error('No tokens found in OAuth callback URL');
                 router.replace('/(auth)/login');
             }
         };
