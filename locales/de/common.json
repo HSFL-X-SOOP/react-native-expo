@@ -170,6 +170,7 @@
   },
   "last.measurement": "Letzte Messung",
   "dashboard": {
+    "dashboard": "Dashboard",
     "title": "Sensor Dashboard",
     "loading": "Lade Daten...",
     "harbor": "Hafen",
