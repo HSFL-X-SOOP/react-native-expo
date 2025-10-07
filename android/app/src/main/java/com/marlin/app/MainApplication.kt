@@ -1,4 +1,4 @@
-package com.anonymous.frontend
+package com.marlin.app
 
 import android.app.Application
 import android.content.res.Configuration

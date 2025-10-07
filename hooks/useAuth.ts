@@ -6,6 +6,7 @@ import {
     MagicLinkRequest,
     RegisterRequest,
     VerifyEmailRequest,
+    GoogleLoginRequest,
 } from "@/api/models/auth";
 import { useAuthStore } from "@/api/stores/auth";
 import * as AsyncHandler from "@/hooks/core/asyncHandler";
@@ -31,6 +32,9 @@ export const useAuth = () => {
     const [sendVerificationEmail, sendVerificationEmailStatus] =
         AsyncHandler.useAsync<[], void>(authStore.sendVerificationEmail);
 
+    const [googleLogin, googleLoginStatus] =
+        AsyncHandler.useAsync<[GoogleLoginRequest], LoginResponse>(authStore.googleLogin);
+
     return {
         register,
         registerStatus,
@@ -49,5 +53,8 @@ export const useAuth = () => {
 
         sendVerificationEmail,
         sendVerificationEmailStatus,
+
+        googleLogin,
+        googleLoginStatus,
     };
 };

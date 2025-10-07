@@ -10,7 +10,6 @@ export const PrimaryButton = styled(Button, {
     backgroundColor: '$accent7',
     borderWidth: 1,
     borderColor: '$accent7',
-    color: 'white',
     fontWeight: '600',
     fontSize: '$4',
     shadowColor: '$accent3',
@@ -57,7 +56,6 @@ export const SecondaryButton = styled(Button, {
     backgroundColor: 'transparent',
     borderWidth: 1.5,
     borderColor: '$accent7',
-    color: '$accent7',
     fontWeight: '600',
     fontSize: '$4',
     shadowColor: '$accent3',
@@ -68,7 +66,6 @@ export const SecondaryButton = styled(Button, {
     hoverStyle: {
         backgroundColor: '$accent2',
         borderColor: '$accent8',
-        color: '$accent8',
         shadowOpacity: 0.2,
         scale: 1.02,
     },
@@ -76,7 +73,6 @@ export const SecondaryButton = styled(Button, {
     pressStyle: {
         backgroundColor: '$accent3',
         borderColor: '$accent6',
-        color: '$accent6',
         scale: 0.98,
     },
 
@@ -89,7 +85,6 @@ export const SecondaryButton = styled(Button, {
         opacity: 0.5,
         pointerEvents: 'none',
         borderColor: '$accent4',
-        color: '$accent4',
     },
 })
 

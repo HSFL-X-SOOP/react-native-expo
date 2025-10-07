@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { Link, Href } from 'expo-router';
 import { SafeAreaView, ScrollView, Linking } from 'react-native';
 import { Text, YStack, Card, H1, H2, XStack, View, Button } from 'tamagui';
 import { Code, Database, Key, ExternalLink } from '@tamagui/lucide-icons';
@@ -44,7 +44,7 @@ export default function APIScreen() {
                   <Text fontSize={15} color="$color" opacity={0.9}>
                     {t('api.accessDescription')}
                   </Text>
-                  <Link href="/(other)/prices">
+                  <Link href={"/(other)/prices" as Href}>
                     <Text color="$accent8" textDecorationLine="underline" fontWeight="600">
                       {t('api.pricingLink')}
                     </Text>
@@ -159,7 +159,7 @@ export default function APIScreen() {
                 <Text fontSize={16} textAlign="center" color="$color" opacity={0.9} maxWidth={500}>
                   {t('api.readyDescription')}
                 </Text>
-                <Link href="/(other)/prices">
+                <Link href={"/(other)/prices" as Href}>
                   <Button backgroundColor="$accent7" color="white" borderRadius="$6" paddingHorizontal="$6" paddingVertical="$4" hoverStyle={{ backgroundColor: "$accent8" }}>
                     <Text color="white" fontWeight="600" fontSize={16}>{t('api.viewPricing')}</Text>
                   </Button>

@@ -37,7 +37,7 @@ export const LanguageSelector: React.FC = () => {
       {languages.map((language) => (
         <Button
           key={language.code}
-          variant={currentLanguage === language.code ? "outlined" : "ghost"}
+          variant={currentLanguage === language.code ? "outlined" : undefined}
           justifyContent="flex-start"
           onPress={() => handleLanguageChange(language.code, language.profileLang)}
         >
