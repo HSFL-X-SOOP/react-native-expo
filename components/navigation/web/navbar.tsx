@@ -1,9 +1,9 @@
-import { Link, useRouter, Href } from 'expo-router';
-import { Button, Popover, Sheet, Text, XStack, YStack, useMedia, useTheme,ScrollView } from 'tamagui';
+import {Link, useRouter, Href} from 'expo-router';
+import {Button, Popover, Sheet, Text, XStack, YStack, useMedia, useTheme, ScrollView} from 'tamagui';
 
 import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
 import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
-import {User, ChevronDown, Languages, Menu, LogOut} from '@tamagui/lucide-icons';
+import {User, ChevronDown, Languages, Menu, LogOut, LayoutDashboard} from '@tamagui/lucide-icons';
 import {useSession} from '@/context/SessionContext';
 import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
 import {useTranslation} from '@/hooks/useTranslation';
@@ -47,9 +47,9 @@ export function NavbarWeb() {
                         </XStack>
                     </Link>
 
-                    <Link href="/dashboard/5">
+                    <Link href={"/dashboard/5" as Href}>
                         <XStack alignItems="center" gap="$3">
-                            {/* <MapIcon color={t.accent8?.val} size={26}/> */}
+                            <LayoutDashboard color={t.accent8?.val} size={26}/>
                             <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
                                 {translate('dashboard.dashboard')}
                             </Text>
@@ -265,6 +265,26 @@ export function NavbarWeb() {
                                         <MapIcon color={t.accent8?.val} size={24}/>
                                         <Text fontSize="$5" fontWeight="500" color="$accent8">
                                             {translate('navigation.map')}
+                                        </Text>
+                                    </XStack>
+                                </Link>
+
+                                <Link href={"/dashboard/5" as Href} onPress={() => setIsMenuOpen(false)}>
+                                    <XStack
+                                        alignItems="center"
+                                        gap="$3"
+                                        padding="$3"
+                                        borderRadius="$3"
+                                        hoverStyle={{
+                                            backgroundColor: "$backgroundHover"
+                                        }}
+                                        pressStyle={{
+                                            backgroundColor: "$backgroundPress"
+                                        }}
+                                    >
+                                        <LayoutDashboard color={t.accent8?.val} size={24}/>
+                                        <Text fontSize="$5" fontWeight="500" color="$accent8">
+                                            {translate('dashboard.dashboard')}
                                         </Text>
                                     </XStack>
                                 </Link>
