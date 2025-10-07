@@ -1,15 +1,12 @@
 import { BoxType } from "@/api/models/sensor";
-import { useTranslation } from "@/hooks/useTranslation";
 import { View } from "react-native";
 import { Text, YStack, XStack } from "tamagui";
 
 export default function MapLegend() {
-    const { t } = useTranslation();
-
     const legendItems = [
         { type: BoxType.WaterBox, color: '#0052ff', label: 'WaterBox' },
         { type: BoxType.WaterTemperatureOnlyBox, color: '#d900ff', label: 'Wassertemperatur' },
-        { type: BoxType.AirBox, color: '#ff9a00', label: 'Wetter Station' },
+        { type: BoxType.AirBox, color: '#ff9a00', label: 'AirBox' },
     ];
 
     return (
