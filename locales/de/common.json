@@ -178,7 +178,7 @@
     "airBox": "Luft-Sensorbox",
     "waterTemperature": "Wassertemperatur",
     "waveHeight": "Wellenhöhe",
-    "tide": "Tide",
+    "waterLevel": "Wasserstand",
     "airTemperature": "Lufttemperatur",
     "windSpeed": "Windgeschwindigkeit",
     "windDirection": "Windrichtung",

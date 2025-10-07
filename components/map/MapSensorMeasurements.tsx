@@ -215,7 +215,7 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
                             value={box.measurementTimes[0].measurements.waveHeight}
                         />
                         <MeasurementCard
-                            measurementType="tide"
+                            measurementType="waterLevel"
                             value={box.measurementTimes[0].measurements.tide}
                         />
                     </>
@@ -403,7 +403,7 @@ function getMeasurementIcon(measurementType: string): { icon: React.ReactNode; c
                 color: "$blue10",
                 bgColor: "$blue4"
             };
-        case "tide":
+        case "waterLevel":
             return {
                 icon: <Activity size={size} color="$cyan10"/>,
                 color: "$cyan10",
@@ -460,8 +460,8 @@ function getMeasurementLabel(measurementType: string, t: any): string {
             return t('sensor.waterTemperature');
         case "waveHeight":
             return t('sensor.waveHeight');
-        case "tide":
-            return t('sensor.tide');
+        case "waterLevel":
+            return t('sensor.waterLevel');
         case "airTemperature":
             return t('sensor.airTemperature');
         case "windSpeed":
@@ -485,7 +485,7 @@ function getMeasurementUnit(measurementType: string, t: any): string {
         case "airTemperature":
             return t('dashboard.units.celsius');
         case "waveHeight":
-        case "tide":
+        case "waterLevel":
             return t('dashboard.units.centimeters');
         case "windSpeed":
             return "m/s";

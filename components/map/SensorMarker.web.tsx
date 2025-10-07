@@ -1,7 +1,7 @@
 import { LocationWithBoxes } from "@/api/models/sensor";
 import { Marker } from "@vis.gl/react-maplibre";
 import { SensorMarkerContent } from "./MapSensorTemperatureText";
-import { Popover, useMedia } from "tamagui";
+import { Popover, useMedia, Dialog, YStack } from "tamagui";
 import { SensorPopup } from "./MapSensorMeasurements";
 import { useState } from "react";
 
@@ -13,6 +13,61 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
     const [open, setOpen] = useState(false);
     const media = useMedia();
 
+    if (!media.gtMd) {
+        return (
+            <>
+                <Marker
+                    key={locationWithBoxes.location.id}
+                    longitude={locationWithBoxes.location.coordinates.lon}
+                    latitude={locationWithBoxes.location.coordinates.lat}
+                    anchor="bottom"
+                >
+                    <YStack
+                        onPress={(e) => {
+                            e.stopPropagation();
+                            setOpen(true);
+                        }}
+                        cursor="pointer"
+                    >
+                        <SensorMarkerContent locationWithBoxes={locationWithBoxes} />
+                    </YStack>
+                </Marker>
+
+                <Dialog modal open={open} onOpenChange={setOpen}>
+                    <Dialog.Portal>
+                        <Dialog.Overlay
+                            key="overlay"
+                            animation="quick"
+                            opacity={0.5}
+                            enterStyle={{ opacity: 0 }}
+                            exitStyle={{ opacity: 0 }}
+                        />
+                        <Dialog.Content
+                            bordered
+                            elevate
+                            key="content"
+                            animateOnly={['transform', 'opacity']}
+                            animation={[
+                                'quick',
+                                {
+                                    opacity: {
+                                        overshootClamping: true,
+                                    },
+                                },
+                            ]}
+                            enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
+                            exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+                            padding="$0"
+                        >
+                            <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)} />
+                        </Dialog.Content>
+                    </Dialog.Portal>
+                </Dialog>
+            </>
+        );
+    }
+
+    // Desktop: Use Popover
     return (
         <Marker
             key={locationWithBoxes.location.id}
@@ -23,20 +78,20 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
             <Popover
                 size="$5"
                 allowFlip
-                placement={media.gtMd ? "left" : "top"}
+                placement="left"
                 open={open}
                 onOpenChange={setOpen}
             >
                 <Popover.Trigger asChild>
-                    <div
-                        onClick={(e) => {
+                    <YStack
+                        onPress={(e) => {
                             e.stopPropagation();
                             setOpen(true);
                         }}
-                        style={{ cursor: 'pointer' }}
+                        cursor="pointer"
                     >
                         <SensorMarkerContent locationWithBoxes={locationWithBoxes} />
-                    </div>
+                    </YStack>
                 </Popover.Trigger>
 
                 <Popover.Content
