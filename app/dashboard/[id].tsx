@@ -163,7 +163,7 @@ export default function DashboardScreen() {
                             {name || t('dashboard.loading')}
                         </H1>
                         <View style={{width: 300}}>
-                            <SelectDemoContents isDark={isDark} router={router} sensorLocations={sensorLocations} selectedMarinaId={Number(id)} id="select-demo-2" native />
+                            <NavigateDashboardDropdownMenu isDark={isDark} router={router} sensorLocations={sensorLocations} selectedMarinaId={Number(id)} id="select-demo-2" native />
                         </View>
                     </Stack>
                 </Stack>
@@ -440,8 +440,7 @@ export default function DashboardScreen() {
 </H1> */}
 
 
-export function SelectDemoContents(props: {router: Router} & { sensorLocations: MarinaNameWithId[]} & { isDark: boolean } & {selectedMarinaId: number} & SelectProps & { trigger?: React.ReactNode }) {
-  const [val, setVal] = useState('')
+export function NavigateDashboardDropdownMenu(props: {router: Router} & { sensorLocations: MarinaNameWithId[]} & { isDark: boolean } & {selectedMarinaId: number} & SelectProps & { trigger?: React.ReactNode }) {
   const { router, isDark, sensorLocations, selectedMarinaId, ...restProps } = props;
   const selectedMarina = sensorLocations.filter(item => item.id === selectedMarinaId)[0] || {id: 0, name: "Unknown"}
   const marinasWithIds: MarinaNameWithId[] = [{id: selectedMarina.id, name: selectedMarina.name}, ...sensorLocations]
