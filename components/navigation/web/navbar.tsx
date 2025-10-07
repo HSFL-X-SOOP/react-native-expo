@@ -1,5 +1,5 @@
-import {Link, useRouter, Href} from 'expo-router';
-import {Button, Text, XStack, YStack, useTheme, Popover, Sheet, useMedia, ScrollView} from 'tamagui';
+import { Link, useRouter, Href } from 'expo-router';
+import { Button, Popover, Sheet, Text, XStack, YStack, useMedia, useTheme,ScrollView } from 'tamagui';
 
 import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
 import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
@@ -43,6 +43,15 @@ export function NavbarWeb() {
                             <MapIcon color={t.accent8?.val} size={26}/>
                             <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
                                 {translate('navigation.map')}
+                            </Text>
+                        </XStack>
+                    </Link>
+
+                    <Link href="/dashboard/5">
+                        <XStack alignItems="center" gap="$3">
+                            {/* <MapIcon color={t.accent8?.val} size={26}/> */}
+                            <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
+                                {translate('dashboard.dashboard')}
                             </Text>
                         </XStack>
                     </Link>
