@@ -15,7 +15,7 @@ import {
 } from "@tamagui/lucide-icons";
 import {useRouter} from "expo-router";
 import {Platform} from "react-native";
-import {Button, Card, H3, H4, Separator, Text, XStack, YStack, useTheme, Select} from "tamagui";
+import {Button, Card, H3, H4, Separator, Text, XStack, YStack, useTheme} from "tamagui";
 import {useThemeContext} from "@/context/ThemeSwitch";
 import {LinearGradient} from "expo-linear-gradient";
 import {useState} from "react";
@@ -37,11 +37,8 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
 
     const [selectedBoxIndex, setSelectedBoxIndex] = useState(0);
     const hasMultipleBoxes = locationWithBoxes.boxes.length > 1;
-    const displayedBoxes = hasMultipleBoxes
-        ? [locationWithBoxes.boxes[selectedBoxIndex]]
-        : locationWithBoxes.boxes;
 
-    const cardWidth = Platform.OS === "web" ? 300 : 290;
+    const cardWidth = Platform.OS === "web" ? 350 : 320;
 
     const handleNavigateToDashboard = () => {
         closeOverlay?.();
@@ -98,29 +95,65 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
                 </LinearGradient>
             </YStack>
 
-            {/* Body - Measurements */}
+            {/* Body - Box Selection (if multiple) and Measurements */}
             <YStack padding="$3" gap="$3" backgroundColor={isDark ? '#1a1a1a' : '$background'}>
-                {locationWithBoxes.boxes.map((box, index) => (
-                    <BoxMeasurements key={index} box={box}/>
-                ))}
+                {hasMultipleBoxes && (
+                    <XStack gap="$2" flexWrap="wrap">
+                        {locationWithBoxes.boxes.map((box, index) => (
+                            <Button
+                                key={index}
+                                size="$3"
+                                flex={1}
+                                minWidth={80}
+                                variant={"outlined"}
+                                backgroundColor={isDark ? '#262626' : '$gray4'}
+                                color={isDark ? '$gray11' : '$gray12'}
+                                onPress={() => setSelectedBoxIndex(index)}
+                                borderWidth={selectedBoxIndex === index ? 1 : 0}
+                                borderColor="$grey10"
+                                pressStyle={{
+                                    backgroundColor: '$gray5',
+                                    scale: 0.97
+                                }}
+                                hoverStyle={{
+                                    backgroundColor: '$gray5',
+                                    borderColor: selectedBoxIndex === index ? '$blue10' : '$gray6'
+                                }}
+                                borderRadius="$3"
+                                fontWeight={selectedBoxIndex === index ? '700' : '500'}
+                                fontSize="$3"
+                            >
+                                {getBoxTypeName(box.type, t)}
+                            </Button>
+                        ))}
+                    </XStack>
+                )}
+
+                {hasMultipleBoxes ? (
+                    <BoxMeasurements box={locationWithBoxes.boxes[selectedBoxIndex]} />
+                ) : (
+                    locationWithBoxes.boxes.map((box, index) => (
+                        <BoxMeasurements key={index} box={box}/>
+                    ))
+                )}
             </YStack>
 
             {/* Footer - Dashboard Button */}
             <YStack padding="$3" paddingTop="$2.5" backgroundColor={isDark ? '#1a1a1a' : '$background'}>
                 <Button
                     size="$3"
-                    backgroundColor="$blue9"
+                    backgroundColor={isDark ? '$accent5' : '$accent5'}
                     color="white"
                     width="100%"
                     onPress={handleNavigateToDashboard}
                     iconAfter={<ArrowRight size={18}/>}
                     pressStyle={{
-                        backgroundColor: '$blue10',
+                        backgroundColor: isDark ? '$accent3' : '$accent3',
                         scale: 0.98
                     }}
                     hoverStyle={{
-                        backgroundColor: '$blue10',
-                        scale: 1.02
+                        backgroundColor: isDark ? '$accent3' : '$accent3',
+                        scale: 1.01
                     }}
                     borderRadius="$3"
                     fontWeight="600"
@@ -182,7 +215,7 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
                             value={box.measurementTimes[0].measurements.waveHeight}
                         />
                         <MeasurementCard
-                            measurementType="tide"
+                            measurementType="waterLevel"
                             value={box.measurementTimes[0].measurements.tide}
                         />
                     </>
@@ -295,7 +328,7 @@ function MeasurementCard({measurementType, value}: MeasurementCardProps) {
                     {icon}
                 </YStack>
                 {/* Label */}
-                <Text fontSize="$2" color={isDark ? '#a3a3a3' : '$gray11'} fontWeight="500" numberOfLines={2}
+                <Text fontSize="$2" color={isDark ? '#grey1' : '$gray11'} fontWeight="500" numberOfLines={2}
                       lineHeight="$1">
                     {getMeasurementLabel(measurementType, t)}
                 </Text>
@@ -370,7 +403,7 @@ function getMeasurementIcon(measurementType: string): { icon: React.ReactNode; c
                 color: "$blue10",
                 bgColor: "$blue4"
             };
-        case "tide":
+        case "waterLevel":
             return {
                 icon: <Activity size={size} color="$cyan10"/>,
                 color: "$cyan10",
@@ -427,8 +460,8 @@ function getMeasurementLabel(measurementType: string, t: any): string {
             return t('sensor.waterTemperature');
         case "waveHeight":
             return t('sensor.waveHeight');
-        case "tide":
-            return t('sensor.tide');
+        case "waterLevel":
+            return t('sensor.waterLevel');
         case "airTemperature":
             return t('sensor.airTemperature');
         case "windSpeed":
@@ -452,7 +485,7 @@ function getMeasurementUnit(measurementType: string, t: any): string {
         case "airTemperature":
             return t('dashboard.units.celsius');
         case "waveHeight":
-        case "tide":
+        case "waterLevel":
             return t('dashboard.units.centimeters');
         case "windSpeed":
             return "m/s";

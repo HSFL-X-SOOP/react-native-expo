@@ -433,18 +433,18 @@ export default function DashboardScreen() {
                                 color="#F97316"
                             />
                             <LineChartCard
-                                title={t('dashboard.charts.waterLevel')}
-                                icon={<Waves size={20} color="#3B82F6"/>}
-                                chartData={chartTide}
-                                dataPrecision={dataPrecision}
-                                color="#3B82F6"
-                            />
-                            <LineChartCard
                                 title={t('dashboard.charts.waveHeight')}
                                 icon={<Activity size={20} color="#10B981"/>}
                                 chartData={chartWaveHeight}
                                 dataPrecision={dataPrecision}
                                 color="#10B981"
+                            />
+                            <LineChartCard
+                                title={t('dashboard.charts.waterLevel')}
+                                icon={<Waves size={20} color="#3B82F6"/>}
+                                chartData={chartTide}
+                                dataPrecision={dataPrecision}
+                                color="#3B82F6"
                             />
                         </XStack>
                     </YStack>
@@ -602,15 +602,12 @@ const GetLatestMeasurements = (boxes: Box[]): LatestMeasurement[] => {
     boxes.forEach((box) => {
         if (box.measurementTimes.length === 0) return;
 
-        // Nimm die neueste Messung (letzter Eintrag)
         const latestTime = box.measurementTimes[box.measurementTimes.length - 1];
         const measurementData = latestTime.measurements;
 
-        // Konvertiere die Messungen basierend auf dem Box-Typ
         Object.entries(measurementData).forEach(([key, value]) => {
-            let measurementType = '';
+            let measurementType;
 
-            // Mapping von camelCase zu Display-Namen
             switch (key) {
                 case 'waterTemperature':
                     measurementType = 'Temperature, water';
