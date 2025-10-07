@@ -1,24 +1,52 @@
-import { LocationWithBoxes, SensorModule } from "@/data/sensor";
-import { Text } from "react-native";
+import {LocationWithBoxes, BoxType} from "@/api/models/sensor";
+import {SensorMarkerSvg} from "./SensorMarkerSvg";
+import {useThemeContext} from "@/context/ThemeSwitch.tsx";
 
-type MapSensorTemperatureTextProps = {
-    sensorModule: SensorModule
-}
-
-export const MapSensorTemperatureText: React.FC<MapSensorTemperatureTextProps> =({sensorModule}) => {
-
-  return (
-    <Text style={{ color: 'black', fontSize: 24, fontWeight: "700"}}>{sensorModule.latestMeasurements.find(measurement => measurement.measurementType.name === "Temperature, water" || measurement.measurementType.name === "WTemp")?.value}°C</Text>
-  );
-}
-
-type MapSensorTemperatureTextNewProps = {
+type SensorMarkerContentProps = {
     locationWithBoxes: LocationWithBoxes
 }
 
-export const MapSensorTemperatureTextNew: React.FC<MapSensorTemperatureTextNewProps> =({locationWithBoxes}) => {
+export const SensorMarkerContent: React.FC<SensorMarkerContentProps> = ({locationWithBoxes}) => {
+    const {isDark} = useThemeContext();
+    const box = locationWithBoxes.boxes.find(box =>
+        box.type === BoxType.WaterBox ||
+        box.type === BoxType.WaterTemperatureOnlyBox ||
+        box.type === BoxType.AirBox
+    );
 
-  return (
-    <Text style={{ color: 'black', fontSize: 24, fontWeight: "700"}}>{locationWithBoxes.boxes.find(box => box.type === "WaterBox" || box.type === "WaterTemperatureOnlyBox")?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature}°C</Text>
-  );
+    let tempValue: number | undefined;
+    if (box?.type === BoxType.AirBox) {
+        tempValue = box.measurementTimes.find(measurement => measurement.measurements.airTemperature)?.measurements.airTemperature;
+    } else {
+        tempValue = box?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature;
+    }
+
+    const temperature = tempValue !== undefined ? Math.round(Number(tempValue)) : "N/A";
+
+    const accentColor = !isDark ? '#006e99' : '#7db07d';
+    const backgroundColor = isDark ? '#1a1a1a' : '#1c1c1c';
+    const textColor = 'white';
+
+    const getIndicatorColor = (boxType?: string): string => {
+        switch (boxType) {
+            case BoxType.WaterBox:
+                return '#0052ff';
+            case BoxType.WaterTemperatureOnlyBox:
+                return '#d900ff';
+            case BoxType.AirBox:
+                return '#ff9a00';
+            default:
+                return '#90CAF9';
+        }
+    };
+
+    return (
+        <SensorMarkerSvg
+            temperature={temperature}
+            accentColor={accentColor}
+            backgroundColor={backgroundColor}
+            textColor={textColor}
+            indicatorColor={getIndicatorColor(box?.type)}
+        />
+    );
 }

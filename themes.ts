@@ -1,4 +1,5 @@
-import { createThemes, defaultComponentThemes } from '@tamagui/theme-builder'
+import {createThemes, defaultComponentThemes} from '@tamagui/theme-builder'
+
 const defaultLight = [
     '#fafafa', '#f2f2f3', '#ebebec', '#e3e3e6', '#dcdcdf', '#d4d4d8',
     '#afafb2', '#8a8a8c', '#656567', '#404041', '#1f1f21', '#000000',
@@ -23,8 +24,8 @@ const secondaryLight = [
 ]
 
 const secondaryDark = [
-    '#020f15', '#021821', '#03212e', '#04293a', '#053246', '#315666',
-    '#5d7a87', '#889ea7', '#b4c2c8', '#e0e5e8', '#e6eaed', '#eef1f3',
+    '#e0e5e8', '#b4c2c8', '#889ea7', '#5d7a87', '#315666', '#053246',
+    '#04293a', '#03212e', '#021821', '#020f15', '#010b10', '#00080a',
 ]
 const successLight = [
     '#e2f8ec', '#b9efd1', '#91e5b5', '#68dc9a', '#40d27f', '#17c964',
@@ -112,13 +113,13 @@ export const themes = createThemes({
             },
         },
         success: {
-            palette: { light: successLight, dark: successDark },
+            palette: {light: successLight, dark: successDark},
         },
         warning: {
-            palette: { light: warningLight, dark: warningDark },
+            palette: {light: warningLight, dark: warningDark},
         },
         error: {
-            palette: { light: dangerLight, dark: dangerDark },
+            palette: {light: dangerLight, dark: dangerDark},
         },
     },
 })

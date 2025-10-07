@@ -3,7 +3,7 @@ import {useAuth} from '@/hooks/useAuth';
 import {Link, useRouter, Href} from 'expo-router';
 import {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native';
-import {Button, Checkbox, Text, View, YStack, XStack, Separator, Spinner} from 'tamagui';
+import {Button, Checkbox, Text, View, YStack, XStack, Separator, Spinner, ScrollView} from 'tamagui';
 import {User} from '@tamagui/lucide-icons';
 import {useTranslation} from '@/hooks/useTranslation';
 import {GoogleIcon} from '@/components/ui/Icons';
@@ -83,7 +83,7 @@ export default function RegisterScreen() {
 
     return (
         <SafeAreaView style={{flex: 1}}>
-            <YStack flex={1} backgroundColor="$content3" alignItems="center" justifyContent="center" padding="$4">
+            <ScrollView flex={1} backgroundColor="$content3" contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 16}}>
                 <AuthCard
                     title={t('auth.createAccount')}
                     subtitle={t('auth.joinUsMessage')}
@@ -225,7 +225,7 @@ export default function RegisterScreen() {
                         </Link>
                     </Text>
                 </AuthCard>
-            </YStack>
+            </ScrollView>
         </SafeAreaView>
     );
 }

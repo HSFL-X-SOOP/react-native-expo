@@ -16,7 +16,7 @@ export function useHttpClient() {
             if (!session) return config
 
             const threeHoursMS = 3 * 60 * 60 * 1000
-            const toleranceMS = 60 * 1000; // 1 min
+            const toleranceMS = 60 * 1000;
             const now = Date.now()
             const age = now - new Date(session.loggedInSince).getTime()
 

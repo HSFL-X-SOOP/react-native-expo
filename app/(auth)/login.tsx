@@ -4,7 +4,7 @@ import {Link, useRouter, Href} from 'expo-router';
 import {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {Lock} from '@tamagui/lucide-icons';
-import {Button, Checkbox, Text, View, YStack, XStack, Separator, Spinner} from 'tamagui';
+import {Button, Checkbox, Text, View, YStack, XStack, Separator, Spinner, ScrollView} from 'tamagui';
 import {useTranslation} from '@/hooks/useTranslation';
 import {GoogleIcon} from '@/components/ui/Icons';
 import {useGoogleSignIn} from '@/hooks/useGoogleSignIn';
@@ -53,7 +53,7 @@ export default function LoginScreen() {
 
     return (
         <SafeAreaView style={{flex: 1}}>
-            <YStack flex={1} backgroundColor="$content3" alignItems="center" justifyContent="center" padding="$4">
+            <ScrollView flex={1} backgroundColor="$content3" contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 16}}>
                 <AuthCard
                     title={t('auth.signIn')}
                     subtitle={t('auth.welcomeBack')}
@@ -191,7 +191,7 @@ export default function LoginScreen() {
                         </Text>
                     </YStack>
                 </AuthCard>
-            </YStack>
+            </ScrollView>
         </SafeAreaView>
     );
 }

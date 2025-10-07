@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Import translations
+
 import enCommon from '../locales/en/common.json';
 import deCommon from '../locales/de/common.json';
 import enAbout from '../locales/en/about.json';
@@ -27,7 +27,6 @@ const resources = {
   },
 };
 
-// Language detection
 const getStoredLanguage = async (): Promise<string> => {
   try {
     const stored = await AsyncStorage.getItem('user-language');
@@ -41,7 +40,6 @@ const saveLanguage = async (language: string): Promise<void> => {
   try {
     await AsyncStorage.setItem('user-language', language);
   } catch {
-    // Silent fail
   }
 };
 
@@ -49,28 +47,27 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'de', // Default language, will be overridden by stored language
+    lng: 'de',
     fallbackLng: 'de',
     debug: __DEV__,
 
     interpolation: {
-      escapeValue: false, // React already does escaping
+      escapeValue: false,
     },
 
     defaultNS: 'common',
     ns: ['common', 'about', 'api', 'sensors'],
 
     react: {
-      useSuspense: false, // Important for React Native
+      useSuspense: false,
     },
   });
 
-// Load stored language on initialization
+
 getStoredLanguage().then((language) => {
   i18n.changeLanguage(language);
 });
 
-// Save language when it changes
 i18n.on('languageChanged', (language) => {
   saveLanguage(language);
 });

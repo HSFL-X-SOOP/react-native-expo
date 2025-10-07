@@ -1,254 +1,503 @@
-import { useThemeContext } from "@/context/ThemeSwitch";
-import { LocationWithBoxes, SensorModule } from "@/data/sensor";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Activity, Battery, HelpCircle, Thermometer, Waves } from "@tamagui/lucide-icons";
-import { Link, useRouter } from "expo-router";
-import { Platform, TouchableOpacity } from "react-native";
-import { Text, XStack, YStack } from "tamagui";
-type MapSensorMeasurementsProps = {
-    sensorModule: SensorModule
-}
-
-export const MapSensorMeasurements: React.FC<MapSensorMeasurementsProps> =({sensorModule}) => {
-  const {isDark} = useThemeContext();
-  const {t, i18n} = useTranslation();
-  const isAdmin = false; //TODO: Hier prüfen ob Admin
-  const excludedMeasurements: string[] = [];
-
-  if (!isAdmin) {
-    excludedMeasurements.push("Battery, voltage");
-  }
-  excludedMeasurements.push("Standard deviation");
-
-  // Wenn die Width/minWidth geändert wird, dann muss das in der global.css bei '.maplibregl-popup-content' auch angepasst werden, damit das Schließen-Kreuz richtig positioniert ist.
-  const cardWidth = Platform.OS === "web" ? 300 : 320;
-  const cardMinHeight = 200;
-
-  return (
-    <YStack
-      backgroundColor="$background"
-      padding="$3"
-      borderRadius="$4"
-      width={cardWidth}
-      minHeight={cardMinHeight}
-      shadowColor="$shadowColor"
-      shadowOffset={{ width: 0, height: 2 }}
-      shadowOpacity={0.1}
-      shadowRadius={4}
-      elevation={3}
-    >
-      <Text fontSize={16} color="$gray10">Name</Text>
+import {LocationWithBoxes, BoxType} from "@/api/models/sensor";
+import {useTranslation} from "@/hooks/useTranslation";
+import {
+    Activity,
+    ArrowRight,
+    Battery,
+    Compass,
+    Droplets,
+    Gauge,
+    HelpCircle,
+    MapPin,
+    Thermometer,
+    Waves,
+    Wind
+} from "@tamagui/lucide-icons";
+import {useRouter} from "expo-router";
+import {Platform} from "react-native";
+import {Button, Card, H3, H4, Separator, Text, XStack, YStack, useTheme} from "tamagui";
+import {useThemeContext} from "@/context/ThemeSwitch";
+import {LinearGradient} from "expo-linear-gradient";
+import {useState} from "react";
 
 
-      <Link href={`/dashboard/${sensorModule.location.id}`} style={{ zIndex: 10}} onPress={(e) => e.stopPropagation()}>
-        <Text fontSize={24} color="$color" fontWeight="600">
-          {sensorModule.location.name}
-        </Text>
-      </Link>
-
-
-      <XStack flexWrap="wrap" width="100%" justifyContent="space-between" marginTop="$3">
-        {sensorModule.latestMeasurements.map((a, index) => (
-          !excludedMeasurements.includes(a.measurementType.name) && (
-            <YStack key={index} width="48%" marginBottom="$2">
-              <Text fontSize={16} color="$gray10">
-                {getTextFromMeasurementType(a.measurementType.name, t)}
-              </Text>
-              <XStack alignItems="center">
-                <Text fontSize={24} color="$color">
-                  {a.value}{getMeasurementTypeSymbol(a.measurementType.name)}{" "}
-                </Text>
-                {getMeasurementIcon(a.measurementType.name, 22)}
-              </XStack>
-            </YStack>
-          )
-        ))}
-      </XStack>
-    </YStack>
-  );
-}
-
-type MapSensorMeasurementsNewProps = {
+type SensorPopupProps = {
     locationWithBoxes: LocationWithBoxes,
     closeOverlay?: () => void
 }
 
-export const MapSensorMeasurementsNew: React.FC<MapSensorMeasurementsNewProps> =({locationWithBoxes, closeOverlay}) => {
-  const {t} = useTranslation();
-  const isAdmin = false; //TODO: Hier prüfen ob Admin
-  const excludedMeasurements: string[] = [];
-  const router = useRouter();
-  if (!isAdmin) {
-    excludedMeasurements.push("Battery, voltage");
-  }
-  excludedMeasurements.push("Standard deviation");
+export const SensorPopup: React.FC<SensorPopupProps> = ({
+                                                            locationWithBoxes,
+                                                            closeOverlay
+                                                        }) => {
+    const router = useRouter();
+    const {t} = useTranslation();
+    const {isDark} = useThemeContext();
+    const theme = useTheme();
 
-  // Wenn die Width/minWidth geändert wird, dann muss das in der global.css bei '.maplibregl-popup-content' auch angepasst werden, damit das Schließen-Kreuz richtig positioniert ist.
-  const cardWidth = Platform.OS === "web" ? 300 : 320;
-  const cardMinHeight = 200;
+    const [selectedBoxIndex, setSelectedBoxIndex] = useState(0);
+    const hasMultipleBoxes = locationWithBoxes.boxes.length > 1;
 
-  const close = () => {
-    closeOverlay ? closeOverlay() : null;
-    router.push(`/dashboard/${locationWithBoxes.location.id}`);
-  }
+    const cardWidth = Platform.OS === "web" ? 350 : 320;
 
-  return (
-    <YStack
-      backgroundColor="$background"
-      padding="$3"
-      borderRadius="$4"
-      width={cardWidth}
-      minHeight={cardMinHeight}
-      shadowColor="$shadowColor"
-      shadowOffset={{ width: 0, height: 2 }}
-      shadowOpacity={0.1}
-      shadowRadius={4}
-      elevation={3}
-    >
-      <Text fontSize={16} color="$gray10">{t('map.location')}</Text>
+    const handleNavigateToDashboard = () => {
+        closeOverlay?.();
+        router.push(`/dashboard/${locationWithBoxes.location.id}`);
+    };
 
-      <TouchableOpacity onPress={close}>
-        <Text fontSize={24} color="$color" fontWeight="600">
-          {locationWithBoxes.location.name}
-        </Text>
+    return (
+        <Card
+            elevate
+            bordered
+            width={cardWidth}
+            borderRadius="$5"
+            padding="$0"
+            overflow="hidden"
+            borderWidth={1}
+            borderColor={isDark ? '#2a2a2a' : '$gray4'}
+            shadowColor="$shadowColor"
+            shadowRadius={12}
+            shadowOffset={{width: 0, height: 4}}
+        >
+            {/* Header with Gradient Background */}
+            <YStack>
+                <LinearGradient
+                    colors={isDark
+                        ? [theme.accent9.val, theme.accent8.val, theme.accent7.val]
+                        : [theme.accent6.val, theme.accent5.val, theme.accent4.val]
+                    }
+                    start={[0, 0]}
+                    end={[1, 1]}
+                    style={{padding: 14}}
+                >
+                    <XStack alignItems="center" gap="$2.5">
+                        <YStack
+                            width={38}
+                            height={38}
+                            borderRadius="$3"
+                            backgroundColor="rgba(255,255,255,0.2)"
+                            alignItems="center"
+                            justifyContent="center"
+                            borderWidth={1}
+                            borderColor="rgba(255,255,255,0.3)"
+                        >
+                            <MapPin size={24} color="white"/>
+                        </YStack>
+                        <YStack flex={1}>
+                            <Text fontSize="$1" color="rgba(255,255,255,0.85)" fontWeight="500">
+                                {t('sensor.location')}
+                            </Text>
+                            <H3 fontSize="$7" fontWeight="700" color="white" numberOfLines={1}>
+                                {locationWithBoxes.location.name}
+                            </H3>
+                        </YStack>
+                    </XStack>
+                </LinearGradient>
+            </YStack>
 
-      </TouchableOpacity>
-      {/* <Link href={`/dashboard/${locationWithBoxes.location.id}`} style={{ zIndex: 10}}>
-      </Link> */}
+            {/* Body - Box Selection (if multiple) and Measurements */}
+            <YStack padding="$3" gap="$3" backgroundColor={isDark ? '#1a1a1a' : '$background'}>
+                {hasMultipleBoxes && (
+                    <XStack gap="$2" flexWrap="wrap">
+                        {locationWithBoxes.boxes.map((box, index) => (
+                            <Button
+                                key={index}
+                                size="$3"
+                                flex={1}
+                                minWidth={80}
+                                variant={"outlined"}
+                                backgroundColor={isDark ? '#262626' : '$gray4'}
+                                color={isDark ? '$gray11' : '$gray12'}
+                                onPress={() => setSelectedBoxIndex(index)}
+                                borderWidth={selectedBoxIndex === index ? 1 : 0}
+                                borderColor="$grey10"
+                                pressStyle={{
+                                    backgroundColor: '$gray5',
+                                    scale: 0.97
+                                }}
+                                hoverStyle={{
+                                    backgroundColor: '$gray5',
+                                    borderColor: selectedBoxIndex === index ? '$blue10' : '$gray6'
+                                }}
+                                borderRadius="$3"
+                                fontWeight={selectedBoxIndex === index ? '700' : '500'}
+                                fontSize="$3"
+                            >
+                                {getBoxTypeName(box.type, t)}
+                            </Button>
+                        ))}
+                    </XStack>
+                )}
 
+                {hasMultipleBoxes ? (
+                    <BoxMeasurements box={locationWithBoxes.boxes[selectedBoxIndex]} />
+                ) : (
+                    locationWithBoxes.boxes.map((box, index) => (
+                        <BoxMeasurements key={index} box={box}/>
+                    ))
+                )}
+            </YStack>
 
-        {locationWithBoxes.boxes.map((a, index) => (
-          a.type === "WaterBox" && (
-            <XStack key={index} flexWrap="wrap" width="100%" justifyContent="space-between" marginTop="$3">
-            
-              <MeasurementCard key={index + 1} index={index + 1} measurementType="Temperature, water" value={a.measurementTimes[0].measurements.waterTemperature}/>
-              <MeasurementCard key={index + 2} index={index + 2} measurementType="Wave Height" value={a.measurementTimes[0].measurements.waveHeight}/>
-              <MeasurementCard key={index + 3} index={index + 3} measurementType="Tide" value={a.measurementTimes[0].measurements.tide}/>
-              {/* <MeasurementCard key={index + 4} index={index + 4} measurementType="Battery, voltage" value={a.measurementTimes[0].measurements.batteryVoltage}/> */}
-              
-              <XStack width={"100%"} justifyContent="space-between" alignItems="center">
-                <Text fontSize={14}>{t('last.measurement')}: {formatDateTime(a.measurementTimes[0].time)}</Text>
-              </XStack>
+            {/* Footer - Dashboard Button */}
+            <YStack padding="$3" paddingTop="$2.5" backgroundColor={isDark ? '#1a1a1a' : '$background'}>
+                <Button
+                    size="$3"
+                    backgroundColor={isDark ? '$accent5' : '$accent5'}
+                    color="white"
+                    width="100%"
+                    onPress={handleNavigateToDashboard}
+                    iconAfter={<ArrowRight size={18}/>}
+                    pressStyle={{
+                        backgroundColor: isDark ? '$accent3' : '$accent3',
+                        scale: 0.98
+                    }}
+                    hoverStyle={{
+                        backgroundColor: isDark ? '$accent3' : '$accent3',
+                        scale: 1.01
+                    }}
+                    borderRadius="$3"
+                    fontWeight="600"
+                    fontSize="$4"
+                >
+                    {t('sensor.viewDashboard')}
+                </Button>
+            </YStack>
+        </Card>
+    );
+}
+
+type BoxMeasurementsProps = {
+    box: LocationWithBoxes['boxes'][0];
+};
+
+function BoxMeasurements({box}: BoxMeasurementsProps) {
+    const {t} = useTranslation();
+    const {isDark} = useThemeContext();
+
+    if (!box.measurementTimes[0]) return null;
+
+    const latestTime = box.measurementTimes[0].time;
+
+    return (
+        <YStack gap="$2.5">
+            {/* Box Type Header */}
+            <XStack
+                alignItems="center"
+                gap="$2"
+                padding="$2"
+                backgroundColor={isDark ? '#262626' : '$gray2'}
+            >
+                <YStack
+                    width={26}
+                    height={26}
+                    borderRadius="$2"
+                    alignItems="center"
+                    justifyContent="center"
+                    backgroundColor={isDark ? '#333333' : 'white'}
+                >
+                    {getBoxTypeIcon(box.type)}
+                </YStack>
+                <H4 fontSize="$3" fontWeight="600" color={isDark ? '#e5e5e5' : '$gray12'}>
+                    {getBoxTypeName(box.type, t)}
+                </H4>
             </XStack>
-            )
-        )
-        
-        )}
 
-        {locationWithBoxes.boxes.map((a, index) => (
-          a.type === "WaterTemperatureOnlyBox" && (
-            <XStack flexWrap="wrap" width="100%" justifyContent="space-between" marginTop="$3">
-            
-              <MeasurementCard key={index + 1} index={index + 1} measurementType="Temperature, water" value={a.measurementTimes[0].measurements.waterTemperature}/>
+            {/* Measurements Grid */}
+            <XStack flexWrap="wrap" gap="$2.5" justifyContent="space-between">
+                {box.type === BoxType.WaterBox && (
+                    <>
+                        <MeasurementCard
+                            measurementType="waterTemperature"
+                            value={box.measurementTimes[0].measurements.waterTemperature}
+                        />
+                        <MeasurementCard
+                            measurementType="waveHeight"
+                            value={box.measurementTimes[0].measurements.waveHeight}
+                        />
+                        <MeasurementCard
+                            measurementType="tide"
+                            value={box.measurementTimes[0].measurements.tide}
+                        />
+                    </>
+                )}
 
-              <XStack width={"100%"} justifyContent="space-between" alignItems="center">
-                <Text fontSize={14}>{t('last.measurement')}: {formatDateTime(a.measurementTimes[0].time)}</Text>
-              </XStack>
+                {box.type === BoxType.WaterTemperatureOnlyBox && (
+                    <MeasurementCard
+                        measurementType="waterTemperature"
+                        value={box.measurementTimes[0].measurements.waterTemperature}
+                    />
+                )}
+
+                {box.type === BoxType.AirBox && (
+                    <>
+                        <MeasurementCard
+                            measurementType="airTemperature"
+                            value={box.measurementTimes[0].measurements.airTemperature}
+                        />
+                        <MeasurementCard
+                            measurementType="windSpeed"
+                            value={box.measurementTimes[0].measurements.windSpeed}
+                        />
+                        <MeasurementCard
+                            measurementType="humidity"
+                            value={box.measurementTimes[0].measurements.humidity}
+                        />
+                        <MeasurementCard
+                            measurementType="airPressure"
+                            value={box.measurementTimes[0].measurements.airPressure}
+                        />
+                    </>
+                )}
             </XStack>
-            )
-        ))}
-    </YStack>
-  );
+
+            {/* Last Measurement Time */}
+            <XStack
+                alignItems="center"
+                gap="$1.5"
+                padding="$2"
+                backgroundColor={isDark ? '$gray4' : '$gray2'}
+                borderRadius="$2"
+            >
+                <YStack
+                    width={20}
+                    height={20}
+                    borderRadius="$2"
+                    alignItems="center"
+                    justifyContent="center"
+                    backgroundColor="$green4"
+                >
+                    <Activity size={11} color="$green10"/>
+                </YStack>
+                <Text fontSize="$1" color="$gray11" fontWeight="500">
+                    {t('sensor.lastMeasurement')}: <Text fontWeight="600"
+                                                         color={isDark ? '$gray12' : '$gray12'}>
+                    {formatDateTime(latestTime)}
+                </Text>
+                </Text>
+            </XStack>
+            <Separator/>
+        </YStack>
+    );
 }
 
 type MeasurementCardProps = {
-    index: number,
-    measurementType: string,
-    value: number
-}
+    measurementType: string;
+    value: number;
+};
 
-function MeasurementCard({index, measurementType, value}: MeasurementCardProps) {
-  const {t, i18n} = useTranslation();
-  return (              
-      <YStack key={index} width="48%" marginBottom="$2">
-        <Text fontSize={16} color="$gray10">
-          {getTextFromMeasurementType(measurementType, t)}
-        </Text>
-        <XStack alignItems="center">
-          <Text fontSize={24} color="$color">
-            {value}{getMeasurementTypeSymbol(measurementType)}{" "}
-          </Text>
-          {getMeasurementIcon(measurementType, 22)}
-        </XStack>
-      </YStack>  
-  );
+function MeasurementCard({measurementType, value}: MeasurementCardProps) {
+    const {t} = useTranslation();
+    const {isDark} = useThemeContext();
+
+    const {icon, color, bgColor} = getMeasurementIcon(measurementType);
+
+    return (
+        <Card
+            width="100%"
+            backgroundColor={isDark ? '#262626' : 'white'}
+            padding="$2.5"
+            borderRadius="$3"
+            borderWidth={isDark ? 1 : 0}
+            borderColor={isDark ? '#333333' : 'transparent'}
+            pressStyle={{scale: 0.97, opacity: 0.9}}
+            hoverStyle={{scale: 1.02, borderColor: color}}
+            animation={[
+                'quick',
+                {
+                    scale: {
+                        overshootClamping: true,
+                    },
+                },
+            ]}
+            elevate
+            shadowColor={color}
+            shadowRadius={6}
+            shadowOpacity={0.08}
+        >
+            <XStack gap={"$2"} justifyContent={"space-between"} alignItems={"center"}>
+                <YStack
+                    width={36}
+                    height={36}
+                    borderRadius="$2"
+                    backgroundColor={isDark ? `${bgColor}80` : bgColor}
+                    alignItems="center"
+                    justifyContent="center"
+                    borderWidth={1}
+                    borderColor={isDark ? '#404040' : `${color}3`}
+                >
+                    {icon}
+                </YStack>
+                {/* Label */}
+                <Text fontSize="$2" color={isDark ? '#grey1' : '$gray11'} fontWeight="500" numberOfLines={2}
+                      lineHeight="$1">
+                    {getMeasurementLabel(measurementType, t)}
+                </Text>
+
+                {/* Value and Unit */}
+                <XStack alignItems="baseline" gap="$1">
+                    <Text fontSize="$7" fontWeight="800" color={color} letterSpacing={-0.5}>
+                        {Math.round(value * 10) / 10}
+                    </Text>
+                    <Text fontSize="$3" color={isDark ? '#737373' : '$gray10'} fontWeight="700">
+                        {getMeasurementUnit(measurementType, t)}
+                    </Text>
+                </XStack>
+            </XStack>
+        </Card>
+    );
 }
 
 function formatDateTime(dateString: string): string {
-  const date = new Date(dateString);
-  const pad = (n: number) => n.toString().padStart(2, "0");
-  const hh = pad(date.getHours());
-  const mm = pad(date.getMinutes());
-  const dd = pad(date.getDate());
-  const MM = pad(date.getMonth() + 1);
-  const yyyy = date.getFullYear();
-  return `${hh}:${mm} Uhr · ${dd}.${MM}.${yyyy}`;
+    const date = new Date(dateString);
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    const hh = pad(date.getHours());
+    const mm = pad(date.getMinutes());
+    const dd = pad(date.getDate());
+    const MM = pad(date.getMonth() + 1);
+    const yyyy = date.getFullYear();
+    return `${hh}:${mm} Uhr · ${dd}.${MM}.${yyyy}`;
 }
 
-const getMeasurementIcon = (measurementType: string, size: number = 24) => {
-    const color = getValueColor(measurementType);
-    const props = {size, color};
-    switch (measurementType) {
-        case "Wave Height":
-            return <Waves {...props}/>;
-        case "Temperature, water":
-        case "WTemp":
-            return <Thermometer {...props}/>;
-        case "Tide":
-            return <Activity {...props}/>;
-        case "Battery, voltage":
-            return <Battery {...props}/>;
-        default:
-            return <HelpCircle {...props}/>;
-    }
-};
+// Helper Functions
 
-const getTextFromMeasurementType = (measurementType: string, t: (key: string) => string): string => {
+function getBoxTypeIcon(boxType: BoxType) {
+    const size = 14;
+    switch (boxType) {
+        case BoxType.WaterBox:
+            return <Waves size={size} color="$blue10"/>;
+        case BoxType.WaterTemperatureOnlyBox:
+            return <Thermometer size={size} color="$orange10"/>;
+        case BoxType.AirBox:
+            return <Wind size={size} color="$green10"/>;
+        default:
+            return <HelpCircle size={size} color="$gray10"/>;
+    }
+}
+
+function getBoxTypeName(boxType: BoxType, t: any): string {
+    switch (boxType) {
+        case BoxType.WaterBox:
+            return t('sensor.waterBox');
+        case BoxType.WaterTemperatureOnlyBox:
+            return t('sensor.waterTemperatureBox');
+        case BoxType.AirBox:
+            return t('sensor.airBox');
+        default:
+            return boxType;
+    }
+}
+
+function getMeasurementIcon(measurementType: string): { icon: React.ReactNode; color: string; bgColor: string } {
+    const size = 18;
+
     switch (measurementType) {
-        case "Wave Height":
-            return t("measurements.waveHeight");
-        case "Temperature, water":
-        case "WTemp":
-            return t("measurements.waterTemperature");
-        case "Tide":
-            return t("measurements.tide");
-        case "Battery, voltage":
-            return t("measurements.batteryVoltage");
+        case "waterTemperature":
+            return {
+                icon: <Thermometer size={size} color="$orange10"/>,
+                color: "$orange10",
+                bgColor: "$orange4"
+            };
+        case "waveHeight":
+            return {
+                icon: <Waves size={size} color="$blue10"/>,
+                color: "$blue10",
+                bgColor: "$blue4"
+            };
+        case "tide":
+            return {
+                icon: <Activity size={size} color="$cyan10"/>,
+                color: "$cyan10",
+                bgColor: "$cyan4"
+            };
+        case "airTemperature":
+            return {
+                icon: <Thermometer size={size} color="$red10"/>,
+                color: "$red10",
+                bgColor: "$red4"
+            };
+        case "windSpeed":
+            return {
+                icon: <Wind size={size} color="$green10"/>,
+                color: "$green10",
+                bgColor: "$green4"
+            };
+        case "windDirection":
+            return {
+                icon: <Compass size={size} color="$purple10"/>,
+                color: "$purple10",
+                bgColor: "$purple4"
+            };
+        case "humidity":
+            return {
+                icon: <Droplets size={size} color="$blue10"/>,
+                color: "$blue10",
+                bgColor: "$blue4"
+            };
+        case "airPressure":
+            return {
+                icon: <Gauge size={size} color="$gray10"/>,
+                color: "$gray10",
+                bgColor: "$gray4"
+            };
+        case "batteryVoltage":
+            return {
+                icon: <Battery size={size} color="$yellow10"/>,
+                color: "$yellow10",
+                bgColor: "$yellow4"
+            };
+        default:
+            return {
+                icon: <HelpCircle size={size} color="$gray10"/>,
+                color: "$gray10",
+                bgColor: "$gray4"
+            };
+    }
+}
+
+function getMeasurementLabel(measurementType: string, t: any): string {
+    switch (measurementType) {
+        case "waterTemperature":
+            return t('sensor.waterTemperature');
+        case "waveHeight":
+            return t('sensor.waveHeight');
+        case "tide":
+            return t('sensor.tide');
+        case "airTemperature":
+            return t('sensor.airTemperature');
+        case "windSpeed":
+            return t('sensor.windSpeed');
+        case "windDirection":
+            return t('sensor.windDirection');
+        case "humidity":
+            return t('sensor.humidity');
+        case "airPressure":
+            return t('sensor.airPressure');
+        case "batteryVoltage":
+            return t('sensor.batteryVoltage');
         default:
             return measurementType;
     }
-};
+}
 
-const getMeasurementTypeSymbol = (measurementType: string): string => {
-  switch (measurementType) {
-    case "Wave Height":
-      return "cm";
-    case "Temperature, water":
-      return "°C";
-    case "WTemp":
-      return "°C";
-    case "Tide":
-      //TODO: Hier noch überprüfen ob Flut oder Ebbe und den Pfeil dementsprechend anpassen?
-      return "cm";
-    case "Battery, voltage":
-      return "V";
-    default:
-      return "help-circle";
-  }
-};
-
-const getValueColor = (measurementType: string): string => {
+function getMeasurementUnit(measurementType: string, t: any): string {
     switch (measurementType) {
-        case "Wave Height":
-            return "$green10";
-        case "Temperature, water":
-        case "WTemp":
-            return "$orange10";
-        case "Tide":
-            return "$blue10";
-        case "Battery, voltage":
-            return "$yellow10";
+        case "waterTemperature":
+        case "airTemperature":
+            return t('dashboard.units.celsius');
+        case "waveHeight":
+        case "tide":
+            return t('dashboard.units.centimeters');
+        case "windSpeed":
+            return "m/s";
+        case "windDirection":
+            return "°";
+        case "humidity":
+            return "%";
+        case "airPressure":
+            return "hPa";
+        case "batteryVoltage":
+            return "V";
         default:
-            return "$gray10";
+            return "";
     }
-};
+}

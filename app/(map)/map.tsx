@@ -14,7 +14,7 @@ export default function MapScreen() {
   const [module3Visible, setModule3Visible] = useState(false);
 
   return (
-      <View pos={"relative"} flex={1} backgroundColor={isDark ? "#1a1a1a" : "#f5f5f5"}>
+      <View pos={"relative"} flex={1} backgroundColor={isDark ? "#282c34" : "#f5f5f5"}>
         <MapWrapper
             module1Visible={module1Visible}
             module2Visible={module2Visible}
