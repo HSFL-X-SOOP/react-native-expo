@@ -1,3 +1,27 @@
+import { useThemeContext } from '@/context/ThemeSwitch';
+import { GetGeomarData, GetGeomarDataTimeRange } from '@/data/geomar-data';
+import { SensorModule } from '@/data/sensor';
+import { useTranslation } from '@/hooks/useTranslation';
+import {
+    Activity,
+    Battery,
+    Check,
+    ChevronDown,
+    ChevronUp,
+    Clock,
+    HelpCircle,
+    Home,
+    MapPin,
+    Thermometer,
+    Waves
+} from '@tamagui/lucide-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Router, useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Animated, SafeAreaView, ScrollView, View } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
+import { LinearGradient as LinearG } from 'react-native-svg';
+//import { LinearGradient } from 'react-native-svg';
 import {useRef, useState, useEffect} from 'react';
 import {Animated, SafeAreaView, ScrollView, View} from 'react-native';
 import {useThemeContext} from '@/context/ThemeSwitch';
@@ -8,37 +32,33 @@ import {LineChart} from 'react-native-chart-kit';
 import {useTranslation} from '@/hooks/useTranslation';
 import {LinearGradient} from 'expo-linear-gradient';
 import {
-    XStack,
-    YStack,
+    Adapt,
+    Button,
     Card,
+    FontSizeTokens,
     H1,
     H2,
     H3,
     H4,
-    Text,
-    Button,
     Image,
-    Stack,
+    Select,
+    SelectProps,
     Separator,
+    Sheet,
+    Stack,
+    Text,
+    XStack,
+    YStack,
+    getFontSize,
     useMedia
 } from 'tamagui';
-import {
-    ChevronDown,
-    ChevronUp,
-    Home,
-    Thermometer,
-    Waves,
-    Battery,
-    HelpCircle,
-    MapPin,
-    Clock,
-    Activity
-} from '@tamagui/lucide-icons';
+
 
 export default function DashboardScreen() {
     const media = useMedia();
+    const router = useRouter();
+    const { t, changeLanguage } = useTranslation();
     const {isDark} = useThemeContext();
-    const {t} = useTranslation();
     const [showInfo, setShowInfo] = useState(false);
     const infoHeight = useRef(new Animated.Value(0)).current;
     let {id} = useLocalSearchParams();
@@ -47,6 +67,9 @@ export default function DashboardScreen() {
         id = "4";
     }
 
+    const [content, setContent] = useState<SensorModule[]>([])
+    const [sensorLocations, setSensorLocations] = useState<MarinaNameWithId[]>([])
+    const [, setLoading] = useState(true)
     const [timeRange, setTimeRange] = useState<'today' | 'yesterday' | 'last7days' | 'last30days'>('today')
 
     const { data: allSensorData } = useSensorData();
@@ -56,7 +79,21 @@ export default function DashboardScreen() {
     const dataPrecision = timeRange === 'last30days' ? 6 :
         timeRange === 'last7days' ? 3 :
             timeRange === 'yesterday' ? 3 :
-                3;
+                3; // today
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                let data = await GetGeomarData()
+                setSensorLocations(GetAllAvailableSensorLocations(data));
+                setContent(data.filter((sensor: SensorModule) => String(sensor.location.id) === id))
+                setName(data.filter((sensor: SensorModule) => String(sensor.location.id) === id)[0]?.location.name || "")
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchData()
+    }, [id, timeRange])
 
     const isAdmin = false;
     const excludedMeasurements: string[] = [];
@@ -136,6 +173,9 @@ export default function DashboardScreen() {
                         >
                             {name || t('dashboard.loading')}
                         </H1>
+                        <View style={{width: 300}}>
+                            <NavigateDashboardDropdownMenu isDark={isDark} router={router} sensorLocations={sensorLocations} selectedMarinaId={Number(id)} id="select-demo-2" native />
+                        </View>
                     </Stack>
                 </Stack>
 
@@ -399,6 +439,155 @@ export default function DashboardScreen() {
     );
 }
 
+{/* <H1
+    color="white"
+    // fontSize={media.lg ? "$10" : "$8"}
+    fontWeight="700"
+    textShadowColor="rgba(0,0,0,0.5)"
+    textShadowOffset={{width: 0, height: 2}}
+    textShadowRadius={4}
+>
+    {item || 'Lade Daten...'}
+</H1> */}
+
+
+export function NavigateDashboardDropdownMenu(props: {router: Router} & { sensorLocations: MarinaNameWithId[]} & { isDark: boolean } & {selectedMarinaId: number} & SelectProps & { trigger?: React.ReactNode }) {
+  const { router, isDark, sensorLocations, selectedMarinaId, ...restProps } = props;
+  const selectedMarina = sensorLocations.filter(item => item.id === selectedMarinaId)[0] || {id: 0, name: "Unknown"}
+  const marinasWithIds: MarinaNameWithId[] = [{id: selectedMarina.id, name: selectedMarina.name}, ...sensorLocations]
+
+  return (
+    <Select value={""} onValueChange={(e) => {router.push(`/dashboard/${e}`);}} disablePreventBodyScroll {...restProps}>
+      {props?.trigger || (
+        <Select.Trigger maxWidth={220} iconAfter={ChevronDown}>
+          <Select.Value placeholder="Something" />
+        </Select.Trigger>
+      )}
+
+      <Adapt platform="touch">
+        <Sheet native={!!props.native} modal dismissOnSnapToBottom animation="medium">
+          <Sheet.Frame>
+            <Sheet.ScrollView>
+              <Adapt.Contents />
+            </Sheet.ScrollView>
+          </Sheet.Frame>
+          <Sheet.Overlay
+            backgroundColor={isDark ? '$gray8' : '$gray2'}
+            animation="lazy"
+            enterStyle={{ opacity: 0 }}
+            exitStyle={{ opacity: 0 }}
+          />
+        </Sheet>
+      </Adapt>
+
+      <Select.Content zIndex={200000}>
+        <Select.ScrollUpButton
+          alignItems="center"
+          justifyContent="center"
+          position="relative"
+          width="100%"
+          height="$3"
+        >
+          <YStack zIndex={10}>
+            <ChevronUp size={20} />
+          </YStack>
+          <LinearG
+            x1={0}
+            y1={0}
+            x2={0}
+            y2={1}
+          />
+        </Select.ScrollUpButton>
+
+        <Select.Viewport
+          minWidth={200}
+        >
+          <Select.Group>
+            <Select.Label>Sensors</Select.Label>
+            {useMemo(
+              () =>
+                marinasWithIds.map((item, i) => {
+                  return (
+                    <Select.Item
+                      index={i}
+                      key={item.id}
+                      //value={item.toLowerCase()}
+                      value={item.id.toString()}
+                    >
+                      <Select.ItemText>
+                        {item.name}
+                        </Select.ItemText>
+                      <Select.ItemIndicator marginLeft="auto">
+                        <Check size={16} />
+                      </Select.ItemIndicator>
+                    </Select.Item>
+
+                  )
+                }),
+              [sensorLocations]
+            )}
+          </Select.Group>
+          {props.native && (
+            <YStack
+              position="absolute"
+              right={0}
+              top={0}
+              bottom={0}
+              alignItems="center"
+              justifyContent="center"
+              width={'$4'}
+              pointerEvents="none"
+            >
+              <ChevronDown
+                size={getFontSize((props.size as FontSizeTokens) ?? '$true')}
+              />
+            </YStack>
+          )}
+        </Select.Viewport>
+
+        <Select.ScrollDownButton
+          alignItems="center"
+          justifyContent="center"
+          position="relative"
+          width="100%"
+          height="$3"
+        >
+          <YStack zIndex={10}>
+            <ChevronDown size={20} />
+          </YStack>
+          <LinearG
+            x1={0}
+            y1={0}
+            x2={0}
+            y2={1}
+          />
+        </Select.ScrollDownButton>
+      </Select.Content>
+    </Select>
+  )
+}
+
+interface MarinaNameWithId {
+    name: string;
+    id: number;
+}
+
+const GetAllAvailableSensorLocations = (data: any) => {
+    const locations: MarinaNameWithId[] = [];
+    console.log(data)
+
+    data.forEach((element: any) => {
+        locations.push({
+            id: element.location.id,
+            name: element.location.name
+        });
+    });
+
+    return locations
+
+
+}
+
 const CreateMeasurementDictionary = (data: any, timeRange: string) => {
     if (!data?.boxes?.[0]?.measurementTimes) return {};
 
@@ -407,6 +596,8 @@ const CreateMeasurementDictionary = (data: any, timeRange: string) => {
 
     measurementTimes.forEach((entry: any) => {
         if (!entry.time) return;
+
+
 
         let label: string;
         if (timeRange === 'last7days' || timeRange === 'last30days') {
@@ -492,7 +683,6 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
     const {isDark} = useThemeContext();
     const {t} = useTranslation();
     const media = useMedia();
-
     const data = chartData.length > 0
         ? chartData.filter((_, idx) => idx % dataPrecision === 0).map(item => item.value)
         : [];
