@@ -1,7 +1,7 @@
 import { LocationWithBoxes } from "@/api/models/sensor";
 import { Marker } from "@vis.gl/react-maplibre";
 import { SensorMarkerContent } from "./MapSensorTemperatureText";
-import { Popover } from "tamagui";
+import { Popover, useMedia } from "tamagui";
 import { SensorPopup } from "./MapSensorMeasurements";
 import { useState } from "react";
 
@@ -11,6 +11,7 @@ interface SensorMarkerProps {
 
 export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
     const [open, setOpen] = useState(false);
+    const media = useMedia();
 
     return (
         <Marker
@@ -22,7 +23,7 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
             <Popover
                 size="$5"
                 allowFlip
-                placement="left"
+                placement={media.gtMd ? "left" : "top"}
                 open={open}
                 onOpenChange={setOpen}
             >
