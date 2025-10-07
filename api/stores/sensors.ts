@@ -7,7 +7,7 @@ import {useHttpClient} from '@/api/client';
 // Set this to true to use mock data instead of API
 // Set this to false to use real database
 // ============================================
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 
 export function useSensorStore() {
     const httpClient = useHttpClient();
