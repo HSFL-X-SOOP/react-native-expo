@@ -1,16 +1,14 @@
-import React, {useState} from 'react';
-import {XStack, YStack, Text, useTheme, Sheet, Button} from 'tamagui';
-import {Link, useRouter} from 'expo-router';
-import {ThemeSwitch, useThemeContext} from '@/context/ThemeSwitch.tsx';
-import {SunFilledIcon, MoonFilledIcon} from '@/components/ui/Icons';
-import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
-import {User, Menu, Languages, X} from '@tamagui/lucide-icons';
-import {useSession} from '@/context/SessionContext';
-import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
-import {useTranslation} from '@/hooks/useTranslation';
-import {LanguageSelector} from '@/components/common/LanguageSelector';
-import {TouchableOpacity, View, Text as RNText, ScrollView} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { LanguageSelector } from '@/components/common/LanguageSelector';
+import { CloudIcon, InfoIcon, LOGO, MapIcon, MoonFilledIcon, SunFilledIcon } from '@/components/ui/Icons';
+import { useSession } from '@/context/SessionContext';
+import { useThemeContext } from '@/context/ThemeSwitch.tsx';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Languages, Menu, User, X } from '@tamagui/lucide-icons';
+import { Link, useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Text as RNText, ScrollView, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Sheet, Text, useTheme, XStack } from 'tamagui';
 
 export function TabBarNative() {
     const router = useRouter();
@@ -157,6 +155,30 @@ export function TabBarNative() {
                                     marginLeft: 12
                                 }}>
                                     {translate('navigation.map')}
+                                </RNText>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                onPress={() => navigateAndClose('/dashboard/5')}
+                                style={{
+                                    padding: 16,
+                                    marginBottom: 12,
+                                    borderRadius: 8,
+                                    backgroundColor: t.gray2?.val,
+                                    borderWidth: 1,
+                                    borderColor: t.accent8?.val,
+                                    flexDirection: 'row',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                {/* <MapIcon color={t.accent8?.val} size={24}/> */}
+                                <RNText style={{
+                                    fontSize: 18,
+                                    fontWeight: '500',
+                                    color: t.accent8?.val,
+                                    marginLeft: 12
+                                }}>
+                                    {translate('dashboard.dashboard')}
                                 </RNText>
                             </TouchableOpacity>
 

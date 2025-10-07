@@ -1,14 +1,14 @@
-import {Link, useRouter} from 'expo-router';
-import {Button, Text, XStack, YStack, useTheme, Popover, Adapt, Sheet, useMedia} from 'tamagui';
+import { Link, useRouter } from 'expo-router';
+import { Button, Popover, Sheet, Text, XStack, YStack, useMedia, useTheme } from 'tamagui';
 
-import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
-import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
-import {User, ChevronDown, Languages, Menu, LogOut} from '@tamagui/lucide-icons';
-import {useSession} from '@/context/SessionContext';
-import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
-import {useTranslation} from '@/hooks/useTranslation';
-import {LanguageSelector} from '@/components/common/LanguageSelector';
-import {useState} from 'react';
+import { LanguageSelector } from '@/components/common/LanguageSelector';
+import { CloudIcon, InfoIcon, LOGO, MapIcon } from '@/components/ui/Icons';
+import { useSession } from '@/context/SessionContext';
+import { ThemeSwitch } from '@/context/ThemeSwitch.tsx';
+import { useTranslation } from '@/hooks/useTranslation';
+import { PrimaryButton, SecondaryButton } from "@/types/button.ts";
+import { ChevronDown, Languages, LogOut, Menu, User } from '@tamagui/lucide-icons';
+import { useState } from 'react';
 
 
 export function NavbarWeb() {
@@ -43,6 +43,15 @@ export function NavbarWeb() {
                             <MapIcon color={t.accent8?.val} size={26}/>
                             <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
                                 {translate('navigation.map')}
+                            </Text>
+                        </XStack>
+                    </Link>
+
+                    <Link href="/dashboard/5">
+                        <XStack alignItems="center" gap="$3">
+                            {/* <MapIcon color={t.accent8?.val} size={26}/> */}
+                            <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
+                                {translate('dashboard.dashboard')}
                             </Text>
                         </XStack>
                     </Link>
