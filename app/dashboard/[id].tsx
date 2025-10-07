@@ -163,7 +163,7 @@ export default function DashboardScreen() {
                             {name || t('dashboard.loading')}
                         </H1>
                         <View style={{width: 300}}>
-                            <SelectDemoContents isDark={isDark} router={router} sensorLocations={sensorLocations} id="select-demo-2" native />
+                            <NavigateDashboardDropdownMenu isDark={isDark} router={router} sensorLocations={sensorLocations} selectedMarinaId={Number(id)} id="select-demo-2" native />
                         </View>
                     </Stack>
                 </Stack>
@@ -440,12 +440,13 @@ export default function DashboardScreen() {
 </H1> */}
 
 
-export function SelectDemoContents(props: {router: Router} & { sensorLocations: MarinaNameWithId[]} & { isDark: boolean } & SelectProps & { trigger?: React.ReactNode }) {
-  const [val, setVal] = useState('')
-  const { router, isDark, sensorLocations, ...restProps } = props;
-
+export function NavigateDashboardDropdownMenu(props: {router: Router} & { sensorLocations: MarinaNameWithId[]} & { isDark: boolean } & {selectedMarinaId: number} & SelectProps & { trigger?: React.ReactNode }) {
+  const { router, isDark, sensorLocations, selectedMarinaId, ...restProps } = props;
+  const selectedMarina = sensorLocations.filter(item => item.id === selectedMarinaId)[0] || {id: 0, name: "Unknown"}
+  const marinasWithIds: MarinaNameWithId[] = [{id: selectedMarina.id, name: selectedMarina.name}, ...sensorLocations]
+  
   return (
-    <Select value={val} onValueChange={(e) => {router.push(`/dashboard/${e}`)}} disablePreventBodyScroll {...restProps}>
+    <Select value={""} onValueChange={(e) => {router.push(`/dashboard/${e}`);}} disablePreventBodyScroll {...restProps}>
       {props?.trigger || (
         <Select.Trigger maxWidth={220} iconAfter={ChevronDown}>
           <Select.Value placeholder="Something" />
@@ -488,19 +489,13 @@ export function SelectDemoContents(props: {router: Router} & { sensorLocations: 
         </Select.ScrollUpButton>
 
         <Select.Viewport
-          // to do animations:
-          // animation="quick"
-          // animateOnly={['transform', 'opacity']}
-          // enterStyle={{ o: 0, y: -10 }}
-          // exitStyle={{ o: 0, y: 10 }}
           minWidth={200}
         >
           <Select.Group>
             <Select.Label>Sensors</Select.Label>
-            {/* for longer lists memoizing these is useful */}
             {useMemo(
               () =>
-                sensorLocations.map((item, i) => {
+                marinasWithIds.map((item, i) => {
                   return (
                     <Select.Item
                       index={i}
@@ -521,7 +516,6 @@ export function SelectDemoContents(props: {router: Router} & { sensorLocations: 
               [sensorLocations]
             )}
           </Select.Group>
-          {/* Native gets an extra icon */}
           {props.native && (
             <YStack
               position="absolute"
