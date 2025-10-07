@@ -1,21 +1,21 @@
 import { LocationWithBoxes } from "@/api/models/sensor";
 import { PointAnnotation } from "@maplibre/maplibre-react-native";
 import React, { useState } from "react";
-import { Modal, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import { View } from "react-native";
 import { SensorPopup } from "./MapSensorMeasurements";
 import { SensorMarkerContent } from "./MapSensorTemperatureText";
-
+import { Sheet } from "tamagui";
+import { useThemeContext } from "@/context/ThemeSwitch";
 
 export default function AndroidMarker({
     locationWithBoxes,
     index,
-    onClose,
 }: {
     locationWithBoxes: LocationWithBoxes;
     index?: number;
-    onClose?: () => void;
 }) {
-    const [overlayVisible, setOverlayVisible] = useState(false);
+    const [open, setOpen] = useState(false);
+    const { isDark } = useThemeContext();
 
     return (
         <>
@@ -26,51 +26,38 @@ export default function AndroidMarker({
                     locationWithBoxes.location.coordinates.lon,
                     locationWithBoxes.location.coordinates.lat,
                 ]}
-                title="Marker Title"
+                title="Sensor"
                 selected={true}
-                onSelected={() => setOverlayVisible(true)}
+                onSelected={() => setOpen(true)}
             >
                 <View>
                     <SensorMarkerContent locationWithBoxes={locationWithBoxes} />
                 </View>
             </PointAnnotation>
 
-            <Modal
-                visible={overlayVisible}
-                transparent
-                animationType="fade"
-                onRequestClose={() => setOverlayVisible(false)}
+            <Sheet
+                modal
+                open={open}
+                onOpenChange={setOpen}
+                snapPoints={[85]}
+                dismissOnSnapToBottom
+                animation="medium"
             >
-                <TouchableWithoutFeedback onPress={() => setOverlayVisible(false)}>
-                    <View style={styles.overlayContainer}>
-                        <TouchableWithoutFeedback onPress={() => setOverlayVisible(false)}>
-                            <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOverlayVisible(false)}/>
-                        </TouchableWithoutFeedback>
-                    </View>
-                </TouchableWithoutFeedback>
-            </Modal>
+                <Sheet.Overlay
+                    backgroundColor="rgba(0,0,0,0.5)"
+                    animation="lazy"
+                    enterStyle={{ opacity: 0 }}
+                    exitStyle={{ opacity: 0 }}
+                />
+                <Sheet.Frame
+                    padding="$4"
+                    backgroundColor={isDark ? '$gray2' : '$background'}
+                    alignItems="center"
+                    justifyContent="center"
+                >
+                    <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)} />
+                </Sheet.Frame>
+            </Sheet>
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    overlayContainer: {
-        flex: 1,
-        backgroundColor: "rgba(0,0,0,0.5)",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    overlayBox: {
-        backgroundColor: "white",
-        padding: 24,
-        borderRadius: 16,
-        minWidth: 300,
-        alignItems: "center",
-    },
-    linkButton: {
-        marginTop: 20,
-    },
-    closeButton: {
-        marginTop: 10,
-    },
-});

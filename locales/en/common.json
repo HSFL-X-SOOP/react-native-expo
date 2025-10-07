@@ -169,6 +169,23 @@
     "finish": "Finish"
   },
   "last.measurement": "Last Measurement",
+  "sensor": {
+    "location": "Location",
+    "viewDashboard": "View Dashboard",
+    "lastMeasurement": "Last Measurement",
+    "waterBox": "Water Sensor Box",
+    "waterTemperatureBox": "Water Temperature Box",
+    "airBox": "Air Sensor Box",
+    "waterTemperature": "Water Temperature",
+    "waveHeight": "Wave Height",
+    "tide": "Tide",
+    "airTemperature": "Air Temperature",
+    "windSpeed": "Wind Speed",
+    "windDirection": "Wind Direction",
+    "humidity": "Humidity",
+    "airPressure": "Air Pressure",
+    "batteryVoltage": "Battery Voltage"
+  },
   "dashboard": {
     "dashboard": "Dashboard",
     "title": "Sensor Dashboard",

@@ -72,29 +72,29 @@ export enum BoxType {
 
 export type Box =
     | {
-        type: "WaterTemperatureOnlyBox";
-        id: number;
-        name: string;
-        description: string;
-        isMoving: boolean;
-        measurementTimes: MeasurementTime<WaterTemperatureOnlyMeasurements>[];
-    }
+    type: BoxType.WaterTemperatureOnlyBox;
+    id: number;
+    name: string;
+    description: string;
+    isMoving: boolean;
+    measurementTimes: MeasurementTime<WaterTemperatureOnlyMeasurements>[];
+}
     | {
-        type: "WaterBox";
-        id: number;
-        name: string;
-        description: string;
-        isMoving: boolean;
-        measurementTimes: MeasurementTime<WaterBoxMeasurements>[];
-    }
+    type: BoxType.WaterBox;
+    id: number;
+    name: string;
+    description: string;
+    isMoving: boolean;
+    measurementTimes: MeasurementTime<WaterBoxMeasurements>[];
+}
     | {
-        type: "AirBox";
-        id: number;
-        name: string;
-        description: string;
-        isMoving: boolean;
-        measurementTimes: MeasurementTime<AirBoxMeasurements>[];
-    };
+    type: BoxType.AirBox;
+    id: number;
+    name: string;
+    description: string;
+    isMoving: boolean;
+    measurementTimes: MeasurementTime<AirBoxMeasurements>[];
+};
 
 export interface LocationWithBoxes {
     location: Location;

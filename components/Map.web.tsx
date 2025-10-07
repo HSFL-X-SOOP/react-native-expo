@@ -1,9 +1,7 @@
-import { LocationWithBoxes } from '@/api/models/sensor';
 import { useSensorDataNew } from '@/hooks/useSensors';
 import {
   LngLatBoundsLike,
-  Map,
-  Popup
+  Map
 } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
@@ -12,7 +10,6 @@ import { View } from 'react-native';
 import '../Global.css';
 import SensorMarker from './map/SensorMarker.web';
 import ClusterMarker from './map/ClusterMarker.web';
-import { SensorPopup } from './map/MapSensorMeasurements';
 import MapZoomControl from './map/MapZoomControl';
 import MapLegend from './map/MapLegend';
 import { useSupercluster } from '@/hooks/useSupercluster';
@@ -20,7 +17,6 @@ import type { MapRef } from '@vis.gl/react-maplibre';
 
 export default function WebMap() {
   const { data: content } = useSensorDataNew();
-  const [popupInfo, setPopupInfo] = useState<LocationWithBoxes>();
   const mapRef = React.useRef<MapRef>(null);
 
   const homeCoordinate: [number, number] = [9.26, 54.47926];
@@ -81,7 +77,6 @@ export default function WebMap() {
         <SensorMarker
           key={locationWithBoxes!.location.id}
           locationWithBoxes={locationWithBoxes!}
-          setPopupInfo={setPopupInfo}
         />
       );
     });
@@ -105,16 +100,6 @@ export default function WebMap() {
         zoom={zoomLevel}
       >
         {pins}
-        {popupInfo && (
-          <Popup
-            anchor="top"
-            longitude={Number(popupInfo.location.coordinates.lon)}
-            latitude={Number(popupInfo.location.coordinates.lat)}
-            onClose={() => setPopupInfo(undefined)}
-          >
-            <SensorPopup locationWithBoxes={popupInfo} />
-          </Popup>
-        )}
         <MapZoomControl
           zoomLevel={zoomLevel}
           minMaxZoomLevel={minMaxZoomLevel}
