@@ -1,62 +1,42 @@
+import { LocationWithBoxes } from '@/api/models/sensor';
+import { LineChartCard } from '@/components/dashboard/chart/LineChartCard';
+import { ChartTimeRange, TimeRangeButton } from '@/components/dashboard/chart/TimeRangeButton';
+import { MeasurementCard } from '@/components/dashboard/MeasurementCard';
+import { NavigateDashboardDropdownMenu } from '@/components/dashboard/NavigateDropdownMenu';
+import { useThemeContext } from '@/context/ThemeSwitch';
+import { useSensorDataNew, useSensorDataTimeRange } from '@/hooks/useSensors';
+import { useTranslation } from '@/hooks/useTranslation';
+import { ChartDataPoint } from '@/types/chart';
+import { MarinaNameWithId } from '@/types/marina';
+import { CreateMeasurementDictionary, GetLatestMeasurements, getIconBackground, getMeasurementColor, getMeasurementIcon, getMeasurementTypeSymbol, getTextFromMeasurementType } from '@/utils/measurements';
 import {
     Activity,
-    Battery,
-    Check,
     ChevronDown,
     ChevronUp,
     Clock,
-    HelpCircle,
     Home,
     MapPin,
     Thermometer,
     Waves
 } from '@tamagui/lucide-icons';
-import {LinearGradient} from 'expo-linear-gradient';
-import {Router, useLocalSearchParams, useRouter} from 'expo-router';
-import {useEffect, useMemo, useRef, useState} from 'react';
-import {Animated, SafeAreaView, ScrollView, View} from 'react-native';
-import {LineChart} from 'react-native-chart-kit';
-import {LinearGradient as LinearG} from 'react-native-svg';
-import {useThemeContext} from '@/context/ThemeSwitch';
-import {useSensorDataNew, useSensorDataTimeRange} from '@/hooks/useSensors';
-import {LocationWithBoxes, Box} from '@/api/models/sensor';
-import {useTranslation} from '@/hooks/useTranslation';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Animated, SafeAreaView, ScrollView, View } from 'react-native';
 import {
-    Adapt,
     Button,
     Card,
-    FontSizeTokens,
     H1,
     H2,
     H3,
-    H4,
     Image,
-    Select,
-    SelectProps,
     Separator,
-    Sheet,
     Stack,
     Text,
     XStack,
     YStack,
-    getFontSize,
     useMedia
 } from 'tamagui';
-
-interface MarinaNameWithId {
-    name: string;
-    id: number;
-}
-
-interface ChartDataPoint {
-    label: string;
-    value: number;
-}
-
-interface MeasurementDictionary {
-    [key: string]: ChartDataPoint[];
-}
-
 
 export default function DashboardScreen() {
     const media = useMedia();
@@ -71,7 +51,7 @@ export default function DashboardScreen() {
         id = "4";
     }
 
-    const [timeRange, setTimeRange] = useState<'today' | 'yesterday' | 'last7days' | 'last30days'>('today');
+    const [timeRange, setTimeRange] = useState<ChartTimeRange>('today');
 
     const {data: allSensorData} = useSensorDataNew();
 
@@ -81,6 +61,21 @@ export default function DashboardScreen() {
     );
 
     const name = useMemo(() => content[0]?.location.name || "", [content]);
+
+    const GetAllAvailableSensorLocations = (data: LocationWithBoxes[]): MarinaNameWithId[] => {
+        const locationMap = new Map<number, MarinaNameWithId>();
+
+        data.forEach((element) => {
+            if (element.location?.id && element.location?.name) {
+                locationMap.set(element.location.id, {
+                    id: element.location.id,
+                    name: element.location.name
+                });
+            }
+        });
+
+        return Array.from(locationMap.values());
+    }
 
     const sensorLocations = useMemo(
         () => GetAllAvailableSensorLocations(allSensorData),
@@ -376,46 +371,37 @@ export default function DashboardScreen() {
                             </YStack>
                             <XStack gap="$2" backgroundColor={isDark ? '$gray8' : '$gray2'} padding="$1"
                                     borderRadius="$3" flexWrap="wrap">
-                                <Button
-                                    size="$2"
-                                    variant="outlined"
-                                    color={timeRange === 'today' ? '$blue10' : '$gray10'}
-                                    backgroundColor={timeRange === 'today' ? (isDark ? '$gray9' : '$background') : 'transparent'}
-                                    onPress={() => setTimeRange('today')}
-                                    borderRadius="$2"
-                                >
-                                    {t('dashboard.timeRange.todayButton')}
-                                </Button>
-                                <Button
-                                    size="$2"
-                                    variant="outlined"
-                                    color={timeRange === 'yesterday' ? '$blue10' : '$gray10'}
-                                    backgroundColor={timeRange === 'yesterday' ? (isDark ? '$gray9' : '$background') : 'transparent'}
-                                    onPress={() => setTimeRange('yesterday')}
-                                    borderRadius="$2"
-                                >
-                                    {t('dashboard.timeRange.yesterdayButton')}
-                                </Button>
-                                <Button
-                                    size="$2"
-                                    variant="outlined"
-                                    color={timeRange === 'last7days' ? '$blue10' : '$gray10'}
-                                    backgroundColor={timeRange === 'last7days' ? (isDark ? '$gray9' : '$background') : 'transparent'}
-                                    onPress={() => setTimeRange('last7days')}
-                                    borderRadius="$2"
-                                >
-                                    {t('dashboard.timeRange.last7daysButton')}
-                                </Button>
-                                <Button
-                                    size="$2"
-                                    variant="outlined"
-                                    color={timeRange === 'last30days' ? '$blue10' : '$gray10'}
-                                    backgroundColor={timeRange === 'last30days' ? (isDark ? '$gray9' : '$background') : 'transparent'}
-                                    onPress={() => setTimeRange('last30days')}
-                                    borderRadius="$2"
-                                >
-                                    {t('dashboard.timeRange.last30daysButton')}
-                                </Button>
+                                <TimeRangeButton
+                                    timeRange="today"
+                                    selectedTimeRange={timeRange}
+                                    buttonText={t('dashboard.timeRange.todayButton')}
+                                    setTimeRange={setTimeRange}
+                                    isDark={isDark}
+                                />
+
+                                <TimeRangeButton
+                                    timeRange="yesterday"
+                                    selectedTimeRange={timeRange}
+                                    buttonText={t('dashboard.timeRange.yesterdayButton')}
+                                    setTimeRange={setTimeRange}
+                                    isDark={isDark}
+                                />
+
+                                <TimeRangeButton
+                                    timeRange='last7days'
+                                    selectedTimeRange={timeRange}
+                                    buttonText={t('dashboard.timeRange.last7daysButton')}
+                                    setTimeRange={setTimeRange}
+                                    isDark={isDark}
+                                />
+
+                                <TimeRangeButton
+                                    timeRange="last30days"
+                                    selectedTimeRange={timeRange}
+                                    buttonText={t('dashboard.timeRange.last30daysButton')}
+                                    setTimeRange={setTimeRange}
+                                    isDark={isDark}
+                                />
                             </XStack>
                         </XStack>
 
@@ -454,507 +440,7 @@ export default function DashboardScreen() {
     );
 }
 
-interface NavigateDashboardDropdownMenuProps extends SelectProps {
-    router: Router;
-    sensorLocations: MarinaNameWithId[];
-    isDark: boolean;
-    selectedMarinaId: number;
-    trigger?: React.ReactNode;
-}
-
-export function NavigateDashboardDropdownMenu(props: NavigateDashboardDropdownMenuProps) {
-    const {router, isDark, sensorLocations, selectedMarinaId, ...restProps} = props;
-
-    const handleValueChange = (value: string) => {
-        router.push(`/dashboard/${value}`);
-    };
-
-    return (
-        <Select value={String(selectedMarinaId)} onValueChange={handleValueChange} disablePreventBodyScroll {...restProps}>
-            {props?.trigger || (
-                <Select.Trigger maxWidth={220} iconAfter={ChevronDown}>
-                    <Select.Value placeholder="Something"/>
-                </Select.Trigger>
-            )}
-
-            <Adapt platform="touch">
-                <Sheet native={!!props.native} modal dismissOnSnapToBottom animation="medium">
-                    <Sheet.Frame>
-                        <Sheet.ScrollView>
-                            <Adapt.Contents/>
-                        </Sheet.ScrollView>
-                    </Sheet.Frame>
-                    <Sheet.Overlay
-                        backgroundColor={isDark ? '$gray8' : '$gray2'}
-                        animation="lazy"
-                        enterStyle={{opacity: 0}}
-                        exitStyle={{opacity: 0}}
-                    />
-                </Sheet>
-            </Adapt>
-
-            <Select.Content zIndex={200000}>
-                <Select.ScrollUpButton
-                    alignItems="center"
-                    justifyContent="center"
-                    position="relative"
-                    width="100%"
-                    height="$3"
-                >
-                    <YStack zIndex={10}>
-                        <ChevronUp size={20}/>
-                    </YStack>
-                    <LinearG
-                        x1={0}
-                        y1={0}
-                        x2={0}
-                        y2={1}
-                    />
-                </Select.ScrollUpButton>
-
-                <Select.Viewport
-                    minWidth={200}
-                >
-                    <Select.Group>
-                        <Select.Label>Sensors</Select.Label>
-                        {useMemo(
-                            () =>
-                                sensorLocations.map((item, i) => (
-                                    <Select.Item
-                                        index={i}
-                                        key={item.id}
-                                        value={item.id.toString()}
-                                    >
-                                        <Select.ItemText>
-                                            {item.name}
-                                        </Select.ItemText>
-                                        <Select.ItemIndicator marginLeft="auto">
-                                            <Check size={16}/>
-                                        </Select.ItemIndicator>
-                                    </Select.Item>
-                                )),
-                            [sensorLocations]
-                        )}
-                    </Select.Group>
-                    {props.native && (
-                        <YStack
-                            position="absolute"
-                            right={0}
-                            top={0}
-                            bottom={0}
-                            alignItems="center"
-                            justifyContent="center"
-                            width={'$4'}
-                            pointerEvents="none"
-                        >
-                            <ChevronDown
-                                size={getFontSize((props.size as FontSizeTokens) ?? '$true')}
-                            />
-                        </YStack>
-                    )}
-                </Select.Viewport>
-
-                <Select.ScrollDownButton
-                    alignItems="center"
-                    justifyContent="center"
-                    position="relative"
-                    width="100%"
-                    height="$3"
-                >
-                    <YStack zIndex={10}>
-                        <ChevronDown size={20}/>
-                    </YStack>
-                    <LinearG
-                        x1={0}
-                        y1={0}
-                        x2={0}
-                        y2={1}
-                    />
-                </Select.ScrollDownButton>
-            </Select.Content>
-        </Select>
-    )
-}
-
-const GetAllAvailableSensorLocations = (data: LocationWithBoxes[]): MarinaNameWithId[] => {
-    const locationMap = new Map<number, MarinaNameWithId>();
-
-    data.forEach((element) => {
-        if (element.location?.id && element.location?.name) {
-            locationMap.set(element.location.id, {
-                id: element.location.id,
-                name: element.location.name
-            });
-        }
-    });
-
-    return Array.from(locationMap.values());
-}
-
-interface LatestMeasurement {
-    measurementType: string;
-    value: number;
-}
-
-const GetLatestMeasurements = (boxes: Box[]): LatestMeasurement[] => {
-    const measurements: LatestMeasurement[] = [];
-
-    boxes.forEach((box) => {
-        if (box.measurementTimes.length === 0) return;
-
-        const latestTime = box.measurementTimes[box.measurementTimes.length - 1];
-        const measurementData = latestTime.measurements;
-
-        Object.entries(measurementData).forEach(([key, value]) => {
-            let measurementType;
-
-            switch (key) {
-                case 'waterTemperature':
-                    measurementType = 'Temperature, water';
-                    break;
-                case 'waveHeight':
-                    measurementType = 'Wave Height';
-                    break;
-                case 'tide':
-                    measurementType = 'Tide';
-                    break;
-                case 'standardDeviation':
-                    measurementType = 'Standard deviation';
-                    break;
-                case 'batteryVoltage':
-                    measurementType = 'Battery, voltage';
-                    break;
-                case 'airTemperature':
-                    measurementType = 'Temperature, air';
-                    break;
-                case 'windSpeed':
-                    measurementType = 'Wind Speed';
-                    break;
-                case 'windDirection':
-                    measurementType = 'Wind Direction';
-                    break;
-                case 'gustSpeed':
-                    measurementType = 'Gust Speed';
-                    break;
-                case 'gustDirection':
-                    measurementType = 'Gust Direction';
-                    break;
-                case 'humidity':
-                    measurementType = 'Humidity';
-                    break;
-                case 'airPressure':
-                    measurementType = 'Air Pressure';
-                    break;
-                default:
-                    measurementType = key;
-            }
-
-            measurements.push({
-                measurementType,
-                value: typeof value === 'number' ? value : Number(value)
-            });
-        });
-    });
-
-    return measurements;
-}
-
-const CreateMeasurementDictionary = (
-    data: any,
-    timeRange: string
-): MeasurementDictionary => {
-    if (!data?.boxes?.[0]?.measurementTimes) return {};
-
-    const measurementTimes = data.boxes[0].measurementTimes;
-    const measurementDict: MeasurementDictionary = {};
-
-    measurementTimes.forEach((entry: any) => {
-        if (!entry.time) return;
-
-        const label = timeRange === 'last7days' || timeRange === 'last30days'
-            ? new Date(entry.time).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })
-            : entry.time.slice(11, 16);
-
-        Object.entries(entry.measurements || {}).forEach(([key, value]) => {
-            if (!measurementDict[key]) {
-                measurementDict[key] = [];
-            }
-            measurementDict[key].push({
-                label,
-                value: Math.ceil(Number(value))
-            });
-        });
-    });
-
-    return measurementDict;
-}
-
-type MeasurementCardProps = {
-    measurementType: string,
-    value: string,
-}
-
-export const MeasurementCard: React.FC<MeasurementCardProps> = ({measurementType, value}) => {
-    const media = useMedia();
-    const {t} = useTranslation();
-
-    return (
-        <Card
-            elevate
-            bordered
-            animation="quick"
-            scale={0.99}
-            hoverStyle={{scale: 1}}
-            pressStyle={{scale: 0.98}}
-            backgroundColor="$background"
-            width={media.lg ? 180 : media.md ? 160 : 140}
-            height={100}
-        >
-            <Card.Header padded>
-                <XStack gap="$2" alignItems="center" justifyContent="center">
-                    {getMeasurementIcon(measurementType, 24)}
-                    <YStack alignItems="center">
-                        <Text fontSize="$1" color="$gray11" textAlign="center">
-                            {getTextFromMeasurementType(measurementType, t)}
-                        </Text>
-                        <XStack alignItems="baseline" gap="$1">
-                            <H4 fontSize="$6" color="$blue10">
-                                {value}
-                            </H4>
-                            <Text fontSize="$3" color="$gray10">
-                                {getMeasurementTypeSymbol(measurementType, t)}
-                            </Text>
-                        </XStack>
-                    </YStack>
-                </XStack>
-            </Card.Header>
-        </Card>
-    );
-}
-
-type LineChartCardProps = {
-    title: string,
-    icon?: React.ReactNode,
-    chartData: { label: string, value: number }[],
-    dataPrecision: number,
-    color?: string,
-}
-
-export const LineChartCard: React.FC<LineChartCardProps> = ({
-                                                                title,
-                                                                icon,
-                                                                chartData,
-                                                                dataPrecision,
-                                                                color = "#4dabf7"
-                                                            }) => {
-    const {isDark} = useThemeContext();
-    const {t} = useTranslation();
-    const media = useMedia();
-
-    const {data, displayLabels} = useMemo(() => {
-        if (chartData.length === 0) {
-            return {data: [], displayLabels: []};
-        }
-
-        const filteredData = chartData.filter((_, idx) => idx % dataPrecision === 0);
-        const dataValues = filteredData.map(item => item.value);
-        const labelValues = filteredData.map(item => item.label);
-        const showEvery = Math.ceil(labelValues.length / 6);
-        const displayLabelValues = labelValues.filter((_, index) => index % showEvery === 0);
-
-        return {data: dataValues, displayLabels: displayLabelValues};
-    }, [chartData, dataPrecision]);
-
-    const chartWidth = media.md ? 320 : 400;
-    const chartHeight = media.md ? 180 : 220;
-
-    const unit = useMemo(() => {
-        if (title === t('dashboard.charts.waterTemperature')) return t('dashboard.units.celsius');
-        if (title === t('dashboard.charts.waveHeight')) return t('dashboard.units.centimeters');
-        return t('dashboard.units.centimeters');
-    }, [title, t]);
-
-    const chartConfig = useMemo(() => ({
-        backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
-        backgroundGradientFrom: isDark ? '#1a1a1a' : '#ffffff',
-        backgroundGradientTo: isDark ? '#1a1a1a' : '#ffffff',
-        decimalPlaces: 1,
-        color: (opacity = 1) => color + Math.round(opacity * 255).toString(16).padStart(2, '0'),
-        labelColor: (opacity = 1) => isDark ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
-        style: {
-            borderRadius: 16
-        },
-        propsForDots: {
-            r: "4",
-            strokeWidth: "2",
-            stroke: color
-        },
-        propsForBackgroundLines: {
-            strokeDasharray: "5,5",
-            stroke: isDark ? '#333' : '#e5e5e5',
-            strokeWidth: 1
-        }
-    }), [isDark, color]);
-
-    return (
-        <Card
-            elevate
-            bordered
-            backgroundColor={isDark ? '$gray1' : '$background'}
-            flex={media.md ? undefined : 1}
-            width={media.md ? "100%" : undefined}
-            minWidth={280}
-            marginBottom={media.md ? "$3" : 0}
-        >
-            <Card.Header padded>
-                <XStack gap="$2" alignItems="center" justifyContent="space-between">
-                    <XStack gap="$2" alignItems="center">
-                        {icon}
-                        <YStack>
-                            <H3 fontSize="$5">{title}</H3>
-                            <Text fontSize="$1" color="$gray11">
-                                {data.length} {t('dashboard.charts.dataPoints')}
-                            </Text>
-                        </YStack>
-                    </XStack>
-                    {data.length > 0 && (
-                        <YStack alignItems="flex-end">
-                            <Text fontSize="$1" color="$gray11">{t('dashboard.charts.current')}</Text>
-                            <XStack alignItems="baseline" gap="$1">
-                                <Text fontSize="$6" fontWeight="600" color={color}>
-                                    {data[data.length - 1]?.toFixed(1)}
-                                </Text>
-                                <Text fontSize="$3" color="$gray10">
-                                    {unit}
-                                </Text>
-                            </XStack>
-                        </YStack>
-                    )}
-                </XStack>
-            </Card.Header>
-            <Card.Footer padded paddingTop="$0">
-                {data.length > 0 ? (
-                    <View style={{width: '100%', alignItems: 'center'}}>
-                        <LineChart
-                            data={{
-                                labels: displayLabels,
-                                datasets: [{
-                                    data: data.length > 0 ? data : [0],
-                                    color: () => color,
-                                    strokeWidth: 2.5
-                                }]
-                            }}
-                            width={chartWidth}
-                            height={chartHeight}
-                            yAxisLabel=""
-                            yAxisSuffix=""
-                            yAxisInterval={1}
-                            chartConfig={chartConfig}
-                            bezier
-                            style={{
-                                marginVertical: 8,
-                                borderRadius: 16
-                            }}
-                            withInnerLines={true}
-                            withOuterLines={false}
-                            withVerticalLines={true}
-                            withHorizontalLines={true}
-                            withVerticalLabels={true}
-                            withHorizontalLabels={true}
-                            withDots={data.length < 20}
-                            transparent={true}
-                        />
-                    </View>
-                ) : (
-                    <YStack height={chartHeight} alignItems="center" justifyContent="center">
-                        <Activity size={32} color="$gray8"/>
-                        <Text color="$gray10" marginTop="$2">{t('dashboard.charts.noData')}</Text>
-                    </YStack>
-                )}
-            </Card.Footer>
-        </Card>
-    );
-}
-
-const getMeasurementColor = (measurementType: string): string => {
-    switch (measurementType) {
-        case "Wave Height":
-            return "#10B981";
-        case "Temperature, water":
-        case "WTemp":
-            return "#F97316";
-        case "Tide":
-            return "#3B82F6";
-        case "Battery, voltage":
-            return "#EAB308";
-        default:
-            return "#6B7280";
-    }
-};
-
-const getMeasurementIcon = (measurementType: string, size: number = 24) => {
-    const color = getMeasurementColor(measurementType);
-    const props = {size, color};
-    switch (measurementType) {
-        case "Wave Height":
-            return <Waves {...props}/>;
-        case "Temperature, water":
-        case "WTemp":
-            return <Thermometer {...props}/>;
-        case "Tide":
-            return <Activity {...props}/>;
-        case "Battery, voltage":
-            return <Battery {...props}/>;
-        default:
-            return <HelpCircle {...props}/>;
-    }
-};
-
-const getIconBackground = (measurementType: string): string => {
-    switch (measurementType) {
-        case "Wave Height":
-            return "$green5";
-        case "Temperature, water":
-        case "WTemp":
-            return "$orange5";
-        case "Tide":
-            return "$blue5";
-        case "Battery, voltage":
-            return "$yellow5";
-        default:
-            return "$gray5";
-    }
-};
 
 
-const getTextFromMeasurementType = (measurementType: string, t: any): string => {
-    switch (measurementType) {
-        case "Wave Height":
-            return t('dashboard.measurements.waveHeight');
-        case "Temperature, water":
-        case "WTemp":
-            return t('dashboard.measurements.waterTemperature');
-        case "Tide":
-            return t('dashboard.measurements.waterLevel');
-        case "Battery, voltage":
-            return t('dashboard.measurements.batteryVoltage');
-        default:
-            return measurementType;
-    }
-};
 
-const getMeasurementTypeSymbol = (measurementType: string, t: any): string => {
-    switch (measurementType) {
-        case "Wave Height":
-            return t('dashboard.units.centimeters');
-        case "Temperature, water":
-        case "WTemp":
-            return t('dashboard.units.celsius');
-        case "Tide":
-            return t('dashboard.units.centimeters');
-        case "Battery, voltage":
-            return t('dashboard.units.volts');
-        default:
-            return "";
-    }
-};
+
