@@ -20,7 +20,7 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
                     key={locationWithBoxes.location.id}
                     longitude={locationWithBoxes.location.coordinates.lon}
                     latitude={locationWithBoxes.location.coordinates.lat}
-                    anchor="bottom"
+                    anchor="center"
                 >
                     <YStack
                         onPress={(e) => {
