@@ -9,6 +9,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { ChartDataPoint } from '@/types/chart';
 import { MarinaNameWithId } from '@/types/marina';
 import { CreateMeasurementDictionary, GetLatestMeasurements, getIconBackground, getMeasurementColor, getMeasurementIcon, getMeasurementTypeSymbol, getTextFromMeasurementType } from '@/utils/measurements';
+import { FormattedTime } from '@/utils/time';
 import {
     Activity,
     ChevronDown,
@@ -59,6 +60,7 @@ export default function DashboardScreen() {
         () => allSensorData.filter((location: LocationWithBoxes) => String(location.location.id) === id),
         [allSensorData, id]
     );
+
 
     const name = useMemo(() => content[0]?.location.name || "", [content]);
 
@@ -145,6 +147,8 @@ export default function DashboardScreen() {
             useNativeDriver: false,
         }).start();
     };
+
+    const latestTime = content[0]?.boxes[0].measurementTimes[0].time ? content[0].boxes[0].measurementTimes[0].time : new Date().toISOString();
 
     return (
         <SafeAreaView style={{flex: 1}}>
@@ -271,7 +275,7 @@ export default function DashboardScreen() {
                             <H3 fontSize="$5" fontWeight="600">{t('dashboard.currentMeasurements')}</H3>
                             <XStack gap="$1" alignItems="center">
                                 <Stack width={6} height={6} borderRadius="$5" backgroundColor="$green9"/>
-                                <Text fontSize="$2" color="$gray11">{t('dashboard.live')}</Text>
+                                <Text fontSize="$2" color="$gray11">{t('dashboard.live')} {FormattedTime({ time: latestTime })}</Text>
                             </XStack>
                         </XStack>
                         <XStack
