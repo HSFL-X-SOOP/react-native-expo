@@ -1,6 +1,6 @@
-import { SafeAreaView, ScrollView } from 'react-native';
-import { Text, YStack, Card, H1, H2 } from 'tamagui';
 import { useTranslation } from '@/hooks/useTranslation';
+import { SafeAreaView, ScrollView } from 'react-native';
+import { Card, H1, H2, Text, YStack } from 'tamagui';
 
 export default function SensorsScreen() {
   const { t } = useTranslation('sensors');
@@ -32,7 +32,7 @@ export default function SensorsScreen() {
                     {t('sensors.waterTempDesc')}
                   </Text>
                   <YStack gap="$2" paddingLeft="$4" marginTop="$2">
-                    <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">0°C</Text> – {t('examples.freezing')}</Text>
+                    <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">-0.5~°C</Text> – {t('examples.freezing')}</Text>
                     <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">8°C</Text> – {t('examples.coldDrink')}</Text>
                     <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">10°C</Text> – {t('examples.wetsuit')}</Text>
                     <Text fontSize={15} color="$color">• <Text fontWeight="600" color="$accent8">20°C</Text> – {t('examples.swimming')}</Text>
