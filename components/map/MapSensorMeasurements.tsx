@@ -1,5 +1,7 @@
-import {LocationWithBoxes, BoxType} from "@/api/models/sensor";
-import {useTranslation} from "@/hooks/useTranslation";
+import { BoxType, LocationWithBoxes } from "@/api/models/sensor";
+import { useThemeContext } from "@/context/ThemeSwitch";
+import { useTranslation } from "@/hooks/useTranslation";
+import { FormattedTime } from "@/utils/time";
 import {
     Activity,
     ArrowRight,
@@ -13,13 +15,11 @@ import {
     Waves,
     Wind
 } from "@tamagui/lucide-icons";
-import {useRouter} from "expo-router";
-import {Platform} from "react-native";
-import {Button, Card, H3, H4, Separator, Text, XStack, YStack, useTheme} from "tamagui";
-import {useThemeContext} from "@/context/ThemeSwitch";
-import {LinearGradient} from "expo-linear-gradient";
-import {useState} from "react";
-
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Platform } from "react-native";
+import { Button, Card, H3, H4, Separator, Text, XStack, YStack, useTheme } from "tamagui";
 
 type SensorPopupProps = {
     locationWithBoxes: LocationWithBoxes,
@@ -173,10 +173,8 @@ type BoxMeasurementsProps = {
 function BoxMeasurements({box}: BoxMeasurementsProps) {
     const {t} = useTranslation();
     const {isDark} = useThemeContext();
-
+    
     if (!box.measurementTimes[0]) return null;
-
-    const latestTime = box.measurementTimes[0].time;
 
     return (
         <YStack gap="$2.5">
@@ -271,7 +269,7 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
                 <Text fontSize="$1" color="$gray11" fontWeight="500">
                     {t('sensor.lastMeasurement')}: <Text fontWeight="600"
                                                          color={isDark ? '$gray12' : '$gray12'}>
-                    {formatDateTime(latestTime)}
+                    {FormattedTime({ time: box.measurementTimes[0].time + "Z" })}
                 </Text>
                 </Text>
             </XStack>
@@ -345,17 +343,6 @@ function MeasurementCard({measurementType, value}: MeasurementCardProps) {
             </XStack>
         </Card>
     );
-}
-
-function formatDateTime(dateString: string): string {
-    const date = new Date(dateString);
-    const pad = (n: number) => n.toString().padStart(2, "0");
-    const hh = pad(date.getHours());
-    const mm = pad(date.getMinutes());
-    const dd = pad(date.getDate());
-    const MM = pad(date.getMonth() + 1);
-    const yyyy = date.getFullYear();
-    return `${hh}:${mm} Uhr · ${dd}.${MM}.${yyyy}`;
 }
 
 // Helper Functions
