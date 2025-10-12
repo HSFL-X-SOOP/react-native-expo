@@ -25,7 +25,7 @@ platform :android do
       skip_upload_metadata: true,
       skip_upload_images: true,
       skip_upload_screenshots: true,
-      package_name: 'com.marlin.app'
+      package_name: 'com.marlin.live'
     )
   end
 
@@ -47,13 +47,13 @@ platform :android do
     )
 
     upload_to_play_store(
-      track: 'Closed testing - Marlin',
+      track: 'beta',
       aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH],
       json_key_data: ENV['PLAY_STORE_JSON_KEY'],
       skip_upload_metadata: true,
       skip_upload_images: true,
       skip_upload_screenshots: true,
-      package_name: 'com.marlin.app'
+      package_name: 'com.marlin.live'
     )
   end
 
@@ -81,7 +81,7 @@ platform :android do
       skip_upload_metadata: false,
       skip_upload_images: false,
       skip_upload_screenshots: false,
-      package_name: 'com.marlin.app'
+      package_name: 'com.marlin.live'
     )
   end
 end
