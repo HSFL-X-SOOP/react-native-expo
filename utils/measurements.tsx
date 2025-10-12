@@ -8,7 +8,7 @@ export const GetLatestMeasurements = (boxes: Box[]): LatestMeasurement[] => {
     boxes.forEach((box) => {
         if (box.measurementTimes.length === 0) return;
 
-        const latestTime = box.measurementTimes[box.measurementTimes.length - 1];
+        const latestTime = box.measurementTimes[0];
         const measurementData = latestTime.measurements;
 
         Object.entries(measurementData).forEach(([key, value]) => {
@@ -87,7 +87,7 @@ export const CreateMeasurementDictionary = (
             }
             measurementDict[key].push({
                 label,
-                value: Math.ceil(Number(value))
+                value: Number(value)  // Keep the original precision
             });
         });
     });

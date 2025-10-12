@@ -12,6 +12,7 @@ type LineChartCardProps = {
     chartData: { label: string, value: number }[],
     dataPrecision: number,
     color?: string,
+    currentValue?: number,  // Optional prop for the actual current value
 }
 
 export const LineChartCard: React.FC<LineChartCardProps> = ({
@@ -19,7 +20,8 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                                                                 icon,
                                                                 chartData,
                                                                 dataPrecision,
-                                                                color = "#4dabf7"
+                                                                color = "#4dabf7",
+                                                                currentValue
                                                             }) => {
     const {isDark} = useThemeContext();
     const {t} = useTranslation();
@@ -91,12 +93,16 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                             </Text>
                         </YStack>
                     </XStack>
-                    {data.length > 0 && (
+                    {(currentValue !== undefined || data.length > 0) && (
                         <YStack alignItems="flex-end">
                             <Text fontSize="$1" color="$gray11">{t('dashboard.charts.current')}</Text>
                             <XStack alignItems="baseline" gap="$1">
                                 <Text fontSize="$6" fontWeight="600" color={color}>
-                                    {data[data.length - 1]?.toFixed(1)}
+                                    {currentValue !== undefined
+                                        ? (currentValue < 1 ? currentValue.toFixed(2) : currentValue.toFixed(1))
+                                        : data[data.length - 1] !== undefined
+                                            ? (data[data.length - 1] < 1 ? data[data.length - 1].toFixed(2) : data[data.length - 1].toFixed(1))
+                                            : '0'}
                                 </Text>
                                 <Text fontSize="$3" color="$gray10">
                                     {unit}

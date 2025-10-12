@@ -140,6 +140,29 @@ export default function DashboardScreen() {
         );
     }, [content, excludedMeasurements]);
 
+    // Extract current values for charts (independent of time range)
+    const currentWaterTemp = useMemo(() => {
+        const measurement = filteredMeasurements.find(m =>
+            m.measurementType === "Temperature, water" ||
+            m.measurementType === "WTemp"
+        );
+        return measurement?.value;
+    }, [filteredMeasurements]);
+
+    const currentWaveHeight = useMemo(() => {
+        const measurement = filteredMeasurements.find(m =>
+            m.measurementType === "Wave Height"
+        );
+        return measurement?.value;
+    }, [filteredMeasurements]);
+
+    const currentWaterLevel = useMemo(() => {
+        const measurement = filteredMeasurements.find(m =>
+            m.measurementType === "Tide"
+        );
+        return measurement?.value;
+    }, [filteredMeasurements]);
+
     const toggleInfo = () => {
         setShowInfo((prev) => !prev);
         Animated.timing(infoHeight, {
@@ -422,6 +445,7 @@ export default function DashboardScreen() {
                                 chartData={chartWaterTemperature}
                                 dataPrecision={dataPrecision}
                                 color="#F97316"
+                                currentValue={currentWaterTemp}
                             />
                             <LineChartCard
                                 title={t('dashboard.charts.waveHeight')}
@@ -429,6 +453,7 @@ export default function DashboardScreen() {
                                 chartData={chartWaveHeight}
                                 dataPrecision={dataPrecision}
                                 color="#10B981"
+                                currentValue={currentWaveHeight}
                             />
                             <LineChartCard
                                 title={t('dashboard.charts.waterLevel')}
@@ -436,6 +461,7 @@ export default function DashboardScreen() {
                                 chartData={chartTide}
                                 dataPrecision={dataPrecision}
                                 color="#3B82F6"
+                                currentValue={currentWaterLevel}
                             />
                         </XStack>
                     </YStack>
