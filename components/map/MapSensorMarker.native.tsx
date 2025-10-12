@@ -31,7 +31,7 @@ export default function AndroidMarker({
                 onSelected={() => setOpen(true)}
             >
                 <View>
-                    <SensorMarkerContent locationWithBoxes={locationWithBoxes} />
+                    <SensorMarkerContent locationWithBoxes={locationWithBoxes} isHovered={false} />
                 </View>
             </PointAnnotation>
 

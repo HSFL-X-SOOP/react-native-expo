@@ -29,6 +29,7 @@ interface ClusterMarkerSvgProps {
     width?: number;
     height?: number;
     accentColor?: string;
+    enableAnimations?: boolean;
 }
 
 export const ClusterMarkerSvg: React.FC<ClusterMarkerSvgProps> = ({
@@ -36,15 +37,21 @@ export const ClusterMarkerSvg: React.FC<ClusterMarkerSvgProps> = ({
                                                                       width = 96,
                                                                       height = 96,
                                                                       accentColor = '#7db07d',
+                                                                      enableAnimations = false
                                                                   }) => {
     const pulseT = useSharedValue(0);
 
     useEffect(() => {
+        if (!enableAnimations) {
+            pulseT.value = 0;
+            return;
+        }
+
         const loop = (dur: number) =>
             withRepeat(withTiming(1, {duration: dur, easing: Easing.linear}), -1, false);
 
         pulseT.value = loop(2800);
-    }, [pulseT]);
+    }, [pulseT, enableAnimations]);
 
     const pulseAnimatedProps = useAnimatedProps(() => {
         const r = interpolate(pulseT.value, [0, 0.5, 1], [30, 40, 30]);
@@ -75,7 +82,7 @@ export const ClusterMarkerSvg: React.FC<ClusterMarkerSvgProps> = ({
             </Defs>
 
             <G id="marker-minimal-badge">
-                <Circle cx="48" cy="48" r="26" fill="url(#g-accent)" opacity="0.35" filter="url(#f-glow)"/>
+                <Circle cx="48" cy="48" r="26" fill="url(#g-accent)" opacity="0.35"/>
                 <Circle cx="48" cy="48" r="34" fill="url(#g-dark)"/>
                 <Circle cx="48" cy="48" r="28" fill="url(#g-accent)"/>
                 <Circle cx="48" cy="48" r="20" fill="url(#g-dark)" opacity="0.85"/>

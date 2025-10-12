@@ -14,6 +14,7 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
     const media = useMedia();
 
     if (!media.gtMd) {
+        // Mobile Web: Always animate
         return (
             <>
                 <Marker
@@ -29,7 +30,7 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
                         }}
                         cursor="pointer"
                     >
-                        <SensorMarkerContent locationWithBoxes={locationWithBoxes} />
+                        <SensorMarkerContent locationWithBoxes={locationWithBoxes} isHovered={true} />
                     </YStack>
                 </Marker>
 
@@ -67,7 +68,7 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
         );
     }
 
-    // Desktop: Use Popover
+    // Desktop Web: Always animate
     return (
         <Marker
             key={locationWithBoxes.location.id}
@@ -90,7 +91,7 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
                         }}
                         cursor="pointer"
                     >
-                        <SensorMarkerContent locationWithBoxes={locationWithBoxes} />
+                        <SensorMarkerContent locationWithBoxes={locationWithBoxes} isHovered={true} />
                     </YStack>
                 </Popover.Trigger>
 
