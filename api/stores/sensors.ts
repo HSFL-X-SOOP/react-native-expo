@@ -28,7 +28,7 @@ export function useSensorStore() {
             }
         },
 
-        getSensorDataNew: async (): Promise<LocationWithBoxes[]> => {
+        getSensorDataNew: async (timezone: string = 'UTC'): Promise<LocationWithBoxes[]> => {
             if (USE_MOCK_DATA) {
                 console.log('Using mock sensor data (new API format)');
                 await new Promise(resolve => setTimeout(resolve, 300));
@@ -36,7 +36,7 @@ export function useSensorStore() {
             }
 
             try {
-                const response = await httpClient.get<LocationWithBoxes[]>('/latestmeasurementsNEW?timezone=UTC');
+                const response = await httpClient.get<LocationWithBoxes[]>(`/latestmeasurementsNEW?timezone=${timezone}`);
                 return response.data;
             } catch (error) {
                 console.error('API call failed, falling back to mock data:', error);
@@ -44,7 +44,7 @@ export function useSensorStore() {
             }
         },
 
-        getSensorDataTimeRange: async (id: number, timeRange: string): Promise<LocationWithBoxes | null> => {
+        getSensorDataTimeRange: async (id: number, timeRange: string, timezone: string = 'UTC'): Promise<LocationWithBoxes | null> => {
             if (USE_MOCK_DATA) {
                 console.log(`Using mock time range data for location ${id}, range: ${timeRange}`);
                 await new Promise(resolve => setTimeout(resolve, 300));
@@ -54,7 +54,7 @@ export function useSensorStore() {
             try {
                 const response = await httpClient.get<LocationWithBoxes>(
                     `/location/${id}/measurementsWithinTimeRange`,
-                    {params: {timeRange}}
+                    {params: {timeRange, timezone}}
                 );
                 return response.data;
             } catch (error) {
