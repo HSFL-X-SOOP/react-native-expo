@@ -1,93 +1,100 @@
-import {LocationWithBoxes} from "@/api/models/sensor";
-import {useSensorDataNew} from "@/hooks/useSensors";
-import {Camera, MapView} from "@maplibre/maplibre-react-native";
-import {useRef, useState} from "react";
-import {Modal, Text, TouchableOpacity, View} from "react-native";
-import AndroidMarker from "./map/MapSensorMarker.native";
+import { useSensorDataNew } from "@/hooks/useSensors";
+import { useSupercluster } from "@/hooks/useSupercluster";
+import { Camera, MapView } from "@maplibre/maplibre-react-native";
+import { useMemo, useState } from "react";
+import { View } from "react-native";
+import SensorMarker from "./map/MapSensorMarker.native";
+import ClusterMarker from "./map/ClusterMarker.native";
 import MapZoomControl from "./map/MapZoomControl";
 
-export default function AndroidMap() {
-    const {data: content2} = useSensorDataNew();
+export default function NativeMap() {
+    const { data: content } = useSensorDataNew();
 
-    const [selectedLocation, setSelectedLocation] = useState<LocationWithBoxes | null>(null);
-    const pins =
-        content2.map((locationWithBoxes: LocationWithBoxes, index) =>
-            <View key={index}>
-                <AndroidMarker locationWithBoxes={locationWithBoxes} index={index}/>
-            </View>
-        )
-
-    const [zoomLevel, setZoomLevel] = useState(7);
     const homeCoordinate: [number, number] = [9.26, 54.46];
-    const [currentCoordinate, setCurrentCoordinate] = useState<[number, number]>(homeCoordinate);
+    const minMaxZoomLevel = { min: 3, max: 16 };
     const mapBoundariesLongLat = {
         ne: [49.869301, 71.185001],
         sw: [-31.266001, 27.560001]
-    }
-    const minMaxZoomLevel = {min: 3, max: 16};
+    };
 
-    const mapRef = useRef<any>(null);
+    const [zoomLevel, setZoomLevel] = useState(7);
+    const [currentCoordinate, setCurrentCoordinate] = useState<[number, number]>(homeCoordinate);
+
+    const bounds: [number, number, number, number] = useMemo(() => {
+        return [
+            mapBoundariesLongLat.sw[0],
+            mapBoundariesLongLat.sw[1],
+            mapBoundariesLongLat.ne[0],
+            mapBoundariesLongLat.ne[1],
+        ];
+    }, []);
+
+    const { clusters, getClusterExpansionZoom } = useSupercluster(
+        content,
+        bounds,
+        zoomLevel
+    );
+
+    const pins = useMemo(() => {
+        return clusters.map((cluster, index) => {
+            const [longitude, latitude] = cluster.geometry.coordinates;
+            const { cluster: isCluster, point_count, locationWithBoxes } = cluster.properties;
+
+            if (isCluster) {
+                return (
+                    <ClusterMarker
+                        key={`cluster-${cluster.id}`}
+                        latitude={latitude}
+                        longitude={longitude}
+                        pointCount={point_count!}
+                        clusterId={cluster.id as number}
+                        onPress={() => {
+                            const expansionZoom = getClusterExpansionZoom(cluster.id as number);
+                            setZoomLevel(expansionZoom);
+                            setCurrentCoordinate([longitude, latitude]);
+                        }}
+                    />
+                );
+            }
+
+            return (
+                <SensorMarker
+                    key={locationWithBoxes!.location.id}
+                    locationWithBoxes={locationWithBoxes!}
+                    index={index}
+                />
+            );
+        });
+    }, [clusters, getClusterExpansionZoom]);
 
     return (
-        <View style={{flex: 1}}>
-            <MapView style={{flex: 1}}
-                // mapStyle="https://tiles.openfreemap.org/styles/positron"
-                     mapStyle={require('../assets/style.json')}
-                     compassEnabled={true}
-                     zoomEnabled={true}
-                     onRegionDidChange={(region: any) => {
-                         setCurrentCoordinate(region.centerCoordinate);
-                     }}
-
+        <View style={{ flex: 1 }}>
+            <MapView
+                style={{ flex: 1 }}
+                mapStyle={require('../assets/style.json')}
+                compassEnabled={true}
+                zoomEnabled={true}
+                onRegionDidChange={(region: any) => {
+                    setCurrentCoordinate(region.centerCoordinate);
+                    setZoomLevel(region.zoomLevel);
+                }}
             >
                 <Camera
                     zoomLevel={zoomLevel}
-                    centerCoordinate={homeCoordinate}
+                    centerCoordinate={currentCoordinate}
                     maxZoomLevel={18}
                     minZoomLevel={3}
                 />
                 {pins}
             </MapView>
-            {/* <MapFilterButton /> */}
-            <MapZoomControl zoomLevel={zoomLevel} minMaxZoomLevel={minMaxZoomLevel} setZoomLevel={setZoomLevel}
-                            setCurrentCoordinate={setCurrentCoordinate} homeCoordinate={homeCoordinate}/>
-            {/* Popup */}
-            <Modal
-                visible={!!selectedLocation}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={() => setSelectedLocation(null)}
-            >
-                <View style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "rgba(0,0,0,0.3)"
-                }}>
-                    <View style={{
-                        backgroundColor: "white",
-                        borderRadius: 10,
-                        padding: 20,
-                        minWidth: 250,
-                        alignItems: "center"
-                    }}>
-                        <Text style={{fontWeight: "bold", fontSize: 18}}>
-                            {selectedLocation?.location.name}
-                        </Text>
-                        {/* Weitere Infos */}
-                        <Text>
-                            {selectedLocation?.boxes[0]?.description}
-                        </Text>
-                        <TouchableOpacity
-                            style={{marginTop: 20}}
-                            onPress={() => setSelectedLocation(null)}
-                        >
-                            <Text style={{color: "blue"}}>Schließen</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-        </View>
-    )
 
+            <MapZoomControl
+                zoomLevel={zoomLevel}
+                minMaxZoomLevel={minMaxZoomLevel}
+                setZoomLevel={setZoomLevel}
+                setCurrentCoordinate={setCurrentCoordinate}
+                homeCoordinate={homeCoordinate}
+            />
+        </View>
+    );
 }

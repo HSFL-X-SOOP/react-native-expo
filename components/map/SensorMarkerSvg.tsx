@@ -35,6 +35,7 @@ interface SensorMarkerSvgProps {
     backgroundColor?: string;
     textColor?: string;
     indicatorColor?: string;
+    enableAnimations?: boolean;  // Control animations
 }
 
 export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
@@ -44,7 +45,8 @@ export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
                                                                     accentColor = '#7db07d',
                                                                     backgroundColor = '#1c1c1c',
                                                                     textColor = 'white',
-                                                                    indicatorColor = '#1976D2'
+                                                                    indicatorColor = '#1976D2',
+                                                                    enableAnimations = false  // Disabled by default
                                                                 }) => {
     const path1T = useSharedValue(0);
     const path2T = useSharedValue(0);
@@ -52,6 +54,15 @@ export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
     const indicatorT = useSharedValue(0);
 
     useEffect(() => {
+        if (!enableAnimations) {
+            // Keep animations at static state when disabled
+            path1T.value = 0;
+            path2T.value = 0;
+            pulseT.value = 0;
+            indicatorT.value = 0.6;  // Static indicator visibility
+            return;
+        }
+
         const loop = (dur: number) =>
             withRepeat(withTiming(1, {duration: dur, easing: Easing.linear}), -1, false);
 
@@ -59,7 +70,7 @@ export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
         path2T.value = loop(1800);
         pulseT.value = loop(2800);
         indicatorT.value = loop(2800);
-    }, [path1T, path2T, pulseT, indicatorT]);
+    }, [path1T, path2T, pulseT, indicatorT, enableAnimations]);
 
     const path1AnimatedProps = useAnimatedProps(() => {
         const opacity = interpolate(path1T.value, [0, 0.5, 1], [1, 0.5, 1]);
@@ -137,7 +148,7 @@ export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
                     />
                 </G>
 
-                <Circle cx="48" cy="48" r="29" fill="url(#g-accent)" opacity="0.35" filter="url(#f-glow)"/>
+                <Circle cx="48" cy="48" r="29" fill="url(#g-accent)" opacity="0.35"/>
                 <Circle cx="48" cy="48" r="26" fill="url(#g-dark)" stroke="black" strokeWidth="0.5"/>
                 <Circle cx="48" cy="48" r="23" fill="url(#g-accent)"/>
                 <Circle cx="48" cy="48" r="17" fill="url(#g-dark)" opacity="0.85"/>
