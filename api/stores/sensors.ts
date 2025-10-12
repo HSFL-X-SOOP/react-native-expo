@@ -1,6 +1,6 @@
-import {SensorModule, LocationWithBoxes} from '@/api/models/sensor';
-import {mockSensorModules, mockLocationWithBoxes, mockTimeRangeData} from '@/api/mock/mock-sensor-data';
-import {useHttpClient} from '@/api/client';
+import { useHttpClient } from '@/api/client';
+import { mockLocationWithBoxes, mockSensorModules, mockTimeRangeData } from '@/api/mock/mock-sensor-data';
+import { LocationWithBoxes, SensorModule } from '@/api/models/sensor';
 
 // ============================================
 // MOCK DATA CONFIGURATION
@@ -36,7 +36,7 @@ export function useSensorStore() {
             }
 
             try {
-                const response = await httpClient.get<LocationWithBoxes[]>('/latestmeasurementsNEW');
+                const response = await httpClient.get<LocationWithBoxes[]>('/latestmeasurementsNEW?timezone=UTC');
                 return response.data;
             } catch (error) {
                 console.error('API call failed, falling back to mock data:', error);

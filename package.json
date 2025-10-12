@@ -46,6 +46,7 @@
     "@tamagui/theme-builder": "^1.134.1",
     "@vis.gl/react-maplibre": "^8.0.4",
     "axios": "^1.12.2",
+    "date-fns-tz": "^3.2.0",
     "expo": "~53.0.20",
     "expo-asset": "~11.1.7",
     "expo-blur": "~14.1.5",
