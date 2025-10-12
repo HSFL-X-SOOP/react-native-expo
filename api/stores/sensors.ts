@@ -1,6 +1,6 @@
-import { useHttpClient } from '@/api/client';
-import { mockLocationWithBoxes, mockSensorModules, mockTimeRangeData } from '@/api/mock/mock-sensor-data';
-import { LocationWithBoxes, SensorModule } from '@/api/models/sensor';
+import {useHttpClient} from '@/api/client';
+import {mockLocationWithBoxes, mockSensorModules, mockTimeRangeData} from '@/api/mock/mock-sensor-data';
+import {LocationWithBoxes, SensorModule} from '@/api/models/sensor';
 
 // ============================================
 // MOCK DATA CONFIGURATION
@@ -56,6 +56,7 @@ export function useSensorStore() {
                     `/location/${id}/measurementsWithinTimeRange`,
                     {params: {timeRange, timezone}}
                 );
+                console.log("timezone", timezone)
                 return response.data;
             } catch (error) {
                 console.error('API call failed, falling back to mock data:', error);

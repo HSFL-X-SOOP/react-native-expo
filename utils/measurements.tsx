@@ -77,9 +77,20 @@ export const CreateMeasurementDictionary = (
     measurementTimes.forEach((entry: any) => {
         if (!entry.time) return;
 
+        const date = new Date(entry.time);
         const label = timeRange === 'last7days' || timeRange === 'last30days'
-            ? new Date(entry.time).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })
+            ? date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })
             : entry.time.slice(11, 16);
+
+        const fullDateTime = timeRange === 'last7days' || timeRange === 'last30days'
+            ? date.toLocaleString('de-DE', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            })
+            : null;
 
         Object.entries(entry.measurements || {}).forEach(([key, value]) => {
             if (!measurementDict[key]) {
@@ -87,7 +98,8 @@ export const CreateMeasurementDictionary = (
             }
             measurementDict[key].push({
                 label,
-                value: Number(value)  // Keep the original precision
+                value: Number(value),
+                ...(fullDateTime && { fullDateTime })
             });
         });
     });
@@ -177,4 +189,8 @@ export const getMeasurementTypeSymbol = (measurementType: string, t: any): strin
         default:
             return "";
     }
+};
+
+export const formatMeasurementValue = (value: number): string => {
+    return value < 1 ? value.toFixed(2) : value.toFixed(1);
 };

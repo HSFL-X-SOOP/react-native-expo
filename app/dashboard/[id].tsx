@@ -1,15 +1,24 @@
-import { LocationWithBoxes } from '@/api/models/sensor';
-import { LineChartCard } from '@/components/dashboard/chart/LineChartCard';
-import { ChartTimeRange, TimeRangeButton } from '@/components/dashboard/chart/TimeRangeButton';
-import { MeasurementCard } from '@/components/dashboard/MeasurementCard';
-import { NavigateDashboardDropdownMenu } from '@/components/dashboard/NavigateDropdownMenu';
-import { useThemeContext } from '@/context/ThemeSwitch';
-import { useSensorDataNew, useSensorDataTimeRange } from '@/hooks/useSensors';
-import { useTranslation } from '@/hooks/useTranslation';
-import { ChartDataPoint } from '@/types/chart';
-import { MarinaNameWithId } from '@/types/marina';
-import { CreateMeasurementDictionary, GetLatestMeasurements, getIconBackground, getMeasurementColor, getMeasurementIcon, getMeasurementTypeSymbol, getTextFromMeasurementType } from '@/utils/measurements';
-import { FormattedTime } from '@/utils/time';
+import {LocationWithBoxes} from '@/api/models/sensor';
+import {LineChartCard} from '@/components/dashboard/chart/LineChartCard';
+import {ChartTimeRange, TimeRangeButton} from '@/components/dashboard/chart/TimeRangeButton';
+import {MeasurementCard} from '@/components/dashboard/MeasurementCard';
+import {NavigateDashboardDropdownMenu} from '@/components/dashboard/NavigateDropdownMenu';
+import {useThemeContext} from '@/context/ThemeSwitch';
+import {useSensorDataNew, useSensorDataTimeRange} from '@/hooks/useSensors';
+import {useTranslation} from '@/hooks/useTranslation';
+import {ChartDataPoint} from '@/types/chart';
+import {MarinaNameWithId} from '@/types/marina';
+import {
+    CreateMeasurementDictionary,
+    GetLatestMeasurements,
+    formatMeasurementValue,
+    getIconBackground,
+    getMeasurementColor,
+    getMeasurementIcon,
+    getMeasurementTypeSymbol,
+    getTextFromMeasurementType
+} from '@/utils/measurements';
+import {FormattedTime} from '@/utils/time';
 import {
     Activity,
     ChevronDown,
@@ -20,10 +29,10 @@ import {
     Thermometer,
     Waves
 } from '@tamagui/lucide-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, SafeAreaView, ScrollView, View } from 'react-native';
+import {LinearGradient} from 'expo-linear-gradient';
+import {useLocalSearchParams, useRouter} from 'expo-router';
+import {useEffect, useMemo, useRef, useState} from 'react';
+import {Animated, SafeAreaView, ScrollView, View} from 'react-native';
 import {
     Button,
     Card,
@@ -61,7 +70,6 @@ export default function DashboardScreen() {
         [allSensorData, id]
     );
 
-
     const name = useMemo(() => content[0]?.location.name || "", [content]);
 
     const GetAllAvailableSensorLocations = (data: LocationWithBoxes[]): MarinaNameWithId[] => {
@@ -86,10 +94,14 @@ export default function DashboardScreen() {
 
     const dataPrecision = useMemo(() => {
         switch (timeRange) {
-            case 'last30days': return 6;
-            case 'last7days': return 3;
-            case 'yesterday': return 3;
-            default: return 3;
+            case 'last30days':
+                return 6;
+            case 'last7days':
+                return 3;
+            case 'yesterday':
+                return 3;
+            default:
+                return 3;
         }
     }, [timeRange]);
 
@@ -110,10 +122,14 @@ export default function DashboardScreen() {
 
     const apiTimeRange = useMemo(() => {
         switch (timeRange) {
-            case 'yesterday': return '48h';  // 2 days to include yesterday
-            case 'last7days': return '7d';
-            case 'last30days': return '30d';
-            default: return '24h';  // today
+            case 'yesterday':
+                return '48h';
+            case 'last7days':
+                return '7d';
+            case 'last30days':
+                return '30d';
+            default:
+                return '24h';
         }
     }, [timeRange]);
 
@@ -140,7 +156,6 @@ export default function DashboardScreen() {
         );
     }, [content, excludedMeasurements]);
 
-    // Extract current values for charts (independent of time range)
     const currentWaterTemp = useMemo(() => {
         const measurement = filteredMeasurements.find(m =>
             m.measurementType === "Temperature, water" ||
@@ -299,7 +314,8 @@ export default function DashboardScreen() {
                             <H3 fontSize="$5" fontWeight="600">{t('dashboard.currentMeasurements')}</H3>
                             <XStack gap="$1" alignItems="center">
                                 <Stack width={6} height={6} borderRadius="$5" backgroundColor="$green9"/>
-                                <Text fontSize="$2" color="$gray11">{t('dashboard.live')} {FormattedTime({ time: latestTime })}</Text>
+                                <Text fontSize="$2"
+                                      color="$gray11">{t('dashboard.live')} {FormattedTime({time: latestTime})}</Text>
                             </XStack>
                         </XStack>
                         <XStack
@@ -346,7 +362,7 @@ export default function DashboardScreen() {
                                                     <XStack alignItems="baseline" gap="$2">
                                                         <H2 fontSize="$10" fontWeight="700"
                                                             color={getMeasurementColor(measurement.measurementType)}>
-                                                            {measurement.value}
+                                                            {formatMeasurementValue(measurement.value)}
                                                         </H2>
                                                         <Text fontSize="$6"
                                                               color={getMeasurementColor(measurement.measurementType)}
@@ -377,7 +393,7 @@ export default function DashboardScreen() {
                                         <MeasurementCard
                                             key={index}
                                             measurementType={a.measurementType}
-                                            value={String(a.value)}
+                                            value={formatMeasurementValue(a.value)}
                                         />
                                     ))}
                             </XStack>
