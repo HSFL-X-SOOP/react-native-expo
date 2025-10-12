@@ -1,6 +1,6 @@
 import { createTamagui, createFont } from 'tamagui'
-import { themes } from './themes'
 import { config as defaultConfig } from '@tamagui/config/v3'
+import { themes } from './themes'
 
 const oswaldFont = createFont({
   family: 'Oswald_400Regular',
@@ -22,7 +22,10 @@ export const config = createTamagui({
     ...defaultConfig.fonts,
     oswald: oswaldFont,
   },
-  themes,
+  themes: {
+    ...defaultConfig.themes,
+    ...themes,
+  },
   media: {
     xs: { maxWidth: 660 },
     sm: { maxWidth: 800 },
@@ -35,6 +38,7 @@ export const config = createTamagui({
 })
 
 export type AppConfig = typeof config
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 declare module 'tamagui' { interface TamaguiCustomConfig extends AppConfig {} }
 
 export default config
