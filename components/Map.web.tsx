@@ -11,7 +11,6 @@ import '../Global.css';
 import SensorMarker from './map/SensorMarker.web';
 import ClusterMarker from './map/ClusterMarker.web';
 import MapZoomControl from './map/MapZoomControl';
-import MapLegend from './map/MapLegend';
 import { useSupercluster } from '@/hooks/useSupercluster';
 import type { MapRef } from '@vis.gl/react-maplibre';
 
@@ -108,7 +107,6 @@ export default function WebMap() {
           homeCoordinate={homeCoordinate}
         />
       </Map>
-      <MapLegend />
     </View>);
 }
 
