@@ -393,7 +393,13 @@ export const mockTimeRangeData = (id: number, timeRange: string): LocationWithBo
     return null;
   }
 
-  const hours = timeRange === 'DAY' ? 24 : timeRange === 'WEEK' ? 168 : 720;
+  // Parse new timeRange format: '24h', '48h', '7d', '30d'
+  let hours = 24; // default
+  if (timeRange.endsWith('h')) {
+    hours = parseInt(timeRange.slice(0, -1));
+  } else if (timeRange.endsWith('d')) {
+    hours = parseInt(timeRange.slice(0, -1)) * 24;
+  }
   const dataPoints = Math.min(hours, 100);
 
   return {

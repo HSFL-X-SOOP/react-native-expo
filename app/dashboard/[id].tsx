@@ -110,9 +110,10 @@ export default function DashboardScreen() {
 
     const apiTimeRange = useMemo(() => {
         switch (timeRange) {
-            case 'last7days': return 'WEEK';
-            case 'last30days': return 'MONTH';
-            default: return 'DAY';
+            case 'yesterday': return '48h';  // 2 days to include yesterday
+            case 'last7days': return '7d';
+            case 'last30days': return '30d';
+            default: return '24h';  // today
         }
     }, [timeRange]);
 

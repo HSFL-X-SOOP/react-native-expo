@@ -93,7 +93,7 @@ export function useSensorDataNew() {
 /**
  * Hook to fetch sensor data for a specific location within a time range
  */
-export function useSensorDataTimeRange(id: number | null, timeRange: string = 'DAY') {
+export function useSensorDataTimeRange(id: number | null, timeRange: string = '24h') {
     const [data, setData] = useState<LocationWithBoxes | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
