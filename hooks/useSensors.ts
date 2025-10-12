@@ -1,7 +1,6 @@
 import {useState, useEffect} from 'react';
 import {SensorModule, LocationWithBoxes} from '@/api/models/sensor';
 import {useSensorStore} from '@/api/stores/sensors';
-import {useTimeZone} from '@/utils/time';
 
 /**
  * Hook to fetch sensor data (old API format)
@@ -54,13 +53,12 @@ export function useSensorDataNew() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const sensorStore = useSensorStore();
-    const timezone = useTimeZone();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const result = await sensorStore.getSensorDataNew(timezone);
+                const result = await sensorStore.getSensorDataNew();
                 setData(result);
                 setError(null);
             } catch (err) {
@@ -72,12 +70,12 @@ export function useSensorDataNew() {
         };
 
         fetchData();
-    }, [timezone]);
+    }, [sensorStore]);
 
     const refetch = async () => {
         try {
             setLoading(true);
-            const result = await sensorStore.getSensorDataNew(timezone);
+            const result = await sensorStore.getSensorDataNew();
             setData(result);
             setError(null);
         } catch (err) {
@@ -97,8 +95,7 @@ export function useSensorDataTimeRange(id: number | null, timeRange: string = '2
     const [data, setData] = useState<LocationWithBoxes | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const sensorStore = useSensorStore();
-    const timezone = useTimeZone();
+    const sensorStore = useSensorStore()
 
     useEffect(() => {
         if (!id) return;
@@ -106,7 +103,7 @@ export function useSensorDataTimeRange(id: number | null, timeRange: string = '2
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const result = await sensorStore.getSensorDataTimeRange(id, timeRange, timezone);
+                const result = await sensorStore.getSensorDataTimeRange(id, timeRange);
                 setData(result);
                 setError(null);
             } catch (err) {
@@ -118,14 +115,14 @@ export function useSensorDataTimeRange(id: number | null, timeRange: string = '2
         };
 
         fetchData();
-    }, [id, timeRange, timezone]);
+    }, [id, sensorStore, timeRange]);
 
     const refetch = async () => {
         if (!id) return;
 
         try {
             setLoading(true);
-            const result = await sensorStore.getSensorDataTimeRange(id, timeRange, timezone);
+            const result = await sensorStore.getSensorDataTimeRange(id, timeRange);
             setData(result);
             setError(null);
         } catch (err) {
@@ -136,22 +133,4 @@ export function useSensorDataTimeRange(id: number | null, timeRange: string = '2
     };
 
     return {data, loading, error, refetch};
-}
-
-/**
- * Hook to fetch all sensor data types at once
- */
-export function useAllSensorData() {
-    const oldApi = useSensorData();
-    const newApi = useSensorDataNew();
-
-    return {
-        sensorModules: oldApi.data,
-        locationBoxes: newApi.data,
-        loading: oldApi.loading || newApi.loading,
-        error: oldApi.error || newApi.error,
-        refetch: async () => {
-            await Promise.all([oldApi.refetch(), newApi.refetch()]);
-        }
-    };
 }
