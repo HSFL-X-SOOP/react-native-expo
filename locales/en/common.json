@@ -10,7 +10,8 @@
     "menu": "Menu",
     "settings": "Settings",
     "language": "Language",
-    "theme": "Theme"
+    "theme": "Theme",
+    "projectWebsite": "Go to Project Website"
   },
   "language": {
     "name": "English"
