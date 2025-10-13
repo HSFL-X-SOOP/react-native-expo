@@ -70,7 +70,7 @@ export function useSensorDataNew() {
         };
 
         fetchData();
-    }, [sensorStore]);
+    }, []);
 
     const refetch = async () => {
         try {
@@ -115,7 +115,7 @@ export function useSensorDataTimeRange(id: number | null, timeRange: string = '2
         };
 
         fetchData();
-    }, [id, sensorStore, timeRange]);
+    }, [id, timeRange]);
 
     const refetch = async () => {
         if (!id) return;
