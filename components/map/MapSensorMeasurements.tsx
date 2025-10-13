@@ -1,7 +1,7 @@
 import {BoxType, LocationWithBoxes} from "@/api/models/sensor";
 import {useThemeContext} from "@/context/ThemeSwitch";
 import {useTranslation} from "@/hooks/useTranslation";
-import {FormattedTime} from "@/utils/time";
+import {formatTimeToLocal} from "@/utils/time";
 import {
     Activity,
     ArrowRight,
@@ -269,7 +269,7 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
                 <Text fontSize="$1" color="$gray11" fontWeight="500">
                     {t('sensor.lastMeasurement')}: <Text fontWeight="600"
                                                          color={isDark ? '$gray12' : '$gray12'}>
-                    {FormattedTime({time: box.measurementTimes[0].time + "Z"})}
+                    {formatTimeToLocal(box.measurementTimes[0].time + "Z")}
                 </Text>
                 </Text>
             </XStack>

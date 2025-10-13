@@ -1,6 +1,7 @@
 import { Box } from "@/api/models/sensor";
 import { LatestMeasurement, MeasurementDictionary } from "@/types/measurement";
 import { Activity, Battery, HelpCircle, Thermometer, Waves } from "@tamagui/lucide-icons";
+import { formatTimeToLocal } from "@/utils/time";
 
 export const GetLatestMeasurements = (boxes: Box[]): LatestMeasurement[] => {
     const measurements: LatestMeasurement[] = [];
@@ -77,20 +78,14 @@ export const CreateMeasurementDictionary = (
     measurementTimes.forEach((entry: any) => {
         if (!entry.time) return;
 
-        const date = new Date(entry.time);
+        // Use formatTimeToLocal for UTC-aware formatting
         const label = timeRange === 'last7days' || timeRange === 'last30days'
-            ? date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })
-            : entry.time.slice(11, 16);
+            ? formatTimeToLocal(entry.time, 'dd.MM')
+            : formatTimeToLocal(entry.time, 'HH:mm');
 
         const fullDateTime = timeRange === 'last7days' || timeRange === 'last30days'
-            ? date.toLocaleString('de-DE', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            })
-            : null;
+            ? formatTimeToLocal(entry.time, 'dd.MM.yyyy HH:mm')
+            : formatTimeToLocal(entry.time, 'HH:mm - dd.MM.yyyy');
 
         Object.entries(entry.measurements || {}).forEach(([key, value]) => {
             if (!measurementDict[key]) {
@@ -99,7 +94,7 @@ export const CreateMeasurementDictionary = (
             measurementDict[key].push({
                 label,
                 value: Number(value),
-                ...(fullDateTime && { fullDateTime })
+                fullDateTime
             });
         });
     });

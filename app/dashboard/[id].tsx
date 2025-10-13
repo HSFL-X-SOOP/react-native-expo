@@ -18,7 +18,7 @@ import {
     getMeasurementTypeSymbol,
     getTextFromMeasurementType
 } from '@/utils/measurements';
-import {FormattedTime} from '@/utils/time';
+import {formatTimeToLocal} from '@/utils/time';
 import {
     Activity,
     ChevronDown,
@@ -315,7 +315,7 @@ export default function DashboardScreen() {
                             <XStack gap="$1" alignItems="center">
                                 <Stack width={6} height={6} borderRadius="$5" backgroundColor="$green9"/>
                                 <Text fontSize="$2"
-                                      color="$gray11">{t('dashboard.live')} {FormattedTime({time: latestTime})}</Text>
+                                      color="$gray11">{t('dashboard.live')} {formatTimeToLocal(latestTime)}</Text>
                             </XStack>
                         </XStack>
                         <XStack
