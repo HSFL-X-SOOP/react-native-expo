@@ -57,15 +57,19 @@ export function useSensorDataNew() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                console.log('useSensorDataNew: Starting fetch...');
                 setLoading(true);
                 const result = await sensorStore.getSensorDataNew();
+                console.log('useSensorDataNew: Received', result.length, 'locations');
                 setData(result);
                 setError(null);
             } catch (err) {
+                console.error('useSensorDataNew: Error fetching data:', err);
                 setError(err instanceof Error ? err.message : 'Failed to fetch sensor data');
                 setData([]);
             } finally {
                 setLoading(false);
+                console.log('useSensorDataNew: Loading complete');
             }
         };
 

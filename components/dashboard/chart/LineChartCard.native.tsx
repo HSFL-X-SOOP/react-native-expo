@@ -1,10 +1,10 @@
-import { useThemeContext } from "@/context/ThemeSwitch";
+import {useThemeContext} from "@/context/ThemeSwitch";
 import useTranslation from "@/hooks/useTranslation";
-import { Activity } from "@tamagui/lucide-icons";
-import { useMemo, useState, useRef } from "react";
-import { View, Alert, Vibration } from "react-native";
-import { LineChart } from "react-native-chart-kit";
-import { Card, H3, Text, useMedia, XStack, YStack } from "tamagui";
+import {Activity} from "@tamagui/lucide-icons";
+import {useMemo, useState, useRef} from "react";
+import {View, Alert, Vibration} from "react-native";
+import {LineChart} from "react-native-chart-kit";
+import {Card, H3, Text, useMedia, XStack, YStack} from "tamagui";
 
 export type LineChartCardProps = {
     title: string,
@@ -67,7 +67,7 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             Alert.alert(
                 title,
                 `${dateTime}\n${value} ${unit}`,
-                [{ text: t('dashboard.ok') || 'OK', style: 'cancel' }]
+                [{text: t('dashboard.ok') || 'OK', style: 'cancel'}]
             );
         }
     };

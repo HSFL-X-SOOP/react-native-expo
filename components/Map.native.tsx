@@ -7,8 +7,22 @@ import SensorMarker from "./map/MapSensorMarker.native";
 import ClusterMarker from "./map/ClusterMarker.native";
 import MapZoomControl from "./map/MapZoomControl";
 
-export default function NativeMap() {
-    const { data: content } = useSensorDataNew();
+interface MapProps {
+    module1Visible?: boolean;
+    module2Visible?: boolean;
+    module3Visible?: boolean;
+    temperatureVisible?: boolean;
+    windDirectionVisible?: boolean;
+}
+
+export default function NativeMap(props: MapProps) {
+    const { data: content, loading } = useSensorDataNew();
+
+    console.log('NativeMap render:', {
+        contentLength: content?.length,
+        loading,
+        hasContent: !!content
+    });
 
     const homeCoordinate: [number, number] = [9.26, 54.46];
     const minMaxZoomLevel = { min: 3, max: 16 };
@@ -29,8 +43,9 @@ export default function NativeMap() {
         ];
     }, []);
 
+    // Only use supercluster when we have valid content
     const { clusters, getClusterExpansionZoom } = useSupercluster(
-        content,
+        content && content.length > 0 ? content : [],
         bounds,
         zoomLevel
     );

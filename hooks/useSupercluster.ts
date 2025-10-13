@@ -24,12 +24,30 @@ export function useSupercluster(
     zoom: number,
     options?: Supercluster.Options<ClusterProperties, any>
 ) {
+    // Track if we have any locations
+    const hasLocations = locations && locations.length > 0;
+    // Ensure zoom has a valid default value
+    const safeZoom = zoom ?? 7;
+
+    console.log('useSupercluster:', {
+        locationsCount: locations?.length,
+        hasLocations,
+        bounds,
+        zoom,
+        safeZoom
+    });
+
     const supercluster = useMemo(() => {
         const cluster = new Supercluster<ClusterProperties>({
             radius: 75,
             maxZoom: 16,
             ...options,
         });
+
+        // Only create points if we have locations
+        if (!hasLocations) {
+            return cluster;
+        }
 
         const points: ClusterPoint[] = locations.map((locationWithBoxes) => ({
             type: 'Feature' as const,
@@ -48,11 +66,24 @@ export function useSupercluster(
 
         cluster.load(points);
         return cluster;
-    }, [locations, options]);
+    }, [locations, options, hasLocations]);
 
     const clusters = useMemo(() => {
-        return supercluster.getClusters(bounds, Math.floor(zoom));
-    }, [supercluster, bounds, zoom]);
+        // Only get clusters if we have locations loaded
+        if (!hasLocations) {
+            console.log('useSupercluster: No locations, returning empty clusters');
+            return [];
+        }
+
+        try {
+            const result = supercluster.getClusters(bounds, Math.floor(safeZoom));
+            console.log('useSupercluster: Generated', result.length, 'clusters');
+            return result;
+        } catch (error) {
+            console.error('useSupercluster: Error getting clusters:', error);
+            return [];
+        }
+    }, [supercluster, bounds, safeZoom, hasLocations]);
 
     const getClusterExpansionZoom = (clusterId: number) => {
         return supercluster.getClusterExpansionZoom(clusterId);

@@ -1,7 +1,7 @@
-import { BoxType, LocationWithBoxes } from "@/api/models/sensor";
-import { useThemeContext } from "@/context/ThemeSwitch";
-import { useTranslation } from "@/hooks/useTranslation";
-import { FormattedTime } from "@/utils/time";
+import {BoxType, LocationWithBoxes} from "@/api/models/sensor";
+import {useThemeContext} from "@/context/ThemeSwitch";
+import {useTranslation} from "@/hooks/useTranslation";
+import {FormattedTime} from "@/utils/time";
 import {
     Activity,
     ArrowRight,
@@ -15,11 +15,11 @@ import {
     Waves,
     Wind
 } from "@tamagui/lucide-icons";
-import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Platform } from "react-native";
-import { Button, Card, H3, H4, Separator, Text, XStack, YStack, useTheme } from "tamagui";
+import {LinearGradient} from "expo-linear-gradient";
+import {useRouter} from "expo-router";
+import {useState} from "react";
+import {Platform} from "react-native";
+import {Button, Card, H3, H4, Separator, Text, XStack, YStack, useTheme} from "tamagui";
 
 type SensorPopupProps = {
     locationWithBoxes: LocationWithBoxes,
@@ -63,8 +63,8 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
             <YStack>
                 <LinearGradient
                     colors={isDark
-                        ? [theme.accent9.val, theme.accent8.val, theme.accent7.val]
-                        : [theme.accent6.val, theme.accent5.val, theme.accent4.val]
+                        ? [theme.accent9?.val, theme.accent8?.val, theme.accent7?.val]
+                        : [theme.accent6?.val, theme.accent5?.val, theme.accent4?.val]
                     }
                     start={[0, 0]}
                     end={[1, 1]}
@@ -130,7 +130,7 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
                 )}
 
                 {hasMultipleBoxes ? (
-                    <BoxMeasurements box={locationWithBoxes.boxes[selectedBoxIndex]} />
+                    <BoxMeasurements box={locationWithBoxes.boxes[selectedBoxIndex]}/>
                 ) : (
                     locationWithBoxes.boxes.map((box, index) => (
                         <BoxMeasurements key={index} box={box}/>
@@ -173,7 +173,7 @@ type BoxMeasurementsProps = {
 function BoxMeasurements({box}: BoxMeasurementsProps) {
     const {t} = useTranslation();
     const {isDark} = useThemeContext();
-    
+
     if (!box.measurementTimes[0]) return null;
 
     return (
@@ -269,7 +269,7 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
                 <Text fontSize="$1" color="$gray11" fontWeight="500">
                     {t('sensor.lastMeasurement')}: <Text fontWeight="600"
                                                          color={isDark ? '$gray12' : '$gray12'}>
-                    {FormattedTime({ time: box.measurementTimes[0].time + "Z" })}
+                    {FormattedTime({time: box.measurementTimes[0].time + "Z"})}
                 </Text>
                 </Text>
             </XStack>

@@ -24,7 +24,7 @@ export function useSensorStore() {
                 return response.data;
             } catch (error) {
                 console.error('API call failed, falling back to mock data:', error);
-                return mockSensorModules;
+                return [];
             }
         },
 
@@ -37,10 +37,11 @@ export function useSensorStore() {
 
             try {
                 const response = await httpClient.get<LocationWithBoxes[]>(`/latestmeasurementsNEW?timezone=${timezone}`);
+                console.log('API response received:', response.data?.length, 'locations');
                 return response.data;
             } catch (error) {
-                console.error('API call failed, falling back to mock data:', error);
-                return mockLocationWithBoxes;
+                console.error('API call failed, returning empty array:', error);
+                return [];
             }
         },
 
@@ -60,7 +61,7 @@ export function useSensorStore() {
                 return response.data;
             } catch (error) {
                 console.error('API call failed, falling back to mock data:', error);
-                return mockTimeRangeData(id, timeRange);
+                return null;
             }
         }
     };
