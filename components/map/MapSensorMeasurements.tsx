@@ -95,7 +95,6 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
                 </LinearGradient>
             </YStack>
 
-            {/* Body - Box Selection (if multiple) and Measurements */}
             <YStack padding="$3" gap="$3" backgroundColor={isDark ? '#1a1a1a' : '$background'}>
                 {hasMultipleBoxes && (
                     <XStack gap="$2" flexWrap="wrap">
@@ -178,7 +177,6 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
 
     return (
         <YStack gap="$2.5">
-            {/* Box Type Header */}
             <XStack
                 alignItems="center"
                 gap="$2"
@@ -200,7 +198,6 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
                 </H4>
             </XStack>
 
-            {/* Measurements Grid */}
             <XStack flexWrap="wrap" gap="$2.5" justifyContent="space-between">
                 {box.type === BoxType.WaterBox && (
                     <>
@@ -248,7 +245,6 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
                 )}
             </XStack>
 
-            {/* Last Measurement Time */}
             <XStack
                 alignItems="center"
                 gap="$1.5"
@@ -325,13 +321,11 @@ function MeasurementCard({measurementType, value}: MeasurementCardProps) {
                 >
                     {icon}
                 </YStack>
-                {/* Label */}
                 <Text fontSize="$2" color={isDark ? '#grey1' : '$gray11'} fontWeight="500" numberOfLines={2}
                       lineHeight="$1">
                     {getMeasurementLabel(measurementType, t)}
                 </Text>
 
-                {/* Value and Unit */}
                 <XStack alignItems="baseline" gap="$1">
                     <Text fontSize="$7" fontWeight="800" color={color} letterSpacing={-0.5}>
                         {Math.round(value * 10) / 10}
