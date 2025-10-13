@@ -17,7 +17,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.marlin.app"
+      "package": "com.marlin.live"
     },
     "web": {
       "bundler": "metro",

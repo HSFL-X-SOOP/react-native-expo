@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.marlin.app'
+    namespace 'com.marlin.live'
     defaultConfig {
-        applicationId 'com.marlin.app'
+        applicationId 'com.marlin.live'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

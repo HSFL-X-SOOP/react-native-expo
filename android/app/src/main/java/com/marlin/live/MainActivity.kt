@@ -1,4 +1,4 @@
-package com.marlin.app
+package com.marlin.live
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

@@ -1,5 +1,5 @@
+import { Home, Minus, Navigation, Plus } from "@tamagui/lucide-icons";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Plus, Minus, Navigation, Home } from "@tamagui/lucide-icons";
 import { useTheme } from "tamagui";
 type MapZoomControlProps = {
   zoomLevel: number;
@@ -7,9 +7,10 @@ type MapZoomControlProps = {
   setZoomLevel: (level: number) => void;
   setCurrentCoordinate: (coord: [number, number]) => void;
   homeCoordinate: [number, number];
+  setMapStyle?: (style: string) => void;
 };
 
-export default function MapZoomControl({ zoomLevel, minMaxZoomLevel, setZoomLevel, setCurrentCoordinate, homeCoordinate}: MapZoomControlProps) {
+export default function MapZoomControl({ zoomLevel, minMaxZoomLevel, setZoomLevel, setCurrentCoordinate, homeCoordinate, setMapStyle}: MapZoomControlProps) {
   const t = useTheme();
 
   return (

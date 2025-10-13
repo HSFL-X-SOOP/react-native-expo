@@ -1,4 +1,4 @@
-package com.marlin.app
+package com.marlin.live
 
 import android.app.Application
 import android.content.res.Configuration
