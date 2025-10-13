@@ -22,7 +22,7 @@ export const SensorMarkerContent: React.FC<SensorMarkerContentProps> = ({locatio
         tempValue = box?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature;
     }
 
-    const temperature = tempValue !== undefined ? Math.round(Number(tempValue)) : "N/A";
+    const temperature = tempValue !== undefined ? Math.round(Number(tempValue)) : "--";
 
     const accentColor = !isDark ? '#006e99' : '#7db07d';
     const backgroundColor = isDark ? '#1a1a1a' : '#1c1c1c';
