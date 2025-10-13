@@ -1,7 +1,4 @@
 import { useSensorDataNew } from '@/hooks/useSensors';
-import { useSupercluster } from '@/hooks/useSupercluster';
-import { Palette } from "@tamagui/lucide-icons";
-import type { MapRef } from '@vis.gl/react-maplibre';
 import {
   LngLatBoundsLike,
   Map
@@ -9,13 +6,14 @@ import {
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
 import { useMemo, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Text, useTheme } from 'tamagui';
+import { View } from 'react-native';
 import '../Global.css';
-import ClusterMarker from './map/ClusterMarker.web';
-import MapLegend from './map/MapLegend';
-import MapZoomControl from './map/MapZoomControl';
 import SensorMarker from './map/SensorMarker.web';
+import ClusterMarker from './map/ClusterMarker.web';
+import MapZoomControl from './map/MapZoomControl';
+import MapLegend from './map/MapLegend';
+import { useSupercluster } from '@/hooks/useSupercluster';
+import type { MapRef } from '@vis.gl/react-maplibre';
 
 export default function WebMap() {
   const { data: content } = useSensorDataNew();
@@ -51,8 +49,6 @@ export default function WebMap() {
     zoomLevel
   );
 
-  const [mapStyle, setMapStyle] = useState(require('../assets/style.txt'));
-  const t = useTheme();
   const pins = useMemo(() => {
     return clusters.map((cluster) => {
       const [longitude, latitude] = cluster.geometry.coordinates;
@@ -97,7 +93,7 @@ export default function WebMap() {
           setZoomLevel(e.viewState.zoom);
         }}
         key="map"
-        mapStyle={mapStyle}
+        mapStyle={require('../assets/style.txt')}
         maxBounds={mapBoundariesLongLat}
         longitude={currentCoordinate[0]}
         latitude={currentCoordinate[1]}
@@ -111,72 +107,8 @@ export default function WebMap() {
           setCurrentCoordinate={setCurrentCoordinate}
           homeCoordinate={homeCoordinate}
         />
-        <View style={styles.container}>
-          <TouchableOpacity
-            style={[styles.button, {
-          borderTopLeftRadius: 8,
-          borderTopRightRadius: 8,
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          backgroundColor: t.background?.val
-        }]}
-            onPress={() => setMapStyle(require('../assets/final.txt'))}
-            activeOpacity={0.7}
-          >
-            <Palette color={t.color?.val} size={24} />
-            <Text>Neu</Text>
-          </TouchableOpacity>
-                    <View style={{height: 1, backgroundColor: t.borderColor?.val }} />
-          <TouchableOpacity
-            style={[styles.button, {
-          backgroundColor: t.background?.val
-        }]}
-            onPress={() => setMapStyle(require('../assets/final_dark.txt'))}
-            activeOpacity={0.7}
-          >
-            <Palette color={t.color?.val} size={24} />
-            <Text>Neu Dark</Text>
-          </TouchableOpacity>
-          <View style={{height: 1, backgroundColor: t.borderColor?.val }} />
-          <TouchableOpacity
-            style={[styles.button, {
-          borderTopLeftRadius: 0,
-          borderTopRightRadius: 0,
-          borderBottomLeftRadius: 8,
-          borderBottomRightRadius: 8,
-          backgroundColor: t.background?.val
-        }]}
-            onPress={() => setMapStyle(require('../assets/style.txt'))}
-            activeOpacity={0.7}
-          >
-            <Palette color={t.color?.val} size={24} />
-            <Text>Alt</Text>
-          </TouchableOpacity>
-        </View>
       </Map>
       <MapLegend />
     </View>);
 }
-
-const styles = StyleSheet.create({
-    container: {
-        position: "absolute",
-        right: 20,
-        bottom: 300,
-        flexDirection: "column",
-        alignItems: "center",
-        zIndex: 10,
-    },
-    button: {
-        width: 56,
-        height: 40,
-        justifyContent: "center",
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        elevation: 4,
-    }
-});
 
