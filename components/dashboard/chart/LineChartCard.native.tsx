@@ -1,7 +1,7 @@
 import {useThemeContext} from "@/context/ThemeSwitch";
 import useTranslation from "@/hooks/useTranslation";
 import {Activity} from "@tamagui/lucide-icons";
-import {useMemo, useState, useRef} from "react";
+import {useMemo} from "react";
 import {View, Alert, Vibration} from "react-native";
 import {LineChart} from "react-native-chart-kit";
 import {Card, H3, Text, useMedia, XStack, YStack} from "tamagui";
@@ -25,8 +25,11 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
     const {isDark} = useThemeContext();
     const {t} = useTranslation();
     const media = useMedia();
-    const [selectedPoint, setSelectedPoint] = useState<number | null>(null);
-    const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+
+    // Helper function to format values
+    const formatValue = (value: number): string => {
+        return value < 1 ? value.toFixed(2) : value.toFixed(1);
+    };
 
     const {data, displayLabels, filteredChartData} = useMemo(() => {
         if (chartData.length === 0) {
@@ -59,14 +62,14 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
         const index = data.index;
         if (index >= 0 && index < filteredChartData.length) {
             const point = filteredChartData[index];
-            const value = point.value < 1 ? point.value.toFixed(2) : point.value.toFixed(1);
+            const formattedValue = formatValue(point.value);
             const dateTime = point.fullDateTime || point.label;
 
             Vibration.vibrate(10);
 
             Alert.alert(
                 title,
-                `${dateTime}\n${value} ${unit}`,
+                `${dateTime}\n${formattedValue} ${unit}`,
                 [{text: t('dashboard.ok') || 'OK', style: 'cancel'}]
             );
         }
@@ -120,11 +123,15 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                             <Text fontSize="$1" color="$gray11">{t('dashboard.charts.current')}</Text>
                             <XStack alignItems="baseline" gap="$1">
                                 <Text fontSize="$6" fontWeight="600" color={color}>
-                                    {currentValue !== undefined
-                                        ? (currentValue < 1 ? currentValue.toFixed(2) : currentValue.toFixed(1))
-                                        : data[data.length - 1] !== undefined
-                                            ? (data[data.length - 1] < 1 ? data[data.length - 1].toFixed(2) : data[data.length - 1].toFixed(1))
-                                            : '0'}
+                                    {(() => {
+                                        if (currentValue !== undefined) {
+                                            return formatValue(currentValue);
+                                        }
+                                        if (data.length > 0) {
+                                            return formatValue(data[data.length - 1]);
+                                        }
+                                        return '0';
+                                    })()}
                                 </Text>
                                 <Text fontSize="$3" color="$gray10">
                                     {unit}

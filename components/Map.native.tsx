@@ -18,12 +18,6 @@ interface MapProps {
 export default function NativeMap(props: MapProps) {
     const { data: content, loading } = useSensorDataNew();
 
-    console.log('NativeMap render:', {
-        contentLength: content?.length,
-        loading,
-        hasContent: !!content
-    });
-
     const homeCoordinate: [number, number] = [9.26, 54.46];
     const minMaxZoomLevel = { min: 3, max: 16 };
     const mapBoundariesLongLat = {
@@ -33,6 +27,20 @@ export default function NativeMap(props: MapProps) {
 
     const [zoomLevel, setZoomLevel] = useState(7);
     const [currentCoordinate, setCurrentCoordinate] = useState<[number, number]>(homeCoordinate);
+    const [cameraUpdateTrigger, setCameraUpdateTrigger] = useState(0);
+
+    // Custom setZoomLevel that triggers camera update
+    const handleSetZoomLevel = (newZoom: number | ((prev: number) => number)) => {
+        const actualNewZoom = typeof newZoom === 'function' ? newZoom(zoomLevel) : newZoom;
+        setZoomLevel(actualNewZoom);
+        setCameraUpdateTrigger(prev => prev + 1);
+    };
+
+    // Custom setCurrentCoordinate that triggers camera update
+    const handleSetCurrentCoordinate = (newCoord: [number, number]) => {
+        setCurrentCoordinate(newCoord);
+        setCameraUpdateTrigger(prev => prev + 1);
+    };
 
     const bounds: [number, number, number, number] = useMemo(() => {
         return [
@@ -65,8 +73,8 @@ export default function NativeMap(props: MapProps) {
                         clusterId={cluster.id as number}
                         onPress={() => {
                             const expansionZoom = getClusterExpansionZoom(cluster.id as number);
-                            setZoomLevel(expansionZoom);
-                            setCurrentCoordinate([longitude, latitude]);
+                            handleSetZoomLevel(expansionZoom);
+                            handleSetCurrentCoordinate([longitude, latitude]);
                         }}
                     />
                 );
@@ -95,10 +103,12 @@ export default function NativeMap(props: MapProps) {
                 }}
             >
                 <Camera
+                    key={`camera-${cameraUpdateTrigger}`}
                     zoomLevel={zoomLevel}
                     centerCoordinate={currentCoordinate}
                     maxZoomLevel={18}
                     minZoomLevel={3}
+                    animationDuration={300}
                 />
                 {pins}
             </MapView>
@@ -106,8 +116,8 @@ export default function NativeMap(props: MapProps) {
             <MapZoomControl
                 zoomLevel={zoomLevel}
                 minMaxZoomLevel={minMaxZoomLevel}
-                setZoomLevel={setZoomLevel}
-                setCurrentCoordinate={setCurrentCoordinate}
+                setZoomLevel={handleSetZoomLevel}
+                setCurrentCoordinate={handleSetCurrentCoordinate}
                 homeCoordinate={homeCoordinate}
             />
         </View>

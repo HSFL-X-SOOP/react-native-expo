@@ -3,7 +3,7 @@ import { CloudIcon, InfoIcon, LOGO, MapIcon, MoonFilledIcon, SunFilledIcon } fro
 import { useSession } from '@/context/SessionContext';
 import { useThemeContext } from '@/context/ThemeSwitch.tsx';
 import { useTranslation } from '@/hooks/useTranslation';
-import { Languages, Menu, User, X } from '@tamagui/lucide-icons';
+import { Languages, LayoutDashboard, Menu, User, X } from '@tamagui/lucide-icons';
 import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Text as RNText, ScrollView, TouchableOpacity, View } from 'react-native';
@@ -171,7 +171,7 @@ export function TabBarNative() {
                                     alignItems: 'center'
                                 }}
                             >
-                                {/* <MapIcon color={t.accent8?.val} size={24}/> */}
+                                <LayoutDashboard color={t.accent8?.val} size={24}/>
                                 <RNText style={{
                                     fontSize: 18,
                                     fontWeight: '500',

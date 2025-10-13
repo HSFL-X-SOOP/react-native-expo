@@ -27,15 +27,7 @@ export function useSupercluster(
     // Track if we have any locations
     const hasLocations = locations && locations.length > 0;
     // Ensure zoom has a valid default value
-    const safeZoom = zoom ?? 7;
-
-    console.log('useSupercluster:', {
-        locationsCount: locations?.length,
-        hasLocations,
-        bounds,
-        zoom,
-        safeZoom
-    });
+    const safeZoom = typeof zoom === 'number' && !isNaN(zoom) ? zoom : 7;
 
     const supercluster = useMemo(() => {
         const cluster = new Supercluster<ClusterProperties>({
@@ -71,16 +63,13 @@ export function useSupercluster(
     const clusters = useMemo(() => {
         // Only get clusters if we have locations loaded
         if (!hasLocations) {
-            console.log('useSupercluster: No locations, returning empty clusters');
             return [];
         }
 
         try {
-            const result = supercluster.getClusters(bounds, Math.floor(safeZoom));
-            console.log('useSupercluster: Generated', result.length, 'clusters');
-            return result;
+            return supercluster.getClusters(bounds, Math.floor(safeZoom));
         } catch (error) {
-            console.error('useSupercluster: Error getting clusters:', error);
+            // Silently handle errors during initial render
             return [];
         }
     }, [supercluster, bounds, safeZoom, hasLocations]);

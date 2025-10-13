@@ -22,7 +22,11 @@ export default function MapZoomControl({ zoomLevel, minMaxZoomLevel, setZoomLeve
           borderBottomRightRadius: 0,
           backgroundColor: t.background?.val
         }]}
-        onPress={() => {if (zoomLevel < minMaxZoomLevel.max) setZoomLevel(zoomLevel + 1)}}
+        onPress={() => {
+          if (zoomLevel < minMaxZoomLevel.max) {
+            setZoomLevel(zoomLevel + 1);
+          }
+        }}
         activeOpacity={0.7}
       >
         <Plus color={t.color?.val} size={28} />
@@ -63,7 +67,11 @@ export default function MapZoomControl({ zoomLevel, minMaxZoomLevel, setZoomLeve
           borderBottomRightRadius: 8,
           backgroundColor: t.background?.val
         }]}
-        onPress={() => {if (zoomLevel > minMaxZoomLevel.min) setZoomLevel(zoomLevel - 1)}}
+        onPress={() => {
+          if (zoomLevel > minMaxZoomLevel.min) {
+            setZoomLevel(zoomLevel - 1);
+          }
+        }}
         activeOpacity={0.7}
       >
         <Minus color={t.color?.val} size={28} />
