@@ -51,7 +51,7 @@ export default function AndroidMarker({
                 />
                 <Sheet.Frame
                     padding="$4"
-                    backgroundColor={isDark ? '$gray2' : '$background'}
+                    backgroundColor={"$colorTransparent"}
                     alignItems="center"
                     justifyContent="center"
                 >
