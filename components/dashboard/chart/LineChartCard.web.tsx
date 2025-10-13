@@ -33,6 +33,13 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
         }
 
         const filteredData = chartData.filter((_, idx) => idx % dataPrecision === 0);
+
+        // Ensure the last data point is always included if not already present
+        const lastIndex = chartData.length - 1;
+        if (lastIndex % dataPrecision !== 0 && lastIndex >= 0) {
+            filteredData.push(chartData[lastIndex]);
+        }
+
         const values = filteredData.map(item => item.value);
         const minValue = Math.min(...values);
         const maxValue = Math.max(...values);
