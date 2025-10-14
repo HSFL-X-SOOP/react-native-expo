@@ -10,7 +10,6 @@ export type LineChartCardProps = {
     title: string,
     icon?: React.ReactNode,
     chartData: { label: string, value: number, fullDateTime?: string }[],
-    dataPrecision: number,
     color?: string,
     currentValue?: number,
 }
@@ -18,7 +17,6 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                                                                 title,
                                                                 icon,
                                                                 chartData,
-                                                                dataPrecision,
                                                                 color = "#4dabf7",
                                                                 currentValue
                                                             }) => {
@@ -35,21 +33,21 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             return {data: [], displayLabels: [], filteredChartData: []};
         }
 
-        const filteredData = chartData.filter((_, idx) => idx % dataPrecision === 0);
-        const dataValues = filteredData.map(item => item.value);
-        const labelValues = filteredData.map(item => item.label);
+        // Backend handles data aggregation, so use all data points
+        const dataValues = chartData.map(item => item.value);
+        const labelValues = chartData.map(item => item.label);
         const showEvery = Math.ceil(labelValues.length / 6);
         const displayLabelValues = labelValues.filter((_, index) => index % showEvery === 0);
 
         return {
             data: dataValues,
             displayLabels: displayLabelValues,
-            filteredChartData: filteredData
+            filteredChartData: chartData
         };
-    }, [chartData, dataPrecision]);
+    }, [chartData]);
 
-    const chartWidth = media.md ? 320 : 400;
-    const chartHeight = media.md ? 180 : 220;
+    const chartWidth = media.md ? 360 : 460;
+    const chartHeight = media.md ? 200 : 260;
 
     const unit = useMemo(() => {
         if (title === t('dashboard.charts.waterTemperature')) return t('dashboard.units.celsius');

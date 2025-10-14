@@ -1,6 +1,6 @@
 import {LocationWithBoxes} from '@/api/models/sensor';
 import {LineChartCard} from '@/components/dashboard/chart/LineChartCard';
-import {ChartTimeRange, TimeRangeButton} from '@/components/dashboard/chart/TimeRangeButton';
+import {ChartTimeRange, TimeRangeDropdown} from '@/components/dashboard/chart/TimeRangeDropdown';
 import {MeasurementCard} from '@/components/dashboard/MeasurementCard';
 import {NavigateDashboardDropdownMenu} from '@/components/dashboard/NavigateDropdownMenu';
 import {useThemeContext} from '@/context/ThemeSwitch';
@@ -62,14 +62,8 @@ export default function DashboardScreen() {
 
     const [timeRange, setTimeRange] = useState<ChartTimeRange>('today');
 
+    // Only used for the sensor location dropdown
     const {data: allSensorData} = useSensorDataNew();
-
-    const content = useMemo(
-        () => allSensorData.filter((location: LocationWithBoxes) => String(location.location.id) === id),
-        [allSensorData, id]
-    );
-
-    const name = useMemo(() => content[0]?.location.name || "", [content]);
 
     const GetAllAvailableSensorLocations = (data: LocationWithBoxes[]): MarinaNameWithId[] => {
         const locationMap = new Map<number, MarinaNameWithId>();
@@ -90,19 +84,6 @@ export default function DashboardScreen() {
         () => GetAllAvailableSensorLocations(allSensorData),
         [allSensorData]
     );
-
-    const dataPrecision = useMemo(() => {
-        switch (timeRange) {
-            case 'last30days':
-                return 6;
-            case 'last7days':
-                return 3;
-            case 'yesterday':
-                return 3;
-            default:
-                return 3;
-        }
-    }, [timeRange]);
 
     const isAdmin = false;
 
@@ -127,12 +108,21 @@ export default function DashboardScreen() {
                 return '7d';
             case 'last30days':
                 return '30d';
+            case 'last90days':
+                return '90d';
+            case 'last180days':
+                return '180d';
+            case 'last1year':
+                return '1y';
             default:
                 return '24h';
         }
     }, [timeRange]);
 
     const {data: timeRangeData} = useSensorDataTimeRange(Number(id), apiTimeRange);
+
+    // Get location name from timeRangeData instead of useSensorDataNew
+    const name = useMemo(() => timeRangeData?.location.name || "", [timeRangeData]);
 
     useEffect(() => {
         if (timeRangeData) {
@@ -148,12 +138,26 @@ export default function DashboardScreen() {
     }, [timeRangeData, timeRange])
 
     const filteredMeasurements = useMemo(() => {
-        if (!content[0]?.boxes) return [];
-        const latestMeasurements = GetLatestMeasurements(content[0].boxes);
-        return latestMeasurements.filter(
+        if (!timeRangeData?.boxes) return [];
+        const latestMeasurements = GetLatestMeasurements(timeRangeData.boxes);
+        const filtered = latestMeasurements.filter(
             m => !excludedMeasurements.includes(m.measurementType)
         );
-    }, [content, excludedMeasurements]);
+
+        // Sort to display in desired order: Water Temp, Water Level, Wave Height
+        const order = ["Temperature, water", "Tide", "Wave Height"];
+        return filtered.sort((a, b) => {
+            const indexA = order.indexOf(a.measurementType);
+            const indexB = order.indexOf(b.measurementType);
+
+            // If not in order array, push to end
+            if (indexA === -1 && indexB === -1) return 0;
+            if (indexA === -1) return 1;
+            if (indexB === -1) return -1;
+
+            return indexA - indexB;
+        });
+    }, [timeRangeData, excludedMeasurements]);
 
     const currentWaterTemp = useMemo(() => {
         const measurement = filteredMeasurements.find(m =>
@@ -186,7 +190,7 @@ export default function DashboardScreen() {
         }).start();
     };
 
-    const latestTime = content[0]?.boxes[0].measurementTimes[0].time ? content[0].boxes[0].measurementTimes[0].time : new Date().toISOString();
+    const latestTime = timeRangeData?.boxes[0]?.measurementTimes[0]?.time || new Date().toISOString();
 
     return (
         <SafeAreaView style={{flex: 1}}>
@@ -226,9 +230,12 @@ export default function DashboardScreen() {
                             {name || t('dashboard.loading')}
                         </H1>
                         <View style={{width: 300}}>
-                            <NavigateDashboardDropdownMenu isDark={isDark} router={router}
-                                                           sensorLocations={sensorLocations}
-                                                           selectedMarinaId={Number(id)} id="select-demo-2" native/>
+                            <NavigateDashboardDropdownMenu
+                                isDark={isDark}
+                                router={router}
+                                sensorLocations={sensorLocations}
+                                selectedMarinaId={Number(id)}
+                            />
                         </View>
                     </Stack>
                 </Stack>
@@ -236,7 +243,7 @@ export default function DashboardScreen() {
                 <YStack
                     padding={media.md ? "$3" : "$4"}
                     gap={media.md ? "$4" : "$5"}
-                    maxWidth={1400}
+                    maxWidth={1800}
                     width="100%"
                     alignSelf="center"
                     marginTop={media.md ? -20 : -30}
@@ -408,43 +415,17 @@ export default function DashboardScreen() {
                                     {timeRange === 'today' ? t('dashboard.timeRange.today') :
                                         timeRange === 'yesterday' ? t('dashboard.timeRange.yesterday') :
                                             timeRange === 'last7days' ? t('dashboard.timeRange.last7days') :
-                                                t('dashboard.timeRange.last30days')}
+                                                timeRange === 'last30days' ? t('dashboard.timeRange.last30days') :
+                                                    timeRange === 'last90days' ? t('dashboard.timeRange.last90days') :
+                                                        timeRange === 'last180days' ? t('dashboard.timeRange.last180days') :
+                                                            t('dashboard.timeRange.last1year')}
                                 </Text>
                             </YStack>
-                            <XStack gap="$2" backgroundColor={isDark ? '$gray8' : '$gray2'} padding="$1"
-                                    borderRadius="$3" flexWrap="wrap">
-                                <TimeRangeButton
-                                    timeRange="today"
-                                    selectedTimeRange={timeRange}
-                                    buttonText={t('dashboard.timeRange.todayButton')}
-                                    setTimeRange={setTimeRange}
-                                    isDark={isDark}
-                                />
-
-                                <TimeRangeButton
-                                    timeRange="yesterday"
-                                    selectedTimeRange={timeRange}
-                                    buttonText={t('dashboard.timeRange.yesterdayButton')}
-                                    setTimeRange={setTimeRange}
-                                    isDark={isDark}
-                                />
-
-                                <TimeRangeButton
-                                    timeRange='last7days'
-                                    selectedTimeRange={timeRange}
-                                    buttonText={t('dashboard.timeRange.last7daysButton')}
-                                    setTimeRange={setTimeRange}
-                                    isDark={isDark}
-                                />
-
-                                <TimeRangeButton
-                                    timeRange="last30days"
-                                    selectedTimeRange={timeRange}
-                                    buttonText={t('dashboard.timeRange.last30daysButton')}
-                                    setTimeRange={setTimeRange}
-                                    isDark={isDark}
-                                />
-                            </XStack>
+                            <TimeRangeDropdown
+                                selectedTimeRange={timeRange}
+                                setTimeRange={setTimeRange}
+                                isDark={isDark}
+                            />
                         </XStack>
 
                         <XStack
@@ -457,23 +438,20 @@ export default function DashboardScreen() {
                                 title={t('dashboard.charts.waterTemperature')}
                                 icon={<Thermometer size={20} color="#F97316"/>}
                                 chartData={chartWaterTemperature}
-                                dataPrecision={dataPrecision}
                                 color="#F97316"
                                 currentValue={currentWaterTemp}
                             />
                             <LineChartCard
                                 title={t('dashboard.charts.waterLevel')}
-                                icon={<Waves size={20} color="#3B82F6"/>}
+                                icon={<Activity size={20} color="#3B82F6"/>}
                                 chartData={chartTide}
-                                dataPrecision={dataPrecision}
                                 color="#3B82F6"
                                 currentValue={currentWaterLevel}
                             />
                             <LineChartCard
                                 title={t('dashboard.charts.waveHeight')}
-                                icon={<Activity size={20} color="#10B981"/>}
+                                icon={<Waves size={20} color="#10B981"/>}
                                 chartData={chartWaveHeight}
-                                dataPrecision={dataPrecision}
                                 color="#10B981"
                                 currentValue={currentWaveHeight}
                             />

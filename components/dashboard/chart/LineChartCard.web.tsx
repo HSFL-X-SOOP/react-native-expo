@@ -8,7 +8,6 @@ export type LineChartCardProps = {
     title: string,
     icon?: React.ReactNode,
     chartData: { label: string, value: number, fullDateTime?: string }[],
-    dataPrecision: number,
     color?: string,
     currentValue?: number,
 }
@@ -17,7 +16,6 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
     title,
     icon,
     chartData,
-    dataPrecision,
     color = "#4dabf7",
     currentValue
 }) => {
@@ -32,14 +30,8 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             return {data: [], displayData: [], minValue: 0, maxValue: 1};
         }
 
-        const filteredData = chartData.filter((_, idx) => idx % dataPrecision === 0);
-
-        const lastIndex = chartData.length - 1;
-        if (lastIndex % dataPrecision !== 0 && lastIndex >= 0) {
-            filteredData.push(chartData[lastIndex]);
-        }
-
-        const values = filteredData.map(item => item.value);
+        // Backend handles data aggregation, so use all data points
+        const values = chartData.map(item => item.value);
         const minValue = Math.min(...values);
         const maxValue = Math.max(...values);
 
@@ -47,14 +39,14 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
 
         return {
             data: values,
-            displayData: filteredData,
+            displayData: chartData,
             minValue: minValue - padding,
             maxValue: maxValue + padding
         };
-    }, [chartData, dataPrecision]);
+    }, [chartData]);
 
-    const chartWidth = media.md ? 320 : 400;
-    const chartHeight = media.md ? 180 : 220;
+    const chartWidth = media.md ? 360 : 460;
+    const chartHeight = media.md ? 200 : 260;
     const padding = { top: 20, right: 20, bottom: 40, left: 50 };
     const innerWidth = chartWidth - padding.left - padding.right;
     const innerHeight = chartHeight - padding.top - padding.bottom;

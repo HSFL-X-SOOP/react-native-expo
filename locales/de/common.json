@@ -252,10 +252,17 @@
       "yesterday": "Gestern",
       "last7days": "Letzte 7 Tage",
       "last30days": "Letzte 30 Tage",
+      "last90days": "Letzte 90 Tage",
+      "last180days": "Letzte 180 Tage",
+      "last1year": "Letztes Jahr",
       "todayButton": "Heute",
       "yesterdayButton": "Gestern",
       "last7daysButton": "7 Tage",
-      "last30daysButton": "30 Tage"
+      "last30daysButton": "30 Tage",
+      "last90daysButton": "90 Tage",
+      "last180daysButton": "180 Tage",
+      "last1yearButton": "1 Jahr",
+      "selectRange": "Zeitraum wählen"
     },
     "charts": {
       "waterTemperature": "Wassertemperatur",

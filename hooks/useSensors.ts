@@ -89,7 +89,8 @@ export function useSensorDataNew() {
 }
 
 /**
- * Hook to fetch sensor data for a specific location within a time range
+ * Hook to fetch sensor data for a specific location within a time range (FAST API)
+ * Uses the new FAST endpoint which includes backend-side data aggregation
  */
 export function useSensorDataTimeRange(id: number | null, timeRange: string = '24h') {
     const [data, setData] = useState<LocationWithBoxes | null>(null);
@@ -103,7 +104,7 @@ export function useSensorDataTimeRange(id: number | null, timeRange: string = '2
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const result = await sensorStore.getSensorDataTimeRange(id, timeRange);
+                const result = await sensorStore.getSensorDataTimeRangeFAST(id, timeRange);
                 setData(result);
                 setError(null);
             } catch (err) {
@@ -122,7 +123,7 @@ export function useSensorDataTimeRange(id: number | null, timeRange: string = '2
 
         try {
             setLoading(true);
-            const result = await sensorStore.getSensorDataTimeRange(id, timeRange);
+            const result = await sensorStore.getSensorDataTimeRangeFAST(id, timeRange);
             setData(result);
             setError(null);
         } catch (err) {
