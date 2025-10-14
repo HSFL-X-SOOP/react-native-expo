@@ -13,7 +13,6 @@ export default function SensorMarker({locationWithBoxes}: SensorMarkerProps) {
     const [open, setOpen] = useState(false);
     const media = useMedia();
 
-    // Mobile: Use Dialog
     if (!media.gtMd) {
         return (
             <>

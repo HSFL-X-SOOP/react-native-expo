@@ -2,38 +2,25 @@ import {useSensorDataNew} from '@/hooks/useSensors';
 import {useSupercluster} from '@/hooks/useSupercluster';
 import {Palette} from '@tamagui/lucide-icons';
 import type {MapRef} from '@vis.gl/react-maplibre';
-import {
-    LngLatBoundsLike,
-    Map
-} from '@vis.gl/react-maplibre';
+import {LngLatBoundsLike, Map} from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
-import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
-import { View } from 'react-native';
-import '../Global.css';
-import SensorMarker from './map/web/SensorMarker';
-import {useMemo, useState, useEffect} from 'react';
+import {useMemo, useState, useRef} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text, useTheme} from 'tamagui';
 import ClusterMarker from './map/web/ClusterMarker';
 import MapZoomControl from './map/MapZoomControl';
-import { useSupercluster } from '@/hooks/useSupercluster';
-import type { MapRef } from '@vis.gl/react-maplibre';
-import { BoxType, LocationWithBoxes } from '@/api/models/sensor';
+import SensorMarker from './map/web/SensorMarker';
+import {BoxType, LocationWithBoxes} from '@/api/models/sensor';
 import MapSensorDrawer from './map/MapSensorDrawer';
 import SensorList from './map/SensorList';
 import MapDrawerToggle from './map/MapDrawerToggle';
-import SensorMarker from './map/web/SensorMarker';
-import {BoxType} from '@/api/models/sensor';
 
 interface MapProps {
     module1Visible?: boolean;
     module2Visible?: boolean;
     module3Visible?: boolean;
     isDark?: boolean;
-    // Overlay props - currently disabled
-    // temperatureVisible?: boolean;
-    // windDirectionVisible?: boolean;
 }
 
 export default function WebMap(props: MapProps) {
@@ -43,7 +30,7 @@ export default function WebMap(props: MapProps) {
         module3Visible = false,
         isDark = false
     } = props;
-    const { data: content, loading } = useSensorDataNew();
+    const {data: content, loading} = useSensorDataNew();
     const mapRef = React.useRef<MapRef>(null);
 
     const homeCoordinate: [number, number] = [9.26, 54.47926];
@@ -73,12 +60,10 @@ export default function WebMap(props: MapProps) {
         ];
     }, [viewState]);
 
-    // Filter locations based on module visibility
     const filteredContent = useMemo(() => {
         if (!content) return [];
 
         return content.filter(locationWithBoxes => {
-            // Check if this location has any boxes matching the enabled modules
             const hasWaterBoxes = locationWithBoxes.boxes.some(box =>
                 box.type === BoxType.WaterBox || box.type === BoxType.WaterTemperatureOnlyBox
             );
@@ -86,12 +71,10 @@ export default function WebMap(props: MapProps) {
                 box.type === BoxType.AirBox
             );
 
-            // Show location if it has boxes matching any enabled module
             if (module1Visible && hasWaterBoxes) return true;
-            if (module2Visible && hasAirBoxes) return true;
-            // module3Visible is for future use (Air Quality)
+            return module2Visible && hasAirBoxes;
 
-            return false;
+
         });
     }, [content, module1Visible, module2Visible, module3Visible]);
 
@@ -100,7 +83,7 @@ export default function WebMap(props: MapProps) {
         bounds,
         zoomLevel
     );
-    // Filter sensors by viewport bounds
+
     const visibleSensors = useMemo(() => {
         return filteredContent.filter(sensor => {
             const {lat, lon} = sensor.location.coordinates;
@@ -113,42 +96,29 @@ export default function WebMap(props: MapProps) {
         });
     }, [filteredContent, bounds]);
 
-    // Handle sensor selection from list - center map and highlight marker
     const handleSensorSelect = (sensor: LocationWithBoxes) => {
         const {lat, lon} = sensor.location.coordinates;
         setHighlightedSensorId(sensor.location.id);
 
-        // Center the map on the selected sensor
         mapRef.current?.flyTo({
             center: [lon, lat],
-            zoom: Math.max(zoomLevel, 12), // Zoom in if needed
+            zoom: Math.max(zoomLevel, 12),
             duration: 1000,
         });
 
-        // Clear highlight after animation
         setTimeout(() => {
             setHighlightedSensorId(null);
         }, 3000);
     };
 
-    const {clusters, getClusterExpansionZoom} = useSupercluster(
-        filteredContent,
-        bounds,
-        zoomLevel
-    );
-
-    // Track which style type is selected: 'old' or 'new'
     const [styleType, setStyleType] = useState<'old' | 'new'>('old');
     const t = useTheme();
 
-    // Automatically load the correct style based on styleType and isDark
     const mapStyle = useMemo(() => {
         if (styleType === 'old') {
-            // Load the old style and modify its background color based on isDark
             const baseStyle = require('../assets/markers/mapStyles/style.json');
-            const modifiedStyle = JSON.parse(JSON.stringify(baseStyle)); // Deep clone
+            const modifiedStyle = JSON.parse(JSON.stringify(baseStyle));
 
-            // Find and update the background layer
             const backgroundLayer = modifiedStyle.layers.find((layer: any) => layer.id === 'background');
             if (backgroundLayer) {
                 backgroundLayer.paint['background-color'] = isDark ? '#1a1a1a' : 'rgba(255,255,255,1)';
@@ -156,7 +126,6 @@ export default function WebMap(props: MapProps) {
 
             return modifiedStyle;
         } else {
-            // For new style, use light or dark version based on isDark
             return isDark
                 ? require('../assets/markers/mapStyles/dark_mode_openfreemap.json')
                 : require('../assets/markers/mapStyles/light_mode_openfreemap.json');
@@ -194,22 +163,7 @@ export default function WebMap(props: MapProps) {
                 />
             );
         });
-    }, [clusters, getClusterExpansionZoom]);
-
-    // Update map background color when theme changes
-    useEffect(() => {
-        const map = mapRef.current?.getMap();
-        if (!map) return;
-
-        // Wait for map to be loaded before changing style
-        if (!map.isStyleLoaded()) {
-            map.once('load', () => {
-                map.setPaintProperty('background', 'background-color', isDark ? '#1a1a1a' : '#ffffff');
-            });
-        } else {
-            map.setPaintProperty('background', 'background-color', isDark ? '#1a1a1a' : '#ffffff');
-        }
-    }, [isDark]);
+    }, [clusters, getClusterExpansionZoom, highlightedSensorId]);
 
     return (
         <View style={{flex: 1}}>
@@ -222,13 +176,23 @@ export default function WebMap(props: MapProps) {
                     mapCenter={currentCoordinate}
                 />
             </MapSensorDrawer>
+
+            <MapDrawerToggle onPress={() => setIsDrawerOpen(!isDrawerOpen)} isOpen={isDrawerOpen}/>
+
             <Map
                 ref={mapRef}
                 initialViewState={viewState}
                 onMove={(e) => {
+                    if (debounceTimerRef.current) {
+                        clearTimeout(debounceTimerRef.current);
+                    }
+
                     setCurrentCoordinate([e.viewState.longitude, e.viewState.latitude]);
-                    setViewState(e.viewState);
                     setZoomLevel(e.viewState.zoom);
+
+                    debounceTimerRef.current = setTimeout(() => {
+                        setViewState(e.viewState);
+                    }, 300);
                 }}
                 key="map"
                 mapStyle={mapStyle}
@@ -246,6 +210,62 @@ export default function WebMap(props: MapProps) {
                     homeCoordinate={homeCoordinate}
                 />
             </Map>
-        </View>);
+
+            <View style={styles.container}>
+                <TouchableOpacity
+                    style={[styles.button, {
+                        borderTopLeftRadius: 8,
+                        borderTopRightRadius: 8,
+                        borderBottomLeftRadius: 8,
+                        borderBottomRightRadius: 8,
+                        backgroundColor: styleType === 'new' ? t.color?.val : t.background?.val
+                    }]}
+                    onPress={() => setStyleType('new')}
+                    activeOpacity={0.7}
+                >
+                    <Palette color={styleType === 'new' ? t.background?.val : t.color?.val} size={24}/>
+                    <Text
+                        style={{fontSize: 13, color: styleType === 'new' ? t.background?.val : t.color?.val}}>Neu</Text>
+                </TouchableOpacity>
+                <View style={{height: 8}}/>
+                <TouchableOpacity
+                    style={[styles.button, {
+                        borderTopLeftRadius: 8,
+                        borderTopRightRadius: 8,
+                        borderBottomLeftRadius: 8,
+                        borderBottomRightRadius: 8,
+                        backgroundColor: styleType === 'old' ? t.color?.val : t.background?.val
+                    }]}
+                    onPress={() => setStyleType('old')}
+                    activeOpacity={0.7}
+                >
+                    <Palette color={styleType === 'old' ? t.background?.val : t.color?.val} size={24}/>
+                    <Text
+                        style={{fontSize: 13, color: styleType === 'old' ? t.background?.val : t.color?.val}}>Alt</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
 }
 
+const styles = StyleSheet.create({
+    container: {
+        position: "absolute",
+        right: 20,
+        bottom: 300,
+        flexDirection: "column",
+        alignItems: "center",
+        zIndex: 10,
+    },
+    button: {
+        width: 56,
+        height: 40,
+        justifyContent: "center",
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 4,
+    }
+});

@@ -7,10 +7,6 @@ import {useThemeContext} from '@/context/ThemeSwitch';
 export default function MapScreen() {
   const {isDark} = useThemeContext();
 
-  // Overlay filters - currently disabled
-  // const [temperatureVisible, setTemperatureVisible] = useState(false);
-  // const [windDirectionVisible, setWindDirectionVisible] = useState(false);
-
   const [module1Visible, setModule1Visible] = useState(true);
   const [module2Visible, setModule2Visible] = useState(true);
   const [module3Visible, setModule3Visible] = useState(false);

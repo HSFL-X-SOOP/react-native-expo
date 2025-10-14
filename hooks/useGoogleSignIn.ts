@@ -36,7 +36,6 @@ export const useGoogleSignIn = () => {
         return;
       }
 
-      // Native flow
       logger.debug('Checking Play Services availability');
       await GoogleSignin.hasPlayServices();
 

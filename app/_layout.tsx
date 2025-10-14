@@ -114,7 +114,6 @@ function RootContent() {
     const {currentTheme} = useThemeContext()
     const pathname = usePathname()
 
-    // Don't show footer on map page
     const shouldShowFooter = Platform.OS === 'web' && pathname !== '/map'
 
     useEffect(() => {

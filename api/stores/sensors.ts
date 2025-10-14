@@ -2,11 +2,6 @@ import {useHttpClient} from '@/api/client';
 import {mockLocationWithBoxes, mockSensorModules, mockTimeRangeData} from '@/api/mock/mock-sensor-data';
 import {LocationWithBoxes, SensorModule} from '@/api/models/sensor';
 
-// ============================================
-// MOCK DATA CONFIGURATION
-// Set this to true to use mock data instead of API
-// Set this to false to use real database
-// ============================================
 const USE_MOCK_DATA = false;
 
 export function useSensorStore() {

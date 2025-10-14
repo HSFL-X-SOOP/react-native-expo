@@ -24,10 +24,8 @@ export function useSupercluster(
     zoom: number,
     options?: Supercluster.Options<ClusterProperties, any>
 ) {
-    // Track if we have any locations
     const hasLocations = locations && locations.length > 0;
-    // Ensure zoom has a valid default value
-    const safeZoom = typeof zoom === 'number' && !isNaN(zoom) ? zoom : 7;
+    const safeZoom = !isNaN(zoom) ? zoom : 7;
 
     const supercluster = useMemo(() => {
         const cluster = new Supercluster<ClusterProperties>({
@@ -36,7 +34,6 @@ export function useSupercluster(
             ...options,
         });
 
-        // Only create points if we have locations
         if (!hasLocations) {
             return cluster;
         }
@@ -61,7 +58,6 @@ export function useSupercluster(
     }, [locations, options, hasLocations]);
 
     const clusters = useMemo(() => {
-        // Only get clusters if we have locations loaded
         if (!hasLocations) {
             return [];
         }

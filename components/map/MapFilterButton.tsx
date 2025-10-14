@@ -28,7 +28,6 @@ export default function MapFilterButton({
     const isWeb = Platform.OS === 'web';
     const isMobile = media.sm || media.xs;
 
-    // For web desktop: use Popover, for web mobile and native: use Sheet
     const useSheet = !isWeb || isMobile;
 
     const FilterContent = () => (
@@ -121,7 +120,6 @@ export default function MapFilterButton({
     );
 
     if (useSheet) {
-        // Mobile (web & native) - use Sheet
         return (
             <View style={styles.buttonContainer}>
                 <FilterButton />
