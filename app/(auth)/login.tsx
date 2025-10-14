@@ -36,7 +36,7 @@ export default function LoginScreen() {
     }, [session, router]);
 
     const handleSubmit = async () => {
-        logger.info('Login attempt', { email, rememberMe });
+        logger.info('Login attempt', {email, rememberMe});
         const res = await login({email, password, rememberMe});
         if (res) {
             logger.info('Login successful');
@@ -63,7 +63,12 @@ export default function LoginScreen() {
 
     return (
         <SafeAreaView style={{flex: 1}}>
-            <ScrollView flex={1} backgroundColor="$content3" contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 16}}>
+            <ScrollView flex={1} backgroundColor="$content3" contentContainerStyle={{
+                flexGrow: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 16
+            }}>
                 <AuthCard
                     title={t('auth.signIn')}
                     subtitle={t('auth.welcomeBack')}
@@ -98,7 +103,8 @@ export default function LoginScreen() {
                         )}
 
                         <XStack justifyContent="space-between" alignItems="center" width="100%">
-                            <XStack gap="$2" alignItems="center" pressStyle={{ opacity: 0.7 }} onPress={() => setRememberMe(!rememberMe)}>
+                            <XStack gap="$2" alignItems="center" pressStyle={{opacity: 0.7}}
+                                    onPress={() => setRememberMe(!rememberMe)}>
                                 <Checkbox
                                     id="remember-me"
                                     checked={rememberMe}
@@ -177,12 +183,12 @@ export default function LoginScreen() {
                         >
                             {googleLoading ? (
                                 <XStack gap="$2" alignItems="center">
-                                    <Spinner size="small" />
+                                    <Spinner size="small"/>
                                     <Text color="$color">{t('auth.signingIn')}</Text>
                                 </XStack>
                             ) : (
                                 <XStack gap="$3" alignItems="center">
-                                    <GoogleIcon size={20} />
+                                    <GoogleIcon size={20}/>
                                     <Text color="$color">{t('auth.signInWithGoogle')}</Text>
                                 </XStack>
                             )}

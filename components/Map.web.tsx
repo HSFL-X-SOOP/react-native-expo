@@ -92,7 +92,7 @@ export default function WebMap() {
           setZoomLevel(e.viewState.zoom);
         }}
         key="map"
-        mapStyle={require('../assets/style.txt')}
+        mapStyle={require('../assets/style.json')}
         maxBounds={mapBoundariesLongLat}
         longitude={currentCoordinate[0]}
         latitude={currentCoordinate[1]}
