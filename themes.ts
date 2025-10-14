@@ -1,4 +1,24 @@
 import {createThemes, defaultComponentThemes} from '@tamagui/theme-builder'
+import * as Colors from '@tamagui/colors'
+
+const lightShadows = {
+    shadow1: 'rgba(0,0,0,0.04)',
+    shadow2: 'rgba(0,0,0,0.08)',
+    shadow3: 'rgba(0,0,0,0.16)',
+    shadow4: 'rgba(0,0,0,0.24)',
+    shadow5: 'rgba(0,0,0,0.32)',
+    shadow6: 'rgba(0,0,0,0.4)',
+}
+
+const darkShadows = {
+    shadow1: 'rgba(0,0,0,0.2)',
+    shadow2: 'rgba(0,0,0,0.3)',
+    shadow3: 'rgba(0,0,0,0.4)',
+    shadow4: 'rgba(0,0,0,0.5)',
+    shadow5: 'rgba(0,0,0,0.6)',
+    shadow6: 'rgba(0,0,0,0.7)',
+}
+
 
 const defaultLight = [
     '#fafafa', '#f2f2f3', '#ebebec', '#e3e3e6', '#dcdcdf', '#d4d4d8',
@@ -66,6 +86,12 @@ export const themes = createThemes({
         },
         extra: {
             light: {
+                ...lightShadows,
+                shadowColor: lightShadows.shadow1,
+                ...Colors.gray,
+                ...Colors.blue,
+                ...Colors.green,
+                ...Colors.orange,
                 background: '#fafafa',
                 color: '#1f1f21',
                 borderColor: '#e4e4e7',
@@ -82,6 +108,12 @@ export const themes = createThemes({
                 ctaText: '#ffffff',
             },
             dark: {
+                ...darkShadows,
+                shadowColor: darkShadows.shadow1,
+                ...Colors.grayDark,
+                ...Colors.blueDark,
+                ...Colors.greenDark,
+                ...Colors.orangeDark,
                 background: '#000000',
                 color: '#ffffff',
                 borderColor: '#52525b',

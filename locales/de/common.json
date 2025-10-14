@@ -169,6 +169,10 @@
     "next": "Weiter",
     "finish": "Fertig"
   },
+  "Heute": "Heute",
+  "Gestern": "Gestern",
+  "7 Tage": "7 Tage",
+  "30 Tage": "30 Tage",
   "last.measurement": "Letzte Messung",
   "sensor": {
     "location": "Standort",
