@@ -1,12 +1,15 @@
 import {useSensorDataNew} from "@/hooks/useSensors";
 import {useSupercluster} from "@/hooks/useSupercluster";
 import {Camera, MapView} from "@maplibre/maplibre-react-native";
-import {useMemo, useState} from "react";
+import {useMemo, useState, useRef} from "react";
 import {View} from "react-native";
 import SensorMarker from "./map/native/SensorMarker";
 import ClusterMarker from "./map/native/ClusterMarker";
 import MapZoomControl from "./map/MapZoomControl";
-import {BoxType} from "@/api/models/sensor";
+import {BoxType, LocationWithBoxes} from "@/api/models/sensor";
+import MapSensorDrawer from "./map/MapSensorDrawer";
+import SensorList from "./map/SensorList";
+import MapDrawerToggle from "./map/MapDrawerToggle";
 
 interface MapProps {
     module1Visible?: boolean;
@@ -25,7 +28,8 @@ export default function NativeMap(props: MapProps) {
         module3Visible = false,
         isDark = false
     } = props;
-    const {data: content} = useSensorDataNew();
+    const {data: content, loading} = useSensorDataNew();
+    const mapRef = useRef<any>(null);
 
     const homeCoordinate: [number, number] = [9.26, 54.46];
     const minMaxZoomLevel = {min: 3, max: 16};
@@ -37,6 +41,14 @@ export default function NativeMap(props: MapProps) {
     const [zoomLevel, setZoomLevel] = useState(7);
     const [currentCoordinate, setCurrentCoordinate] = useState<[number, number]>(homeCoordinate);
     const [cameraUpdateTrigger, setCameraUpdateTrigger] = useState(0);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [highlightedSensorId, setHighlightedSensorId] = useState<number | null>(null);
+    const [viewportBounds, setViewportBounds] = useState<[number, number, number, number]>([
+        mapBoundariesLongLat.sw[0],
+        mapBoundariesLongLat.sw[1],
+        mapBoundariesLongLat.ne[0],
+        mapBoundariesLongLat.ne[1]
+    ]);
 
     // Custom setZoomLevel that triggers camera update
     const handleSetZoomLevel = (newZoom: number | ((prev: number) => number)) => {
@@ -52,13 +64,8 @@ export default function NativeMap(props: MapProps) {
     };
 
     const bounds: [number, number, number, number] = useMemo(() => {
-        return [
-            mapBoundariesLongLat.sw[0],
-            mapBoundariesLongLat.sw[1],
-            mapBoundariesLongLat.ne[0],
-            mapBoundariesLongLat.ne[1],
-        ];
-    }, []);
+        return viewportBounds;
+    }, [viewportBounds]);
 
     // Filter locations based on module visibility
     const filteredContent = useMemo(() => {
@@ -81,6 +88,37 @@ export default function NativeMap(props: MapProps) {
             return false;
         });
     }, [content, module1Visible, module2Visible, module3Visible]);
+
+    // Filter sensors by viewport bounds
+    const visibleSensors = useMemo(() => {
+        return filteredContent.filter(sensor => {
+            const { lat, lon } = sensor.location.coordinates;
+            return (
+                lon >= bounds[0] &&
+                lat >= bounds[1] &&
+                lon <= bounds[2] &&
+                lat <= bounds[3]
+            );
+        });
+    }, [filteredContent, bounds]);
+
+    // Handle sensor selection from list - center map and highlight marker
+    const handleSensorSelect = (sensor: LocationWithBoxes) => {
+        const { lat, lon } = sensor.location.coordinates;
+        setHighlightedSensorId(sensor.location.id);
+
+        // Center the map on the selected sensor
+        handleSetZoomLevel(Math.max(zoomLevel, 12)); // Zoom in if needed
+        handleSetCurrentCoordinate([lon, lat]);
+
+        // Close drawer after selection (mobile UX)
+        setIsDrawerOpen(false);
+
+        // Clear highlight after animation
+        setTimeout(() => {
+            setHighlightedSensorId(null);
+        }, 3000);
+    };
 
     // Only use supercluster when we have valid content
     const {clusters, getClusterExpansionZoom} = useSupercluster(
@@ -124,6 +162,7 @@ export default function NativeMap(props: MapProps) {
     return (
         <View style={{flex: 1, backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5'}}>
             <MapView
+                ref={mapRef}
                 style={{flex: 1}}
                 mapStyle={require('../assets/style.json')}
                 compassEnabled={true}
@@ -131,6 +170,17 @@ export default function NativeMap(props: MapProps) {
                 onRegionDidChange={(region: any) => {
                     setCurrentCoordinate(region.centerCoordinate);
                     setZoomLevel(region.zoomLevel);
+
+                    // Update viewport bounds for filtering
+                    // Note: This is an approximation. For precise bounds,
+                    // we would need to get the actual visible region from MapLibre
+                    const approximateBounds: [number, number, number, number] = [
+                        region.centerCoordinate[0] - 0.5,
+                        region.centerCoordinate[1] - 0.5,
+                        region.centerCoordinate[0] + 0.5,
+                        region.centerCoordinate[1] + 0.5,
+                    ];
+                    setViewportBounds(approximateBounds);
                 }}
             >
                 <Camera
@@ -151,6 +201,20 @@ export default function NativeMap(props: MapProps) {
                 setCurrentCoordinate={handleSetCurrentCoordinate}
                 homeCoordinate={homeCoordinate}
             />
+
+            {/* Floating Toggle Button */}
+            <MapDrawerToggle onPress={() => setIsDrawerOpen(!isDrawerOpen)} isOpen={isDrawerOpen} />
+
+            {/* Sensor List Drawer */}
+            <MapSensorDrawer isOpen={isDrawerOpen} onToggle={() => setIsDrawerOpen(!isDrawerOpen)}>
+                <SensorList
+                    sensors={visibleSensors}
+                    onSensorSelect={handleSensorSelect}
+                    highlightedSensorId={highlightedSensorId}
+                    loading={loading}
+                    mapCenter={currentCoordinate}
+                />
+            </MapSensorDrawer>
         </View>
     );
 }

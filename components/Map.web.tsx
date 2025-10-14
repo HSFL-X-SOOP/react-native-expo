@@ -5,7 +5,7 @@ import {
 } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { View } from 'react-native';
 import '../Global.css';
 import SensorMarker from './map/web/SensorMarker';
@@ -13,7 +13,10 @@ import ClusterMarker from './map/web/ClusterMarker';
 import MapZoomControl from './map/MapZoomControl';
 import { useSupercluster } from '@/hooks/useSupercluster';
 import type { MapRef } from '@vis.gl/react-maplibre';
-import { BoxType } from '@/api/models/sensor';
+import { BoxType, LocationWithBoxes } from '@/api/models/sensor';
+import MapSensorDrawer from './map/MapSensorDrawer';
+import SensorList from './map/SensorList';
+import MapDrawerToggle from './map/MapDrawerToggle';
 
 interface MapProps {
   module1Visible?: boolean;
@@ -32,7 +35,7 @@ export default function WebMap(props: MapProps) {
     module3Visible = false,
     isDark = false
   } = props;
-  const { data: content } = useSensorDataNew();
+  const { data: content, loading } = useSensorDataNew();
   const mapRef = React.useRef<MapRef>(null);
 
   const homeCoordinate: [number, number] = [9.26, 54.47926];
@@ -46,6 +49,9 @@ export default function WebMap(props: MapProps) {
     latitude: homeCoordinate[1],
     zoom: zoomLevel
   });
+  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+  const [highlightedSensorId, setHighlightedSensorId] = useState<number | null>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const bounds: [number, number, number, number] = useMemo(() => {
     const map = mapRef.current?.getMap();
@@ -80,6 +86,37 @@ export default function WebMap(props: MapProps) {
       return false;
     });
   }, [content, module1Visible, module2Visible, module3Visible]);
+
+  // Filter sensors by viewport bounds
+  const visibleSensors = useMemo(() => {
+    return filteredContent.filter(sensor => {
+      const { lat, lon } = sensor.location.coordinates;
+      return (
+        lon >= bounds[0] &&
+        lat >= bounds[1] &&
+        lon <= bounds[2] &&
+        lat <= bounds[3]
+      );
+    });
+  }, [filteredContent, bounds]);
+
+  // Handle sensor selection from list - center map and highlight marker
+  const handleSensorSelect = (sensor: LocationWithBoxes) => {
+    const { lat, lon } = sensor.location.coordinates;
+    setHighlightedSensorId(sensor.location.id);
+
+    // Center the map on the selected sensor
+    mapRef.current?.flyTo({
+      center: [lon, lat],
+      zoom: Math.max(zoomLevel, 12), // Zoom in if needed
+      duration: 1000,
+    });
+
+    // Clear highlight after animation
+    setTimeout(() => {
+      setHighlightedSensorId(null);
+    }, 3000);
+  };
 
   const { clusters, getClusterExpansionZoom } = useSupercluster(
     filteredContent,
@@ -137,13 +174,37 @@ export default function WebMap(props: MapProps) {
 
   return (
     <View style={{flex: 1, backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5'}}>
+      {/* Sensor List Drawer */}
+      <MapSensorDrawer isOpen={isDrawerOpen} onToggle={() => setIsDrawerOpen(!isDrawerOpen)}>
+        <SensorList
+          sensors={visibleSensors}
+          onSensorSelect={handleSensorSelect}
+          highlightedSensorId={highlightedSensorId}
+          loading={loading}
+          mapCenter={currentCoordinate}
+        />
+      </MapSensorDrawer>
+
+      {/* Floating Toggle Button */}
+      <MapDrawerToggle onPress={() => setIsDrawerOpen(!isDrawerOpen)} isOpen={isDrawerOpen} />
+
       <Map
         ref={mapRef}
         initialViewState={viewState}
         onMove={(e) => {
+          // Clear previous debounce timer
+          if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current);
+          }
+
+          // Update view state immediately for smooth map movement
           setCurrentCoordinate([e.viewState.longitude, e.viewState.latitude]);
-          setViewState(e.viewState);
           setZoomLevel(e.viewState.zoom);
+
+          // Debounce the viewState update to reduce re-renders during panning
+          debounceTimerRef.current = setTimeout(() => {
+            setViewState(e.viewState);
+          }, 300);
         }}
         key="map"
         mapStyle={require('../assets/style.json')}
