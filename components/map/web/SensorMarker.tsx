@@ -1,15 +1,15 @@
-import { LocationWithBoxes } from "@/api/models/sensor";
-import { Marker } from "@vis.gl/react-maplibre";
-import { SensorMarkerContent } from "./MapSensorTemperatureText";
-import { Popover, useMedia, Dialog, YStack } from "tamagui";
-import { SensorPopup } from "./MapSensorMeasurements";
-import { useState } from "react";
+import {LocationWithBoxes} from "@/api/models/sensor";
+import {Marker} from "@vis.gl/react-maplibre";
+import {SensorMarkerContent} from "../MapSensorTemperatureText";
+import {Popover, useMedia, Dialog, YStack} from "tamagui";
+import {SensorPopup} from "../MapSensorMeasurements";
+import {useState} from "react";
 
 interface SensorMarkerProps {
     locationWithBoxes: LocationWithBoxes;
 }
 
-export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
+export default function SensorMarker({locationWithBoxes}: SensorMarkerProps) {
     const [open, setOpen] = useState(false);
     const media = useMedia();
 
@@ -29,7 +29,7 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
                         }}
                         cursor="pointer"
                     >
-                        <SensorMarkerContent locationWithBoxes={locationWithBoxes} />
+                        <SensorMarkerContent locationWithBoxes={locationWithBoxes}/>
                     </YStack>
                 </Marker>
 
@@ -39,8 +39,8 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
                             key="overlay"
                             animation="quick"
                             opacity={0.5}
-                            enterStyle={{ opacity: 0 }}
-                            exitStyle={{ opacity: 0 }}
+                            enterStyle={{opacity: 0}}
+                            exitStyle={{opacity: 0}}
                         />
                         <Dialog.Content
                             bordered
@@ -55,11 +55,11 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
                                     },
                                 },
                             ]}
-                            enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
-                            exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+                            enterStyle={{x: 0, y: -20, opacity: 0, scale: 0.9}}
+                            exitStyle={{x: 0, y: 10, opacity: 0, scale: 0.95}}
                             padding="$0"
                         >
-                            <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)} />
+                            <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)}/>
                         </Dialog.Content>
                     </Dialog.Portal>
                 </Dialog>
@@ -67,7 +67,6 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
         );
     }
 
-    // Desktop: Use Popover
     return (
         <Marker
             key={locationWithBoxes.location.id}
@@ -90,7 +89,7 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
                         }}
                         cursor="pointer"
                     >
-                        <SensorMarkerContent locationWithBoxes={locationWithBoxes} />
+                        <SensorMarkerContent locationWithBoxes={locationWithBoxes}/>
                     </YStack>
                 </Popover.Trigger>
 
@@ -98,8 +97,8 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
                     borderWidth={1}
                     padding={"$0"}
                     borderColor="$borderColor"
-                    enterStyle={{ y: -10, opacity: 0 }}
-                    exitStyle={{ y: -10, opacity: 0 }}
+                    enterStyle={{y: -10, opacity: 0}}
+                    exitStyle={{y: -10, opacity: 0}}
                     elevate
                     animation={[
                         'quick',
@@ -110,8 +109,8 @@ export default function SensorMarker({ locationWithBoxes }: SensorMarkerProps) {
                         },
                     ]}
                 >
-                    <Popover.Arrow borderWidth={1} borderColor="$borderColor" />
-                    <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)} />
+                    <Popover.Arrow borderWidth={1} borderColor="$borderColor"/>
+                    <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)}/>
                 </Popover.Content>
             </Popover>
         </Marker>

@@ -1,7 +1,8 @@
-import {StyleSheet} from "react-native";
-import {Button, Text, XStack, YStack, Sheet, Checkbox, View, useTheme} from 'tamagui';
+import {StyleSheet, Platform} from "react-native";
+import {Button, Text, XStack, YStack, Sheet, Checkbox, View, useMedia, Popover, Separator} from 'tamagui';
 import {useState} from 'react';
 import {useTranslation} from '@/hooks/useTranslation';
+import {SlidersHorizontal, X} from '@tamagui/lucide-icons';
 
 interface MapFilterButtonProps {
     module1Visible: boolean;
@@ -10,10 +11,6 @@ interface MapFilterButtonProps {
     setModule2Visible: (value: boolean) => void;
     module3Visible: boolean;
     setModule3Visible: (value: boolean) => void;
-    temperatureVisible: boolean;
-    setTemperatureVisible: (value: boolean) => void;
-    windDirectionVisible: boolean;
-    setWindDirectionVisible: (value: boolean) => void;
 }
 
 export default function MapFilterButton({
@@ -23,99 +20,170 @@ export default function MapFilterButton({
                                             setModule2Visible,
                                             module3Visible,
                                             setModule3Visible,
-                                            temperatureVisible,
-                                            setTemperatureVisible,
-                                            windDirectionVisible,
-                                            setWindDirectionVisible,
                                         }: MapFilterButtonProps) {
     const {t} = useTranslation();
     const [sheetVisible, setSheetVisible] = useState(false);
-    const theme = useTheme();
+    const [popoverOpen, setPopoverOpen] = useState(false);
+    const media = useMedia();
+    const isWeb = Platform.OS === 'web';
+    const isMobile = media.sm || media.xs;
 
-    const buttonBg = theme.secondary?.get?.() || theme.accentBackground?.get?.() || theme.color?.get?.();
+    const useSheet = !isWeb || isMobile;
 
-    return (
-        <View>
-            <Button
-                theme="secondary"
-                circular
-                size="$6"
-                onPress={() => setSheetVisible(true)}
-                style={[styles.button, {backgroundColor: buttonBg}]}
-            />
+    const FilterContent = () => (
+        <YStack gap="$3" padding="$3" minWidth={250}>
+            <XStack alignItems="center" gap="$3" paddingVertical="$2"
+                    pressStyle={{opacity: 0.7}}
+                    onPress={() => setModule1Visible(!module1Visible)}>
+                <Checkbox
+                    checked={module1Visible}
+                    onCheckedChange={(checked) => setModule1Visible(checked === true)}
+                    size="$4"
+                    borderColor={module1Visible ? "$accent7" : "$borderColor"}
+                    backgroundColor={module1Visible ? "$accent7" : "transparent"}
+                >
+                    <Checkbox.Indicator>
+                        <View width="100%" height="100%" alignItems="center" justifyContent="center">
+                            <Text color="white" fontWeight="bold">✓</Text>
+                        </View>
+                    </Checkbox.Indicator>
+                </Checkbox>
+                <Text fontSize="$4" flex={1}>{t('map.module1')}</Text>
+            </XStack>
 
-            <Sheet modal open={sheetVisible} onOpenChange={setSheetVisible} snapPointsMode="fit">
-                <Sheet.Overlay animation="lazy" enterStyle={{opacity: 0}} exitStyle={{opacity: 0}}/>
-                <Sheet.Handle/>
-                <Sheet.Frame padding="$4" backgroundColor="$background" minHeight="50%">
-                    <XStack alignItems="center" marginBottom="$4" gap="$2">
-                        <Button size="$3" chromeless circular onPress={() => setSheetVisible(false)}>
-                        </Button>
-                        <Text fontSize="$6" fontWeight="600">{t('map.filterSettings')}</Text>
-                    </XStack>
+            <XStack alignItems="center" gap="$3" paddingVertical="$2"
+                    pressStyle={{opacity: 0.7}}
+                    onPress={() => setModule2Visible(!module2Visible)}>
+                <Checkbox
+                    checked={module2Visible}
+                    onCheckedChange={(checked) => setModule2Visible(checked === true)}
+                    size="$4"
+                    borderColor={module2Visible ? "$accent7" : "$borderColor"}
+                    backgroundColor={module2Visible ? "$accent7" : "transparent"}
+                >
+                    <Checkbox.Indicator>
+                        <View width="100%" height="100%" alignItems="center" justifyContent="center">
+                            <Text color="white" fontWeight="bold">✓</Text>
+                        </View>
+                    </Checkbox.Indicator>
+                </Checkbox>
+                <Text fontSize="$4" flex={1}>{t('map.module2')}</Text>
+            </XStack>
 
-                    <YStack gap="$4">
-                        <XStack alignItems="center" gap="$3" paddingVertical="$2">
-                            <Checkbox
-                                checked={module1Visible}
-                                onCheckedChange={(checked) => setModule1Visible(checked === true)}
-                                size="$4"
-                            />
-                            <Text fontSize="$4">{t('map.module1')}</Text>
-                        </XStack>
-
-                        <XStack alignItems="center" gap="$3" paddingVertical="$2">
-                            <Checkbox
-                                checked={module2Visible}
-                                onCheckedChange={(checked) => setModule2Visible(checked === true)}
-                                size="$4"
-                            />
-                            <Text fontSize="$4">{t('map.module2')}</Text>
-                        </XStack>
-
-                        <XStack alignItems="center" gap="$3" paddingVertical="$2">
-                            <Checkbox
-                                checked={module3Visible}
-                                onCheckedChange={(checked) => setModule3Visible(checked === true)}
-                                size="$4"
-                            />
-                            <Text fontSize="$4">{t('map.module3')}</Text>
-                        </XStack>
-
-                        <XStack alignItems="center" gap="$3" paddingVertical="$2">
-                            <Checkbox
-                                checked={temperatureVisible}
-                                onCheckedChange={(checked) => setTemperatureVisible(checked === true)}
-                                size="$4"
-                            />
-                            <Text fontSize="$4">{t('map.temperatureOverlay')}</Text>
-                        </XStack>
-
-                        <XStack alignItems="center" gap="$3" paddingVertical="$2">
-                            <Checkbox
-                                checked={windDirectionVisible}
-                                onCheckedChange={(checked) => setWindDirectionVisible(checked === true)}
-                                size="$4"
-                            />
-                            <Text fontSize="$4">{t('map.windDirectionOverlay')}</Text>
-                        </XStack>
-                    </YStack>
-                </Sheet.Frame>
-            </Sheet>
-        </View>
+            <XStack alignItems="center" gap="$3" paddingVertical="$2"
+                    pressStyle={{opacity: 0.7}}
+                    onPress={() => setModule3Visible(!module3Visible)}>
+                <Checkbox
+                    checked={module3Visible}
+                    onCheckedChange={(checked) => setModule3Visible(checked === true)}
+                    size="$4"
+                    borderColor={module3Visible ? "$accent7" : "$borderColor"}
+                    backgroundColor={module3Visible ? "$accent7" : "transparent"}
+                >
+                    <Checkbox.Indicator>
+                        <View width="100%" height="100%" alignItems="center" justifyContent="center">
+                            <Text color="white" fontWeight="bold">✓</Text>
+                        </View>
+                    </Checkbox.Indicator>
+                </Checkbox>
+                <Text fontSize="$4" flex={1}>{t('map.module3')}</Text>
+            </XStack>
+        </YStack>
     );
+
+    const FilterButton = () => (
+        <Button
+            circular
+            size="$5"
+            backgroundColor="$background"
+            borderWidth={2}
+            borderColor="$accent8"
+            onPress={() => {
+                if (useSheet) {
+                    setSheetVisible(true);
+                } else {
+                    setPopoverOpen(!popoverOpen);
+                }
+            }}
+            hoverStyle={{
+                backgroundColor: "$backgroundHover",
+                borderColor: "$accent9"
+            }}
+            pressStyle={{
+                backgroundColor: "$backgroundPress",
+                borderColor: "$accent10",
+                scale: 0.95
+            }}
+        >
+            <SlidersHorizontal size={20} color="$accent8" strokeWidth={2.5} />
+        </Button>
+    );
+
+    if (useSheet) {
+        return (
+            <View style={styles.buttonContainer}>
+                <FilterButton />
+                <Sheet modal open={sheetVisible} onOpenChange={setSheetVisible} snapPointsMode="fit">
+                    <Sheet.Overlay animation="quick" enterStyle={{opacity: 0}} exitStyle={{opacity: 0}}/>
+                    <Sheet.Handle/>
+                    <Sheet.Frame padding="$4" backgroundColor="$background">
+                        <XStack alignItems="center" justifyContent="space-between" marginBottom="$4">
+                            <Text fontSize="$6" fontWeight="600">{t('map.filterSettings')}</Text>
+                            <Button size="$3" chromeless circular onPress={() => setSheetVisible(false)}>
+                                <X size={20} color="$color" />
+                            </Button>
+                        </XStack>
+                        <Separator marginBottom="$3" />
+                        <FilterContent />
+                    </Sheet.Frame>
+                </Sheet>
+            </View>
+        );
+    } else {
+        return (
+            <Popover open={popoverOpen} onOpenChange={setPopoverOpen} placement="top-end">
+                <Popover.Trigger asChild>
+                    <View style={styles.buttonContainer}>
+                        <FilterButton />
+                    </View>
+                </Popover.Trigger>
+                <Popover.Content
+                    borderWidth={1}
+                    borderColor="$borderColor"
+                    enterStyle={{y: -10, opacity: 0}}
+                    exitStyle={{y: -10, opacity: 0}}
+                    elevate
+                    animation={[
+                        'quick',
+                        {
+                            opacity: {
+                                overshootClamping: true,
+                            },
+                        },
+                    ]}
+                >
+                    <Popover.Arrow borderWidth={1} borderColor="$borderColor"/>
+                    <YStack>
+                        <XStack alignItems="center" justifyContent="space-between" padding="$3" paddingBottom="$2">
+                            <Text fontSize="$5" fontWeight="600">{t('map.filterSettings')}</Text>
+                            <Button size="$2" chromeless circular onPress={() => setPopoverOpen(false)}>
+                                <X size={16} color="$color" />
+                            </Button>
+                        </XStack>
+                        <Separator />
+                        <FilterContent />
+                    </YStack>
+                </Popover.Content>
+            </Popover>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
-    button: {
+    buttonContainer: {
         position: 'absolute',
         bottom: 20,
         right: 20,
-        paddingVertical: 16,
-        paddingHorizontal: 16,
-        borderRadius: 100,
         zIndex: 10,
-        boxShadow: '0px 2px 3.84px rgba(0, 0, 0, 0.25)',
-        elevation: 5,
     },
 });

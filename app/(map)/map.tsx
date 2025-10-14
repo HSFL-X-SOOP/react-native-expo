@@ -7,20 +7,19 @@ import {useThemeContext} from '@/context/ThemeSwitch';
 export default function MapScreen() {
   const {isDark} = useThemeContext();
 
-  const [temperatureVisible, setTemperatureVisible] = useState(false);
-  const [windDirectionVisible, setWindDirectionVisible] = useState(false);
   const [module1Visible, setModule1Visible] = useState(true);
   const [module2Visible, setModule2Visible] = useState(true);
   const [module3Visible, setModule3Visible] = useState(false);
 
   return (
-      <View pos={"relative"} flex={1} backgroundColor={isDark ? "#282c34" : "#f5f5f5"}>
+      <View pos={"relative"} flex={1}>
         <MapWrapper
             module1Visible={module1Visible}
             module2Visible={module2Visible}
             module3Visible={module3Visible}
-            temperatureVisible={temperatureVisible}
-            windDirectionVisible={windDirectionVisible}
+            isDark={isDark}
+            // temperatureVisible={temperatureVisible}
+            // windDirectionVisible={windDirectionVisible}
         />
 
         <MapFilterButton
@@ -30,10 +29,10 @@ export default function MapScreen() {
             setModule2Visible={setModule2Visible}
             module3Visible={module3Visible}
             setModule3Visible={setModule3Visible}
-            temperatureVisible={temperatureVisible}
-            setTemperatureVisible={setTemperatureVisible}
-            windDirectionVisible={windDirectionVisible}
-            setWindDirectionVisible={setWindDirectionVisible}
+            // temperatureVisible={temperatureVisible}
+            // setTemperatureVisible={setTemperatureVisible}
+            // windDirectionVisible={windDirectionVisible}
+            // setWindDirectionVisible={setWindDirectionVisible}
         />
       </View>
   );

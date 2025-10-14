@@ -1,40 +1,46 @@
-import { createTamagui, createFont } from 'tamagui'
-import { themes } from './themes'
-import { config as defaultConfig } from '@tamagui/config/v3'
+import {createTamagui, createFont} from 'tamagui'
+import {config as defaultConfig} from '@tamagui/config/v3'
+import {themes} from './themes'
 
 const oswaldFont = createFont({
-  family: 'Oswald_400Regular',
-  size: defaultConfig.fonts.body.size,
-  lineHeight: defaultConfig.fonts.body.lineHeight,
-  letterSpacing: defaultConfig.fonts.body.letterSpacing,
-  weight: defaultConfig.fonts.body.weight,
-  face: {
-    400: { normal: 'Oswald_400Regular' },
-    500: { normal: 'Oswald_500Medium' },
-    600: { normal: 'Oswald_600SemiBold' },
-    700: { normal: 'Oswald_700Bold' },
-  },
+    family: 'Oswald_400Regular',
+    size: defaultConfig.fonts.body.size,
+    lineHeight: defaultConfig.fonts.body.lineHeight,
+    letterSpacing: defaultConfig.fonts.body.letterSpacing,
+    weight: defaultConfig.fonts.body.weight,
+    face: {
+        400: {normal: 'Oswald_400Regular'},
+        500: {normal: 'Oswald_500Medium'},
+        600: {normal: 'Oswald_600SemiBold'},
+        700: {normal: 'Oswald_700Bold'},
+    },
 })
 
 export const config = createTamagui({
-  ...defaultConfig,
-  fonts: {
-    ...defaultConfig.fonts,
-    oswald: oswaldFont,
-  },
-  themes,
-  media: {
-    xs: { maxWidth: 660 },
-    sm: { maxWidth: 800 },
-    md: { maxWidth: 1024 },
-    lg: { maxWidth: 1280 },
-    xl: { maxWidth: 1536 },
-    xxl: { minWidth: 1536 },
-    gtMd: { minWidth: 1025 },
-  },
+    ...defaultConfig,
+    fonts: {
+        ...defaultConfig.fonts,
+        oswald: oswaldFont,
+    },
+    themes: {
+        ...defaultConfig.themes,
+        ...themes,
+    },
+    media: {
+        xs: {maxWidth: 660},
+        sm: {maxWidth: 800},
+        md: {maxWidth: 1024},
+        lg: {maxWidth: 1280},
+        xl: {maxWidth: 1536},
+        xxl: {minWidth: 1536},
+        gtMd: {minWidth: 1025},
+    },
 })
 
 export type AppConfig = typeof config
-declare module 'tamagui' { interface TamaguiCustomConfig extends AppConfig {} }
+declare module 'tamagui' {
+    interface TamaguiCustomConfig extends AppConfig {
+    }
+}
 
 export default config

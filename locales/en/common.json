@@ -10,7 +10,8 @@
     "menu": "Menu",
     "settings": "Settings",
     "language": "Language",
-    "theme": "Theme"
+    "theme": "Theme",
+    "projectWebsite": "Go to Project Website"
   },
   "language": {
     "name": "English"
@@ -56,6 +57,20 @@
     "passwordDigit": "At least one digit",
     "passwordSpecial": "At least one special character (@$!%*?&#-)",
     "passwordStrength": "Password Strength",
+    "loginSuccess": "Login Successful",
+    "loginError": "Login Failed",
+    "loginErrorGeneric": "An error occurred during login. Please try again.",
+    "registerSuccess": "Registration Successful",
+    "registerError": "Registration Failed",
+    "registerErrorGeneric": "An error occurred during registration. Please try again.",
+    "accountCreated": "Your account has been created successfully!",
+    "agreeToTermsRequired": "Please agree to the Terms of Service to continue.",
+    "invalidPasswordFormat": "Password does not meet the requirements.",
+    "googleSignInSuccess": "Google Sign-In Successful",
+    "googleSignInError": "Google Sign-In Failed",
+    "googleSignInErrorGeneric": "An error occurred during Google Sign-In. Please try again.",
+    "logoutSuccess": "Logged Out Successfully",
+    "logoutMessage": "You have been logged out. See you soon!",
     "magicLink": {
       "title": "Magic Link",
       "description": "Enter your email and we'll send you a secure sign-in link.",
@@ -69,7 +84,12 @@
       "verifyingMessage": "Please wait while we sign you in...",
       "invalidOrExpired": "Invalid or Expired Link",
       "requestNewLink": "Request a new magic link",
-      "validEmail": "Please enter a valid email address"
+      "validEmail": "Please enter a valid email address",
+      "linkSentSuccess": "Magic Link Sent",
+      "linkSentError": "Failed to Send Magic Link",
+      "linkSentErrorGeneric": "An error occurred while sending the magic link. Please try again.",
+      "loginSuccess": "Login Successful",
+      "loginError": "Login Failed"
     }
   },
   "profile": {
@@ -138,7 +158,11 @@
     },
     "validation": {
       "selectAtLeastOneActivity": "Please select at least one activity"
-    }
+    },
+    "saveSuccess": "Profile Saved",
+    "saveError": "Failed to Save Profile",
+    "saveErrorGeneric": "An error occurred while saving your profile. Please try again.",
+    "settingsUpdated": "Your settings have been updated successfully!"
   },
   "map": {
     "title": "Map",
@@ -168,6 +192,10 @@
     "next": "Next",
     "finish": "Finish"
   },
+  "Heute": "Today",
+  "Gestern": "Yesterday",
+  "7 Tage": "7 Days",
+  "30 Tage": "30 Days",
   "last.measurement": "Last Measurement",
   "sensor": {
     "location": "Location",
@@ -184,7 +212,27 @@
     "windDirection": "Wind Direction",
     "humidity": "Humidity",
     "airPressure": "Air Pressure",
-    "batteryVoltage": "Battery Voltage"
+    "batteryVoltage": "Battery Voltage",
+    "online": "Online",
+    "offline": "Offline",
+    "noData": "No Data",
+    "sensorsInView": "Sensors in View",
+    "allSensors": "All Sensors",
+    "inViewport": "In Viewport",
+    "showAll": "Show All",
+    "searchSensors": "Search sensors...",
+    "filterType": "Filter Type",
+    "allTypes": "All Types",
+    "waterSensors": "Water Sensors",
+    "airSensors": "Air Sensors",
+    "sortBy": "Sort By",
+    "sortByDistance": "Distance",
+    "sortByName": "Name",
+    "sortByRecent": "Most Recent",
+    "noSensorsInView": "No Sensors in View",
+    "noSearchResults": "No Search Results",
+    "noSensorsHint": "Try zooming out or moving the map to see more sensors",
+    "clearFilters": "Clear Filters"
   },
   "dashboard": {
     "dashboard": "Dashboard",
@@ -204,10 +252,17 @@
       "yesterday": "Yesterday",
       "last7days": "Last 7 Days",
       "last30days": "Last 30 Days",
+      "last90days": "Last 90 Days",
+      "last180days": "Last 180 Days",
+      "last1year": "Last Year",
       "todayButton": "Today",
       "yesterdayButton": "Yesterday",
       "last7daysButton": "7 Days",
-      "last30daysButton": "30 Days"
+      "last30daysButton": "30 Days",
+      "last90daysButton": "90 Days",
+      "last180daysButton": "180 Days",
+      "last1yearButton": "1 Year",
+      "selectRange": "Select Range"
     },
     "charts": {
       "waterTemperature": "Water Temperature",

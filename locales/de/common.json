@@ -10,7 +10,8 @@
     "menu": "Menü",
     "settings": "Einstellungen",
     "language": "Sprache",
-    "theme": "Theme"
+    "theme": "Theme",
+    "projectWebsite": "Zur Projektwebseite"
   },
   "language": {
     "name": "Deutsch"
@@ -56,6 +57,20 @@
     "passwordDigit": "Mindestens eine Ziffer",
     "passwordSpecial": "Mindestens ein Sonderzeichen (@$!%*?&#-)",
     "passwordStrength": "Passwortstärke",
+    "loginSuccess": "Anmeldung erfolgreich",
+    "loginError": "Anmeldung fehlgeschlagen",
+    "loginErrorGeneric": "Bei der Anmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "registerSuccess": "Registrierung erfolgreich",
+    "registerError": "Registrierung fehlgeschlagen",
+    "registerErrorGeneric": "Bei der Registrierung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "accountCreated": "Ihr Konto wurde erfolgreich erstellt!",
+    "agreeToTermsRequired": "Bitte stimmen Sie den Nutzungsbedingungen zu, um fortzufahren.",
+    "invalidPasswordFormat": "Das Passwort erfüllt nicht die Anforderungen.",
+    "googleSignInSuccess": "Google-Anmeldung erfolgreich",
+    "googleSignInError": "Google-Anmeldung fehlgeschlagen",
+    "googleSignInErrorGeneric": "Bei der Google-Anmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "logoutSuccess": "Erfolgreich abgemeldet",
+    "logoutMessage": "Sie wurden abgemeldet. Bis bald!",
     "magicLink": {
       "title": "Magic Link",
       "description": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen sicheren Anmeldelink.",
@@ -69,7 +84,12 @@
       "verifyingMessage": "Bitte warten Sie, während wir Sie anmelden...",
       "invalidOrExpired": "Ungültiger oder abgelaufener Link",
       "requestNewLink": "Neuen Magic Link anfordern",
-      "validEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+      "validEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+      "linkSentSuccess": "Magic Link gesendet",
+      "linkSentError": "Magic Link konnte nicht gesendet werden",
+      "linkSentErrorGeneric": "Beim Senden des Magic Links ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+      "loginSuccess": "Anmeldung erfolgreich",
+      "loginError": "Anmeldung fehlgeschlagen"
     }
   },
   "profile": {
@@ -138,7 +158,11 @@
     },
     "validation": {
       "selectAtLeastOneActivity": "Bitte wählen Sie mindestens eine Aktivität aus"
-    }
+    },
+    "saveSuccess": "Profil gespeichert",
+    "saveError": "Profil konnte nicht gespeichert werden",
+    "saveErrorGeneric": "Beim Speichern Ihres Profils ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "settingsUpdated": "Ihre Einstellungen wurden erfolgreich aktualisiert!"
   },
   "map": {
     "title": "Karte",
@@ -168,6 +192,10 @@
     "next": "Weiter",
     "finish": "Fertig"
   },
+  "Heute": "Heute",
+  "Gestern": "Gestern",
+  "7 Tage": "7 Tage",
+  "30 Tage": "30 Tage",
   "last.measurement": "Letzte Messung",
   "sensor": {
     "location": "Standort",
@@ -184,7 +212,27 @@
     "windDirection": "Windrichtung",
     "humidity": "Luftfeuchtigkeit",
     "airPressure": "Luftdruck",
-    "batteryVoltage": "Batteriespannung"
+    "batteryVoltage": "Batteriespannung",
+    "online": "Online",
+    "offline": "Offline",
+    "noData": "Keine Daten",
+    "sensorsInView": "Sensoren in Sicht",
+    "allSensors": "Alle Sensoren",
+    "inViewport": "In Sicht",
+    "showAll": "Alle anzeigen",
+    "searchSensors": "Sensoren suchen...",
+    "filterType": "Filtertyp",
+    "allTypes": "Alle Typen",
+    "waterSensors": "Wassersensoren",
+    "airSensors": "Luftsensoren",
+    "sortBy": "Sortieren nach",
+    "sortByDistance": "Entfernung",
+    "sortByName": "Name",
+    "sortByRecent": "Neueste",
+    "noSensorsInView": "Keine Sensoren in Sicht",
+    "noSearchResults": "Keine Suchergebnisse",
+    "noSensorsHint": "Versuchen Sie zu verkleinern oder die Karte zu verschieben, um mehr Sensoren zu sehen",
+    "clearFilters": "Filter zurücksetzen"
   },
   "dashboard": {
     "dashboard": "Dashboard",
@@ -204,10 +252,17 @@
       "yesterday": "Gestern",
       "last7days": "Letzte 7 Tage",
       "last30days": "Letzte 30 Tage",
+      "last90days": "Letzte 90 Tage",
+      "last180days": "Letzte 180 Tage",
+      "last1year": "Letztes Jahr",
       "todayButton": "Heute",
       "yesterdayButton": "Gestern",
       "last7daysButton": "7 Tage",
-      "last30daysButton": "30 Tage"
+      "last30daysButton": "30 Tage",
+      "last90daysButton": "90 Tage",
+      "last180daysButton": "180 Tage",
+      "last1yearButton": "1 Jahr",
+      "selectRange": "Zeitraum wählen"
     },
     "charts": {
       "waterTemperature": "Wassertemperatur",

@@ -1,15 +1,23 @@
-import { LocationWithBoxes } from '@/api/models/sensor';
-import { LineChartCard } from '@/components/dashboard/chart/LineChartCard';
-import { ChartTimeRange, TimeRangeButton } from '@/components/dashboard/chart/TimeRangeButton';
-import { MeasurementCard } from '@/components/dashboard/MeasurementCard';
-import { NavigateDashboardDropdownMenu } from '@/components/dashboard/NavigateDropdownMenu';
-import { useThemeContext } from '@/context/ThemeSwitch';
-import { useSensorDataNew, useSensorDataTimeRange } from '@/hooks/useSensors';
-import { useTranslation } from '@/hooks/useTranslation';
-import { ChartDataPoint } from '@/types/chart';
-import { MarinaNameWithId } from '@/types/marina';
-import { CreateMeasurementDictionary, GetLatestMeasurements, getIconBackground, getMeasurementColor, getMeasurementIcon, getMeasurementTypeSymbol, getTextFromMeasurementType } from '@/utils/measurements';
-import { FormattedTime } from '@/utils/time';
+import {LocationWithBoxes} from '@/api/models/sensor';
+import {LineChartCard} from '@/components/dashboard/chart/LineChartCard';
+import {ChartTimeRange, TimeRangeDropdown} from '@/components/dashboard/chart/TimeRangeDropdown';
+import {MeasurementCard} from '@/components/dashboard/MeasurementCard';
+import {NavigateDashboardDropdownMenu} from '@/components/dashboard/NavigateDropdownMenu';
+import {useThemeContext} from '@/context/ThemeSwitch';
+import {useSensorDataNew, useSensorDataTimeRange} from '@/hooks/useSensors';
+import {useTranslation} from '@/hooks/useTranslation';
+import {ChartDataPoint} from '@/types/chart';
+import {MarinaNameWithId} from '@/types/marina';
+import {
+    CreateMeasurementDictionary,
+    GetLatestMeasurements,
+    formatMeasurementValue,
+    getMeasurementColor,
+    getMeasurementIcon,
+    getMeasurementTypeSymbol,
+    getTextFromMeasurementType
+} from '@/utils/measurements';
+import {formatTimeToLocal} from '@/utils/time';
 import {
     Activity,
     ChevronDown,
@@ -20,10 +28,10 @@ import {
     Thermometer,
     Waves
 } from '@tamagui/lucide-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, SafeAreaView, ScrollView, View } from 'react-native';
+import {LinearGradient} from 'expo-linear-gradient';
+import {useLocalSearchParams, useRouter} from 'expo-router';
+import {useEffect, useMemo, useRef, useState} from 'react';
+import {Animated, SafeAreaView, ScrollView, View} from 'react-native';
 import {
     Button,
     Card,
@@ -56,14 +64,6 @@ export default function DashboardScreen() {
 
     const {data: allSensorData} = useSensorDataNew();
 
-    const content = useMemo(
-        () => allSensorData.filter((location: LocationWithBoxes) => String(location.location.id) === id),
-        [allSensorData, id]
-    );
-
-
-    const name = useMemo(() => content[0]?.location.name || "", [content]);
-
     const GetAllAvailableSensorLocations = (data: LocationWithBoxes[]): MarinaNameWithId[] => {
         const locationMap = new Map<number, MarinaNameWithId>();
 
@@ -84,15 +84,6 @@ export default function DashboardScreen() {
         [allSensorData]
     );
 
-    const dataPrecision = useMemo(() => {
-        switch (timeRange) {
-            case 'last30days': return 6;
-            case 'last7days': return 3;
-            case 'yesterday': return 3;
-            default: return 3;
-        }
-    }, [timeRange]);
-
     const isAdmin = false;
 
     const excludedMeasurements = useMemo(() => {
@@ -110,13 +101,26 @@ export default function DashboardScreen() {
 
     const apiTimeRange = useMemo(() => {
         switch (timeRange) {
-            case 'last7days': return 'WEEK';
-            case 'last30days': return 'MONTH';
-            default: return 'DAY';
+            case 'yesterday':
+                return '48h';
+            case 'last7days':
+                return '7d';
+            case 'last30days':
+                return '30d';
+            case 'last90days':
+                return '90d';
+            case 'last180days':
+                return '180d';
+            case 'last1year':
+                return '1y';
+            default:
+                return '24h';
         }
     }, [timeRange]);
 
     const {data: timeRangeData} = useSensorDataTimeRange(Number(id), apiTimeRange);
+
+    const name = useMemo(() => timeRangeData?.location.name || "", [timeRangeData]);
 
     useEffect(() => {
         if (timeRangeData) {
@@ -132,12 +136,46 @@ export default function DashboardScreen() {
     }, [timeRangeData, timeRange])
 
     const filteredMeasurements = useMemo(() => {
-        if (!content[0]?.boxes) return [];
-        const latestMeasurements = GetLatestMeasurements(content[0].boxes);
-        return latestMeasurements.filter(
+        if (!timeRangeData?.boxes) return [];
+        const latestMeasurements = GetLatestMeasurements(timeRangeData.boxes);
+        const filtered = latestMeasurements.filter(
             m => !excludedMeasurements.includes(m.measurementType)
         );
-    }, [content, excludedMeasurements]);
+
+        const order = ["Temperature, water", "Tide", "Wave Height"];
+        return filtered.sort((a, b) => {
+            const indexA = order.indexOf(a.measurementType);
+            const indexB = order.indexOf(b.measurementType);
+
+            if (indexA === -1 && indexB === -1) return 0;
+            if (indexA === -1) return 1;
+            if (indexB === -1) return -1;
+
+            return indexA - indexB;
+        });
+    }, [timeRangeData, excludedMeasurements]);
+
+    const currentWaterTemp = useMemo(() => {
+        const measurement = filteredMeasurements.find(m =>
+            m.measurementType === "Temperature, water" ||
+            m.measurementType === "WTemp"
+        );
+        return measurement?.value;
+    }, [filteredMeasurements]);
+
+    const currentWaveHeight = useMemo(() => {
+        const measurement = filteredMeasurements.find(m =>
+            m.measurementType === "Wave Height"
+        );
+        return measurement?.value;
+    }, [filteredMeasurements]);
+
+    const currentWaterLevel = useMemo(() => {
+        const measurement = filteredMeasurements.find(m =>
+            m.measurementType === "Tide"
+        );
+        return measurement?.value;
+    }, [filteredMeasurements]);
 
     const toggleInfo = () => {
         setShowInfo((prev) => !prev);
@@ -148,7 +186,7 @@ export default function DashboardScreen() {
         }).start();
     };
 
-    const latestTime = content[0]?.boxes[0].measurementTimes[0].time ? content[0].boxes[0].measurementTimes[0].time : new Date().toISOString();
+    const latestTime = timeRangeData?.boxes[0]?.measurementTimes[0]?.time || new Date().toISOString();
 
     return (
         <SafeAreaView style={{flex: 1}}>
@@ -188,9 +226,12 @@ export default function DashboardScreen() {
                             {name || t('dashboard.loading')}
                         </H1>
                         <View style={{width: 300}}>
-                            <NavigateDashboardDropdownMenu isDark={isDark} router={router}
-                                                           sensorLocations={sensorLocations}
-                                                           selectedMarinaId={Number(id)} id="select-demo-2" native/>
+                            <NavigateDashboardDropdownMenu
+                                isDark={isDark}
+                                router={router}
+                                sensorLocations={sensorLocations}
+                                selectedMarinaId={Number(id)}
+                            />
                         </View>
                     </Stack>
                 </Stack>
@@ -198,7 +239,7 @@ export default function DashboardScreen() {
                 <YStack
                     padding={media.md ? "$3" : "$4"}
                     gap={media.md ? "$4" : "$5"}
-                    maxWidth={1400}
+                    maxWidth={1800}
                     width="100%"
                     alignSelf="center"
                     marginTop={media.md ? -20 : -30}
@@ -275,7 +316,8 @@ export default function DashboardScreen() {
                             <H3 fontSize="$5" fontWeight="600">{t('dashboard.currentMeasurements')}</H3>
                             <XStack gap="$1" alignItems="center">
                                 <Stack width={6} height={6} borderRadius="$5" backgroundColor="$green9"/>
-                                <Text fontSize="$2" color="$gray11">{t('dashboard.live')} {FormattedTime({ time: latestTime })}</Text>
+                                <Text fontSize="$2"
+                                      color="$gray11">{t('dashboard.live')} {formatTimeToLocal(latestTime)}</Text>
                             </XStack>
                         </XStack>
                         <XStack
@@ -304,7 +346,6 @@ export default function DashboardScreen() {
                                                     width={56}
                                                     height={56}
                                                     borderRadius="$4"
-                                                    backgroundColor={getIconBackground(measurement.measurementType)}
                                                     alignItems="center"
                                                     justifyContent="center"
                                                 >
@@ -322,7 +363,7 @@ export default function DashboardScreen() {
                                                     <XStack alignItems="baseline" gap="$2">
                                                         <H2 fontSize="$10" fontWeight="700"
                                                             color={getMeasurementColor(measurement.measurementType)}>
-                                                            {measurement.value}
+                                                            {formatMeasurementValue(measurement.value)}
                                                         </H2>
                                                         <Text fontSize="$6"
                                                               color={getMeasurementColor(measurement.measurementType)}
@@ -353,7 +394,7 @@ export default function DashboardScreen() {
                                         <MeasurementCard
                                             key={index}
                                             measurementType={a.measurementType}
-                                            value={String(a.value)}
+                                            value={formatMeasurementValue(a.value)}
                                         />
                                     ))}
                             </XStack>
@@ -370,43 +411,17 @@ export default function DashboardScreen() {
                                     {timeRange === 'today' ? t('dashboard.timeRange.today') :
                                         timeRange === 'yesterday' ? t('dashboard.timeRange.yesterday') :
                                             timeRange === 'last7days' ? t('dashboard.timeRange.last7days') :
-                                                t('dashboard.timeRange.last30days')}
+                                                timeRange === 'last30days' ? t('dashboard.timeRange.last30days') :
+                                                    timeRange === 'last90days' ? t('dashboard.timeRange.last90days') :
+                                                        timeRange === 'last180days' ? t('dashboard.timeRange.last180days') :
+                                                            t('dashboard.timeRange.last1year')}
                                 </Text>
                             </YStack>
-                            <XStack gap="$2" backgroundColor={isDark ? '$gray8' : '$gray2'} padding="$1"
-                                    borderRadius="$3" flexWrap="wrap">
-                                <TimeRangeButton
-                                    timeRange="today"
-                                    selectedTimeRange={timeRange}
-                                    buttonText={t('dashboard.timeRange.todayButton')}
-                                    setTimeRange={setTimeRange}
-                                    isDark={isDark}
-                                />
-
-                                <TimeRangeButton
-                                    timeRange="yesterday"
-                                    selectedTimeRange={timeRange}
-                                    buttonText={t('dashboard.timeRange.yesterdayButton')}
-                                    setTimeRange={setTimeRange}
-                                    isDark={isDark}
-                                />
-
-                                <TimeRangeButton
-                                    timeRange='last7days'
-                                    selectedTimeRange={timeRange}
-                                    buttonText={t('dashboard.timeRange.last7daysButton')}
-                                    setTimeRange={setTimeRange}
-                                    isDark={isDark}
-                                />
-
-                                <TimeRangeButton
-                                    timeRange="last30days"
-                                    selectedTimeRange={timeRange}
-                                    buttonText={t('dashboard.timeRange.last30daysButton')}
-                                    setTimeRange={setTimeRange}
-                                    isDark={isDark}
-                                />
-                            </XStack>
+                            <TimeRangeDropdown
+                                selectedTimeRange={timeRange}
+                                setTimeRange={setTimeRange}
+                                isDark={isDark}
+                            />
                         </XStack>
 
                         <XStack
@@ -419,22 +434,22 @@ export default function DashboardScreen() {
                                 title={t('dashboard.charts.waterTemperature')}
                                 icon={<Thermometer size={20} color="#F97316"/>}
                                 chartData={chartWaterTemperature}
-                                dataPrecision={dataPrecision}
                                 color="#F97316"
-                            />
-                            <LineChartCard
-                                title={t('dashboard.charts.waveHeight')}
-                                icon={<Activity size={20} color="#10B981"/>}
-                                chartData={chartWaveHeight}
-                                dataPrecision={dataPrecision}
-                                color="#10B981"
+                                currentValue={currentWaterTemp}
                             />
                             <LineChartCard
                                 title={t('dashboard.charts.waterLevel')}
-                                icon={<Waves size={20} color="#3B82F6"/>}
+                                icon={<Activity size={20} color="#3B82F6"/>}
                                 chartData={chartTide}
-                                dataPrecision={dataPrecision}
                                 color="#3B82F6"
+                                currentValue={currentWaterLevel}
+                            />
+                            <LineChartCard
+                                title={t('dashboard.charts.waveHeight')}
+                                icon={<Waves size={20} color="#10B981"/>}
+                                chartData={chartWaveHeight}
+                                color="#10B981"
+                                currentValue={currentWaveHeight}
                             />
                         </XStack>
                     </YStack>
@@ -443,8 +458,4 @@ export default function DashboardScreen() {
         </SafeAreaView>
     );
 }
-
-
-
-
 

@@ -2,20 +2,22 @@ import { LocationWithBoxes } from "@/api/models/sensor";
 import { PointAnnotation } from "@maplibre/maplibre-react-native";
 import React, { useState } from "react";
 import { View } from "react-native";
-import { SensorPopup } from "./MapSensorMeasurements";
-import { SensorMarkerContent } from "./MapSensorTemperatureText";
-import { Sheet } from "tamagui";
+import { SensorPopup } from "../MapSensorMeasurements";
+import { SensorMarkerContent } from "../MapSensorTemperatureText";
+import { Sheet, Theme } from "tamagui";
 import { useThemeContext } from "@/context/ThemeSwitch";
 
-export default function AndroidMarker({
-    locationWithBoxes,
-    index,
-}: {
+interface SensorMarkerProps {
     locationWithBoxes: LocationWithBoxes;
     index?: number;
-}) {
+}
+
+export default function SensorMarker({
+    locationWithBoxes,
+    index,
+}: SensorMarkerProps) {
     const [open, setOpen] = useState(false);
-    const { isDark } = useThemeContext();
+    const { currentTheme } = useThemeContext();
 
     return (
         <>
@@ -31,7 +33,7 @@ export default function AndroidMarker({
                 onSelected={() => setOpen(true)}
             >
                 <View>
-                    <SensorMarkerContent locationWithBoxes={locationWithBoxes} />
+                    <SensorMarkerContent locationWithBoxes={locationWithBoxes} isHovered={false} />
                 </View>
             </PointAnnotation>
 
@@ -51,11 +53,13 @@ export default function AndroidMarker({
                 />
                 <Sheet.Frame
                     padding="$4"
-                    backgroundColor={isDark ? '$gray2' : '$background'}
+                    backgroundColor={"$colorTransparent"}
                     alignItems="center"
                     justifyContent="center"
                 >
-                    <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)} />
+                    <Theme name={currentTheme}>
+                        <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)} />
+                    </Theme>
                 </Sheet.Frame>
             </Sheet>
         </>

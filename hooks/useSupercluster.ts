@@ -24,12 +24,19 @@ export function useSupercluster(
     zoom: number,
     options?: Supercluster.Options<ClusterProperties, any>
 ) {
+    const hasLocations = locations && locations.length > 0;
+    const safeZoom = !isNaN(zoom) ? zoom : 7;
+
     const supercluster = useMemo(() => {
         const cluster = new Supercluster<ClusterProperties>({
             radius: 75,
             maxZoom: 16,
             ...options,
         });
+
+        if (!hasLocations) {
+            return cluster;
+        }
 
         const points: ClusterPoint[] = locations.map((locationWithBoxes) => ({
             type: 'Feature' as const,
@@ -48,11 +55,20 @@ export function useSupercluster(
 
         cluster.load(points);
         return cluster;
-    }, [locations, options]);
+    }, [locations, options, hasLocations]);
 
     const clusters = useMemo(() => {
-        return supercluster.getClusters(bounds, Math.floor(zoom));
-    }, [supercluster, bounds, zoom]);
+        if (!hasLocations) {
+            return [];
+        }
+
+        try {
+            return supercluster.getClusters(bounds, Math.floor(safeZoom));
+        } catch (error) {
+            // Silently handle errors during initial render
+            return [];
+        }
+    }, [supercluster, bounds, safeZoom, hasLocations]);
 
     const getClusterExpansionZoom = (clusterId: number) => {
         return supercluster.getClusterExpansionZoom(clusterId);

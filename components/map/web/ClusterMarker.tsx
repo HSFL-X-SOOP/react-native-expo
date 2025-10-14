@@ -1,6 +1,7 @@
 import { Marker } from "@vis.gl/react-maplibre";
-import { ClusterMarkerSvg } from "./ClusterMarkerSvg";
+import { ClusterMarkerSvg } from "../ClusterMarkerSvg";
 import { useThemeContext } from "@/context/ThemeSwitch";
+import { YStack } from "tamagui";
 
 interface ClusterMarkerProps {
     latitude: number;
@@ -23,7 +24,9 @@ export default function ClusterMarker({ latitude, longitude, pointCount, onClick
                 onClick();
             }}
         >
-            <ClusterMarkerSvg count={pointCount} accentColor={accentColor} />
+            <YStack cursor="pointer">
+                <ClusterMarkerSvg count={pointCount} accentColor={accentColor} enableAnimations={true} />
+            </YStack>
         </Marker>
     );
 }

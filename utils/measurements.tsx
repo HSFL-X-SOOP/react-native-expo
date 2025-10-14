@@ -1,6 +1,7 @@
 import { Box } from "@/api/models/sensor";
 import { LatestMeasurement, MeasurementDictionary } from "@/types/measurement";
 import { Activity, Battery, HelpCircle, Thermometer, Waves } from "@tamagui/lucide-icons";
+import { formatTimeToLocal } from "@/utils/time";
 
 export const GetLatestMeasurements = (boxes: Box[]): LatestMeasurement[] => {
     const measurements: LatestMeasurement[] = [];
@@ -8,7 +9,7 @@ export const GetLatestMeasurements = (boxes: Box[]): LatestMeasurement[] => {
     boxes.forEach((box) => {
         if (box.measurementTimes.length === 0) return;
 
-        const latestTime = box.measurementTimes[box.measurementTimes.length - 1];
+        const latestTime = box.measurementTimes[0];
         const measurementData = latestTime.measurements;
 
         Object.entries(measurementData).forEach(([key, value]) => {
@@ -77,9 +78,14 @@ export const CreateMeasurementDictionary = (
     measurementTimes.forEach((entry: any) => {
         if (!entry.time) return;
 
+        // Use formatTimeToLocal for UTC-aware formatting
         const label = timeRange === 'last7days' || timeRange === 'last30days'
-            ? new Date(entry.time).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })
-            : entry.time.slice(11, 16);
+            ? formatTimeToLocal(entry.time, 'dd.MM')
+            : formatTimeToLocal(entry.time, 'HH:mm');
+
+        const fullDateTime = timeRange === 'last7days' || timeRange === 'last30days'
+            ? formatTimeToLocal(entry.time, 'dd.MM.yyyy HH:mm')
+            : formatTimeToLocal(entry.time, 'HH:mm - dd.MM.yyyy');
 
         Object.entries(entry.measurements || {}).forEach(([key, value]) => {
             if (!measurementDict[key]) {
@@ -87,7 +93,8 @@ export const CreateMeasurementDictionary = (
             }
             measurementDict[key].push({
                 label,
-                value: Math.ceil(Number(value))
+                value: Number(value),
+                fullDateTime
             });
         });
     });
@@ -177,4 +184,8 @@ export const getMeasurementTypeSymbol = (measurementType: string, t: any): strin
         default:
             return "";
     }
+};
+
+export const formatMeasurementValue = (value: number): string => {
+    return value < 1 ? value.toFixed(2) : value.toFixed(1);
 };

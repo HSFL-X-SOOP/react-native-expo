@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img"
-     aria-label="Sensor Map Marker">
+     aria-label="Sensor Cluster Marker">
     <defs>
         <radialGradient id="g-accent" cx="50%" cy="45%" r="60%">
             <stop offset="0%" stop-color="#7EE3FF" stop-opacity="1"/>
-            <stop offset="100%" stop-color="#0794d9" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#006e99" stop-opacity="1"/>
         </radialGradient>
         <linearGradient id="g-dark" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#111111"/>
@@ -18,17 +18,17 @@
         </filter>
     </defs>
     <g id="marker-minimal-badge">
-        <circle cx="48" cy="48" r="26" fill="url(#g-accent)" opacity="0.35" filter="url(#f-glow)"/>
+        <circle cx="48" cy="48" r="26" fill="url(#g-accent)" opacity="0.35"/>
         <circle cx="48" cy="48" r="34" fill="url(#g-dark)"/>
         <circle cx="48" cy="48" r="28" fill="url(#g-accent)"/>
         <circle cx="48" cy="48" r="20" fill="url(#g-dark)" opacity="0.85"/>
-        <g id="logo-wrap" transform="translate(0,0)">
+        <g id="logo-wrap">
             <text x="48" y="54" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white"
                   text-anchor="middle">12+
             </text>
         </g>
         <g id="pulse-min-badge">
-            <circle cx="48" cy="48" r="30" fill="none" stroke="#7EE3FF" stroke-width="2" opacity="0.0">
+            <circle cx="48" cy="48" r="30" fill="none" stroke="#006e99" stroke-width="2" opacity="0.0">
                 <animate attributeName="r" values="30;40;30" dur="2.8s" repeatCount="indefinite"/>
                 <animate attributeName="opacity" values="0.0;0.5;0.0" dur="2.8s" repeatCount="indefinite"/>
             </circle>
