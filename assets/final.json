@@ -1,12 +1,7 @@
 {
   "version": 8,
-  "name": "Toner",
+  "name": "Toner (Fixed Contrast and Borders)",
   "metadata": {
-    "mapbox:autocomposite": false,
-    "mapbox:type": "template",
-    "openmaptiles:mapbox:owner": "openmaptiles",
-    "openmaptiles:mapbox:source:url": "mapbox://openmaptiles.4qljc88t",
-    "openmaptiles:version": "3.x",
     "maputnik:renderer": "mlgljs"
   },
   "center": [-122.41877447993727, 37.7977350127602],
@@ -16,16 +11,24 @@
   "sources": {
     "openmaptiles": {
       "type": "vector",
-      "url": "https://api.maptiler.com/tiles/v3-openmaptiles/tiles.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL"
+      "url": "https://tiles.openfreemap.org/planet"
     }
   },
-  "sprite": "https://openmaptiles.github.io/maptiler-toner-gl-style/sprite",
-  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=get_your_own_OpIi9ZULNHzrESv6T2vL",
+  "sprite": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm",
+  "glyphs": "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
   "layers": [
     {
       "id": "background",
       "type": "background",
       "paint": {"background-color": "#fff"}
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "land",
+      "maxzoom": 24,
+      "paint": {"fill-color": "#f8f4f0"}
     },
     {
       "id": "landcover_grass_fill",
@@ -218,142 +221,6 @@
       }
     },
     {
-      "id": "road_path",
-      "type": "line",
-      "metadata": {},
-      "source": "openmaptiles",
-      "source-layer": "transportation",
-      "minzoom": 13,
-      "filter": ["all", ["==", "$type", "LineString"], ["==", "class", "path"]],
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round",
-        "visibility": "none"
-      },
-      "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
-        "line-width": {"stops": [[14, 2], [17, 4]]}
-      }
-    },
-    {
-      "id": "road_secondary",
-      "type": "line",
-      "metadata": {},
-      "source": "openmaptiles",
-      "source-layer": "transportation",
-      "minzoom": 10,
-      "filter": [
-        "all",
-        ["==", "$type", "LineString"],
-        ["!in", "class", "pier", "rail", "path", "primary"],
-        ["in", "class", "secondary", "tertiary", "minor", "service"]
-      ],
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round",
-        "visibility": "none"
-      },
-      "paint": {
-        "line-color": {
-          "stops": [
-            [10, "rgba(0, 0, 0, 0.3)"],
-            [12, "rgba(0, 0, 0, 0.5)"],
-            [15, "rgba(0, 0, 0, 1)"]
-          ]
-        },
-        "line-width": {"stops": [[13, 0.5], [15, 3], [17, 8]]}
-      }
-    },
-    {
-      "id": "road_primary",
-      "type": "line",
-      "metadata": {},
-      "source": "openmaptiles",
-      "source-layer": "transportation",
-      "minzoom": 8,
-      "filter": [
-        "all",
-        ["==", "$type", "LineString"],
-        ["!in", "class", "pier", "rail", "path"],
-        ["==", "class", "primary"]
-      ],
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round",
-        "visibility": "none"
-      },
-      "paint": {
-        "line-color": {
-          "stops": [
-            [8, "rgba(0, 0, 0, 0.19)"],
-            [10, "#646464"],
-            [17, "rgba(0, 0, 0, 1)"]
-          ]
-        },
-        "line-width": {"stops": [[12, 0.75], [15, 6], [17, 8]]}
-      }
-    },
-    {
-      "id": "road_highway_casing",
-      "type": "line",
-      "metadata": {},
-      "source": "openmaptiles",
-      "source-layer": "transportation",
-      "minzoom": 8,
-      "filter": [
-        "all",
-        ["==", "$type", "LineString"],
-        ["!in", "class", "pier", "path", "rail"],
-        ["in", "class", "motorway", "trunk"]
-      ],
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round",
-        "visibility": "none"
-      },
-      "paint": {
-        "line-color": {
-          "stops": [
-            [6, "rgba(219, 219, 219, 1)"],
-            [10, "rgba(255, 255, 255, 1)"],
-            [16, "rgba(255, 255, 255, 1)"]
-          ]
-        },
-        "line-opacity": 1,
-        "line-width": {"stops": [[10, 4], [16, 16]]}
-      }
-    },
-    {
-      "id": "road_highway",
-      "type": "line",
-      "metadata": {},
-      "source": "openmaptiles",
-      "source-layer": "transportation",
-      "minzoom": 6,
-      "filter": [
-        "all",
-        ["==", "$type", "LineString"],
-        ["!in", "class", "pier", "path", "rail"],
-        ["in", "class", "motorway", "trunk"]
-      ],
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round",
-        "visibility": "none"
-      },
-      "paint": {
-        "line-color": {
-          "stops": [
-            [6, "rgba(0, 0, 0, 0.02)"],
-            [10, "rgba(0, 0, 0, 0.6)"],
-            [16, "rgba(0, 0, 0, 1)"]
-          ]
-        },
-        "line-opacity": 1,
-        "line-width": {"stops": [[7, 1], [10, 2], [16, 8]]}
-      }
-    },
-    {
       "id": "road_subtle",
       "type": "line",
       "source": "openmaptiles",
@@ -493,21 +360,6 @@
       }
     },
     {
-      "id": "building_fill",
-      "type": "fill",
-      "metadata": {"mapbox:group": "1444849364238.8171"},
-      "source": "openmaptiles",
-      "source-layer": "building",
-      "minzoom": 16,
-      "layout": {"visibility": "none"},
-      "paint": {
-        "fill-antialias": true,
-        "fill-color": "rgba(0, 0, 0, 1)",
-        "fill-opacity": {"base": 1, "stops": [[13, 0], [16, 1]]},
-        "fill-outline-color": "rgba(0, 0, 0, 1)"
-      }
-    },
-    {
       "id": "building",
       "type": "fill-extrusion",
       "source": "openmaptiles",
@@ -525,21 +377,6 @@
         ],
         "fill-extrusion-height": 3,
         "fill-extrusion-opacity": 0.85
-      }
-    },
-    {
-      "id": "building_pattern",
-      "type": "fill",
-      "metadata": {"mapbox:group": "1444849364238.8171"},
-      "source": "openmaptiles",
-      "source-layer": "building",
-      "minzoom": 14,
-      "layout": {"visibility": "none"},
-      "paint": {
-        "fill-color": "rgba(0, 0, 0, 1)",
-        "fill-opacity": {"base": 1, "stops": [[13, 0], [16, 1]]},
-        "fill-outline-color": "rgba(0, 0, 0, 1)",
-        "fill-pattern": "hatch-t"
       }
     },
     {
@@ -701,7 +538,7 @@
       "filter": ["==", ["get", "class"], "ferry"],
       "layout": {
         "text-field": ["coalesce", ["get", "name:mul"], ["get", "name"]],
-        "text-font": ["literal", ["Americana-Italic"]],
+        "text-font": ["literal", ["Noto Sans Regular"]],
         "symbol-placement": "line",
         "text-size": ["step", ["zoom"], 12, 16, 12, 18, 14],
         "visibility": "visible"
@@ -770,7 +607,7 @@
         "symbol-placement": "line",
         "symbol-spacing": 200,
         "text-field": "{name:latin} {name:nonlatin}",
-        "text-font": ["Noto Sans Bold Italic"],
+        "text-font": ["Noto Sans Italic"],
         "text-max-width": 9,
         "text-rotation-alignment": "map",
         "text-size": {"stops": [[14, 12], [18, 19]]},
@@ -862,7 +699,7 @@
         "text-anchor": "center",
         "text-field": "{name:latin} {name:nonlatin}",
         "text-font": {
-          "stops": [[12, ["Nunito Regular"]], [16, ["Nunito Semi Bold"]]]
+          "stops": [[12, ["Noto Sans Regular"]], [16, ["Noto Sans Bold"]]]
         },
         "text-max-width": 10,
         "text-size": {"stops": [[12, 12], [16, 18]]},
@@ -886,7 +723,9 @@
       "layout": {
         "icon-anchor": "center",
         "text-field": "{name:latin}",
-        "text-font": {"stops": [[4, ["Nunito Regular"]], [7, ["Nunito Bold"]]]},
+        "text-font": {
+          "stops": [[4, ["Noto Sans Regular"]], [7, ["Noto Sans Bold"]]]
+        },
         "text-max-width": 10,
         "text-size": {"stops": [[4, 14], [7, 15], [8, 19], [16, 22]]},
         "visibility": "visible"
@@ -911,7 +750,7 @@
         "icon-anchor": "center",
         "text-field": "{name:latin}",
         "text-font": {
-          "stops": [[8, ["Nunito Regular"]], [14, ["Nunito Bold"]]]
+          "stops": [[8, ["Noto Sans Regular"]], [14, ["Noto Sans Bold"]]]
         },
         "text-max-width": 10,
         "text-size": {"stops": [[8, 15], [16, 18]]},
@@ -935,7 +774,7 @@
       "filter": ["all", ["==", "class", "state"]],
       "layout": {
         "text-field": "{name:latin} {name:nonlatin}",
-        "text-font": ["Nunito Semi Bold"],
+        "text-font": ["Noto Sans Regular"],
         "text-max-width": 10,
         "text-size": 13,
         "text-transform": "uppercase",
@@ -953,7 +792,7 @@
       "filter": ["all", ["==", "class", "state"]],
       "layout": {
         "text-field": "{name:latin} {name:nonlatin}",
-        "text-font": ["Nunito Semi Bold"],
+        "text-font": ["Noto Sans Bold"],
         "text-max-width": 10,
         "text-size": 13,
         "text-transform": "uppercase",
@@ -971,7 +810,9 @@
       "layout": {
         "text-allow-overlap": false,
         "text-field": "{name:latin}",
-        "text-font": {"stops": [[3, ["Nunito Regular"]], [4, ["Nunito Bold"]]]},
+        "text-font": {
+          "stops": [[3, ["Noto Sans Regular"]], [4, ["Noto Sans Bold"]]]
+        },
         "text-ignore-placement": false,
         "text-max-width": 10,
         "text-padding": 2,
@@ -996,7 +837,7 @@
       "filter": ["==", "class", "continent"],
       "layout": {
         "text-field": "{name:latin}",
-        "text-font": ["Nunito Extra Bold"],
+        "text-font": ["Noto Sans Bold"],
         "text-line-height": 1.1,
         "text-max-width": 10,
         "text-size": {"stops": [[3, 18], [4, 24]]},

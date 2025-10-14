@@ -1,6 +1,6 @@
 import { useSensorDataNew } from '@/hooks/useSensors';
 import { useSupercluster } from '@/hooks/useSupercluster';
-import { Palette } from "@tamagui/lucide-icons";
+import { Palette } from '@tamagui/lucide-icons';
 import type { MapRef } from '@vis.gl/react-maplibre';
 import {
   LngLatBoundsLike,
@@ -53,6 +53,7 @@ export default function WebMap() {
 
   const [mapStyle, setMapStyle] = useState(require('../assets/style.txt'));
   const t = useTheme();
+
   const pins = useMemo(() => {
     return clusters.map((cluster) => {
       const [longitude, latitude] = cluster.geometry.coordinates;
@@ -111,7 +112,8 @@ export default function WebMap() {
           setCurrentCoordinate={setCurrentCoordinate}
           homeCoordinate={homeCoordinate}
         />
-        <View style={styles.container}>
+      </Map>
+      <View style={styles.container}>
           <TouchableOpacity
             style={[styles.button, {
           borderTopLeftRadius: 8,
@@ -124,7 +126,7 @@ export default function WebMap() {
             activeOpacity={0.7}
           >
             <Palette color={t.color?.val} size={24} />
-            <Text>Neu</Text>
+            <Text style={{ fontSize: 13 }}>Neu</Text>
           </TouchableOpacity>
                     <View style={{height: 1, backgroundColor: t.borderColor?.val }} />
           <TouchableOpacity
@@ -135,7 +137,7 @@ export default function WebMap() {
             activeOpacity={0.7}
           >
             <Palette color={t.color?.val} size={24} />
-            <Text>Neu Dark</Text>
+            <Text style={{ fontSize: 13 }}>Neu Dark</Text>
           </TouchableOpacity>
           <View style={{height: 1, backgroundColor: t.borderColor?.val }} />
           <TouchableOpacity
@@ -150,10 +152,9 @@ export default function WebMap() {
             activeOpacity={0.7}
           >
             <Palette color={t.color?.val} size={24} />
-            <Text>Alt</Text>
+            <Text style={{ fontSize: 13 }}>Alt</Text>
           </TouchableOpacity>
         </View>
-      </Map>
       <MapLegend />
     </View>);
 }
@@ -179,4 +180,3 @@ const styles = StyleSheet.create({
         elevation: 4,
     }
 });
-
