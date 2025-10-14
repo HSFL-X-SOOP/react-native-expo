@@ -125,7 +125,7 @@ export default function NativeMap(props: MapProps) {
         <View style={{flex: 1, backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5'}}>
             <MapView
                 style={{flex: 1}}
-                mapStyle={require('../assets/style.json')}
+                mapStyle={require('../assets/markers/mapStyles/style.json')}
                 compassEnabled={true}
                 zoomEnabled={true}
                 onRegionDidChange={(region: any) => {
