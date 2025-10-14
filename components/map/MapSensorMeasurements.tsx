@@ -1,5 +1,4 @@
 import {BoxType, LocationWithBoxes} from "@/api/models/sensor";
-import {useThemeContext} from "@/context/ThemeSwitch";
 import {useTranslation} from "@/hooks/useTranslation";
 import {formatTimeToLocal} from "@/utils/time";
 import {
@@ -31,7 +30,6 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
                                                         }) => {
     const router = useRouter();
     const {t} = useTranslation();
-    const {isDark} = useThemeContext();
     const theme = useTheme();
 
     const [selectedBoxIndex, setSelectedBoxIndex] = useState(0);
@@ -53,15 +51,12 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
             padding="$0"
             overflow="hidden"
             borderWidth={1}
-            borderColor={isDark ? '#2a2a2a' : '$gray4'}
+            borderColor="$borderColor"
         >
             {/* Header with Gradient Background */}
             <YStack>
                 <LinearGradient
-                    colors={isDark
-                        ? [theme.accent9?.val, theme.accent8?.val, theme.accent7?.val]
-                        : [theme.accent6?.val, theme.accent5?.val, theme.accent4?.val]
-                    }
+                    colors={[theme.accent8?.val, theme.accent7?.val, theme.accent6?.val]}
                     start={[0, 0]}
                     end={[1, 1]}
                     style={{padding: 14}}
@@ -91,7 +86,7 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
                 </LinearGradient>
             </YStack>
 
-            <YStack padding="$3" gap="$3" backgroundColor={isDark ? '#1a1a1a' : '$background'}>
+            <YStack padding="$3" gap="$3" backgroundColor="$background">
                 {hasMultipleBoxes && (
                     <XStack gap="$2" flexWrap="wrap">
                         {locationWithBoxes.boxes.map((box, index) => (
@@ -101,11 +96,11 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
                                 flex={1}
                                 minWidth={80}
                                 variant={"outlined"}
-                                backgroundColor={isDark ? '#262626' : '$gray4'}
-                                color={isDark ? '$gray11' : '$gray12'}
+                                backgroundColor="$content2"
+                                color="$color"
                                 onPress={() => setSelectedBoxIndex(index)}
                                 borderWidth={selectedBoxIndex === index ? 1 : 0}
-                                borderColor="$grey10"
+                                borderColor="$gray10"
                                 pressStyle={{
                                     backgroundColor: '$gray5',
                                     scale: 0.97
@@ -134,20 +129,20 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
             </YStack>
 
             {/* Footer - Dashboard Button */}
-            <YStack padding="$3" paddingTop="$2.5" backgroundColor={isDark ? '#1a1a1a' : '$background'}>
+            <YStack padding="$3" paddingTop="$2.5" backgroundColor="$background">
                 <Button
                     size="$3"
-                    backgroundColor={isDark ? '$accent5' : '$accent5'}
+                    backgroundColor="$accent5"
                     color="white"
                     width="100%"
                     onPress={handleNavigateToDashboard}
                     iconAfter={<ArrowRight size={18}/>}
                     pressStyle={{
-                        backgroundColor: isDark ? '$accent3' : '$accent3',
+                        backgroundColor: '$accent3',
                         scale: 0.98
                     }}
                     hoverStyle={{
-                        backgroundColor: isDark ? '$accent3' : '$accent3',
+                        backgroundColor: '$accent3',
                         scale: 1.01
                     }}
                     borderRadius="$3"
@@ -167,7 +162,6 @@ type BoxMeasurementsProps = {
 
 function BoxMeasurements({box}: BoxMeasurementsProps) {
     const {t} = useTranslation();
-    const {isDark} = useThemeContext();
 
     if (!box.measurementTimes[0]) return null;
 
@@ -177,7 +171,7 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
                 alignItems="center"
                 gap="$2"
                 padding="$2"
-                backgroundColor={isDark ? '#262626' : '$gray2'}
+                backgroundColor="$content2"
             >
                 <YStack
                     width={26}
@@ -185,11 +179,11 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
                     borderRadius="$2"
                     alignItems="center"
                     justifyContent="center"
-                    backgroundColor={isDark ? '#333333' : 'white'}
+                    backgroundColor="$content3"
                 >
                     {getBoxTypeIcon(box.type)}
                 </YStack>
-                <H4 fontSize="$3" fontWeight="600" color={isDark ? '#e5e5e5' : '$gray12'}>
+                <H4 fontSize="$3" fontWeight="600" color="$color">
                     {getBoxTypeName(box.type, t)}
                 </H4>
             </XStack>
@@ -245,22 +239,12 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
                 alignItems="center"
                 gap="$1.5"
                 padding="$2"
-                backgroundColor={isDark ? '$gray4' : '$gray2'}
+                backgroundColor="$content3"
                 borderRadius="$2"
             >
-                <YStack
-                    width={20}
-                    height={20}
-                    borderRadius="$2"
-                    alignItems="center"
-                    justifyContent="center"
-                    backgroundColor="$green4"
-                >
-                    <Activity size={11} color="$green10"/>
-                </YStack>
-                <Text fontSize="$1" color="$gray11" fontWeight="500">
-                    {t('sensor.lastMeasurement')}: <Text fontWeight="600"
-                                                         color={isDark ? '$gray12' : '$gray12'}>
+                <Activity size={16} color="$green10"/>
+                <Text fontSize="$1" color="$color" fontWeight="500">
+                    {t('sensor.lastMeasurement')}: <Text fontWeight="600" color="$color">
                     {formatTimeToLocal(box.measurementTimes[0].time + "Z")}
                 </Text>
                 </Text>
@@ -277,18 +261,17 @@ type MeasurementCardProps = {
 
 function MeasurementCard({measurementType, value}: MeasurementCardProps) {
     const {t} = useTranslation();
-    const {isDark} = useThemeContext();
 
     const {icon, color} = getMeasurementIcon(measurementType);
 
     return (
         <Card
             width="100%"
-            backgroundColor={isDark ? '#262626' : 'white'}
+            backgroundColor="$content2"
             padding="$2.5"
             borderRadius="$3"
-            borderWidth={isDark ? 1 : 0}
-            borderColor={isDark ? '#333333' : 'transparent'}
+            borderWidth={1}
+            borderColor="$borderColor"
             pressStyle={{scale: 0.97, opacity: 0.9}}
             hoverStyle={{scale: 1.02, borderColor: color}}
             animation={[
@@ -311,7 +294,7 @@ function MeasurementCard({measurementType, value}: MeasurementCardProps) {
                 >
                     {icon}
                 </YStack>
-                <Text fontSize="$2" color={isDark ? '#grey1' : '$gray11'} fontWeight="500" numberOfLines={2}
+                <Text fontSize="$2" color="$color" fontWeight="500" numberOfLines={2}
                       lineHeight="$1">
                     {getMeasurementLabel(measurementType, t)}
                 </Text>
@@ -320,7 +303,7 @@ function MeasurementCard({measurementType, value}: MeasurementCardProps) {
                     <Text fontSize="$7" fontWeight="800" color={color} letterSpacing={-0.5}>
                         {Math.round(value * 10) / 10}
                     </Text>
-                    <Text fontSize="$3" color={isDark ? '#737373' : '$gray10'} fontWeight="700">
+                    <Text fontSize="$3" color="$gray10" fontWeight="700">
                         {getMeasurementUnit(measurementType, t)}
                     </Text>
                 </XStack>

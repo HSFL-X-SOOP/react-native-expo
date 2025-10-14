@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import { SensorPopup } from "../MapSensorMeasurements";
 import { SensorMarkerContent } from "../MapSensorTemperatureText";
-import { Sheet } from "tamagui";
+import { Sheet, Theme } from "tamagui";
+import { useThemeContext } from "@/context/ThemeSwitch";
 
 interface SensorMarkerProps {
     locationWithBoxes: LocationWithBoxes;
@@ -16,6 +17,7 @@ export default function SensorMarker({
     index,
 }: SensorMarkerProps) {
     const [open, setOpen] = useState(false);
+    const { currentTheme } = useThemeContext();
 
     return (
         <>
@@ -55,7 +57,9 @@ export default function SensorMarker({
                     alignItems="center"
                     justifyContent="center"
                 >
-                    <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)} />
+                    <Theme name={currentTheme}>
+                        <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)} />
+                    </Theme>
                 </Sheet.Frame>
             </Sheet>
         </>

@@ -37,12 +37,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 export const useThemeContext = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    console.warn('useThemeContext used outside ThemeProvider, using system theme as fallback');
+    // Return fallback silently - this is expected in Portal contexts like Sheets
     return {
       isDark: false,
-      toggleTheme: () => {
-        console.warn('ThemeSwitch used outside ThemeProvider - toggle ignored');
-      },
+      toggleTheme: () => {},
       currentTheme: 'light' as 'light' | 'dark'
     };
   }
