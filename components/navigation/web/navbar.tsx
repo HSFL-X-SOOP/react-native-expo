@@ -3,8 +3,8 @@ import {Button, Popover, Sheet, Text, XStack, YStack, useMedia, useTheme, Scroll
 import {useToast} from '@/components/useToast';
 
 import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
-import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
-import {User, ChevronDown, Languages, Menu, LogOut, LayoutDashboard, AlertCircle} from '@tamagui/lucide-icons';
+import {LOGO, MapIcon, CloudIcon} from '@/components/ui/Icons';
+import {User, Languages, Menu, LogOut, LayoutDashboard, AlertCircle} from '@tamagui/lucide-icons';
 import {useSession} from '@/context/SessionContext';
 import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
 import {useTranslation} from '@/hooks/useTranslation';
@@ -189,14 +189,9 @@ export function NavbarWeb() {
                     backgroundColor="$background"
                     borderWidth={2}
                     borderColor="$accent8"
-                    elevation="$6"
-                    shadowColor="$shadowColor"
-                    shadowRadius={8}
-                    shadowOffset={{width: 0, height: 2}}
                     hoverStyle={{
                         backgroundColor: "$backgroundHover",
-                        borderColor: "$accent9",
-                        elevation: "$8"
+                        borderColor: "$accent9"
                     }}
                     pressStyle={{
                         backgroundColor: "$backgroundPress",

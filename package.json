@@ -47,6 +47,7 @@
     "@tamagui/toast": "^1.134.2",
     "@vis.gl/react-maplibre": "^8.0.4",
     "axios": "^1.12.2",
+    "burnt": "^0.13.0",
     "date-fns-tz": "^3.2.0",
     "expo": "~53.0.20",
     "expo-asset": "~11.1.7",

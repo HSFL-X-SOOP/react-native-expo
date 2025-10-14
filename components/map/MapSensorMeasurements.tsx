@@ -18,7 +18,6 @@ import {
 import {LinearGradient} from "expo-linear-gradient";
 import {useRouter} from "expo-router";
 import {useState} from "react";
-import {Platform} from "react-native";
 import {Button, Card, H3, H4, Separator, Text, XStack, YStack, useTheme} from "tamagui";
 
 type SensorPopupProps = {
@@ -38,7 +37,7 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
     const [selectedBoxIndex, setSelectedBoxIndex] = useState(0);
     const hasMultipleBoxes = locationWithBoxes.boxes.length > 1;
 
-    const cardWidth = Platform.OS === "web" ? 350 : 320;
+    const cardWidth = 350;
 
     const handleNavigateToDashboard = () => {
         closeOverlay?.();
@@ -55,9 +54,6 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
             overflow="hidden"
             borderWidth={1}
             borderColor={isDark ? '#2a2a2a' : '$gray4'}
-            shadowColor="$shadowColor"
-            shadowRadius={12}
-            shadowOffset={{width: 0, height: 4}}
         >
             {/* Header with Gradient Background */}
             <YStack>
@@ -283,7 +279,7 @@ function MeasurementCard({measurementType, value}: MeasurementCardProps) {
     const {t} = useTranslation();
     const {isDark} = useThemeContext();
 
-    const {icon, color, bgColor} = getMeasurementIcon(measurementType);
+    const {icon, color} = getMeasurementIcon(measurementType);
 
     return (
         <Card
@@ -304,20 +300,14 @@ function MeasurementCard({measurementType, value}: MeasurementCardProps) {
                 },
             ]}
             elevate
-            shadowColor={color}
-            shadowRadius={6}
-            shadowOpacity={0.08}
         >
             <XStack gap={"$2"} justifyContent={"space-between"} alignItems={"center"}>
                 <YStack
                     width={36}
                     height={36}
                     borderRadius="$2"
-                    backgroundColor={isDark ? `${bgColor}80` : bgColor}
                     alignItems="center"
                     justifyContent="center"
-                    borderWidth={1}
-                    borderColor={isDark ? '#404040' : `${color}3`}
                 >
                     {icon}
                 </YStack>
@@ -374,21 +364,21 @@ function getMeasurementIcon(measurementType: string): { icon: React.ReactNode; c
     switch (measurementType) {
         case "waterTemperature":
             return {
-                icon: <Thermometer size={size} color="$orange10"/>,
-                color: "$orange10",
-                bgColor: "$orange4"
+                icon: <Thermometer size={size} color="#F97316"/>,
+                color: "#F97316",
+                bgColor: "#FED7AA"
             };
         case "waveHeight":
             return {
-                icon: <Waves size={size} color="$blue10"/>,
-                color: "$blue10",
-                bgColor: "$blue4"
+                icon: <Activity size={size} color="#10B981"/>,
+                color: "#10B981",
+                bgColor: "#A7F3D0"
             };
         case "waterLevel":
             return {
-                icon: <Activity size={size} color="$cyan10"/>,
-                color: "$cyan10",
-                bgColor: "$cyan4"
+                icon: <Waves size={size} color="#3B82F6"/>,
+                color: "#3B82F6",
+                bgColor: "#BFDBFE"
             };
         case "airTemperature":
             return {

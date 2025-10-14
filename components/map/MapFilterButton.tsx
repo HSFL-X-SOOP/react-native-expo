@@ -106,14 +106,9 @@ export default function MapFilterButton({
                     setPopoverOpen(!popoverOpen);
                 }
             }}
-            elevation="$6"
-            shadowColor="$shadowColor"
-            shadowRadius={8}
-            shadowOffset={{width: 0, height: 2}}
             hoverStyle={{
                 backgroundColor: "$backgroundHover",
-                borderColor: "$accent9",
-                elevation: "$8"
+                borderColor: "$accent9"
             }}
             pressStyle={{
                 backgroundColor: "$backgroundPress",

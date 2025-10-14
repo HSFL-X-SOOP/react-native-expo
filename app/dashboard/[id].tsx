@@ -462,20 +462,20 @@ export default function DashboardScreen() {
                                 currentValue={currentWaterTemp}
                             />
                             <LineChartCard
-                                title={t('dashboard.charts.waveHeight')}
-                                icon={<Activity size={20} color="#10B981"/>}
-                                chartData={chartWaveHeight}
-                                dataPrecision={dataPrecision}
-                                color="#10B981"
-                                currentValue={currentWaveHeight}
-                            />
-                            <LineChartCard
                                 title={t('dashboard.charts.waterLevel')}
                                 icon={<Waves size={20} color="#3B82F6"/>}
                                 chartData={chartTide}
                                 dataPrecision={dataPrecision}
                                 color="#3B82F6"
                                 currentValue={currentWaterLevel}
+                            />
+                            <LineChartCard
+                                title={t('dashboard.charts.waveHeight')}
+                                icon={<Activity size={20} color="#10B981"/>}
+                                chartData={chartWaveHeight}
+                                dataPrecision={dataPrecision}
+                                color="#10B981"
+                                currentValue={currentWaveHeight}
                             />
                         </XStack>
                     </YStack>
