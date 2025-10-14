@@ -2,6 +2,10 @@
   "version": 8,
   "name": "Toner (Fixed Contrast and Borders)",
   "metadata": {
+    "mapbox:autocomposite": false,
+    "mapbox:type": "template",
+    "openmaptiles:mapbox:owner": "openmaptiles",
+    "openmaptiles:version": "3.x",
     "maputnik:renderer": "mlgljs"
   },
   "center": [-122.41877447993727, 37.7977350127602],
@@ -20,7 +24,7 @@
     {
       "id": "background",
       "type": "background",
-      "paint": {"background-color": "#000000ff"}
+      "paint": {"background-color": "#fff"}
     },
     {
       "id": "land",

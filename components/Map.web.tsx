@@ -122,7 +122,7 @@ export default function WebMap() {
           borderBottomRightRadius: 0,
           backgroundColor: t.background?.val
         }]}
-            onPress={() => setMapStyle(require('../assets/final.txt'))}
+            onPress={() => setMapStyle(require('../assets/light_mode_openfreemap.txt'))}
             activeOpacity={0.7}
           >
             <Palette color={t.color?.val} size={24} />
@@ -133,7 +133,7 @@ export default function WebMap() {
             style={[styles.button, {
           backgroundColor: t.background?.val
         }]}
-            onPress={() => setMapStyle(require('../assets/final_dark.txt'))}
+            onPress={() => setMapStyle(require('../assets/dark_mode_openfreemap.txt'))}
             activeOpacity={0.7}
           >
             <Palette color={t.color?.val} size={24} />
