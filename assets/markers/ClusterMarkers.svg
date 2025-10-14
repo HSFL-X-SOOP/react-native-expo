@@ -3,7 +3,7 @@
     <defs>
         <radialGradient id="g-accent" cx="50%" cy="45%" r="60%">
             <stop offset="0%" stop-color="#7EE3FF" stop-opacity="1"/>
-            <stop offset="100%" stop-color="#7db07d" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#006e99" stop-opacity="1"/>
         </radialGradient>
         <linearGradient id="g-dark" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#111111"/>
@@ -28,7 +28,7 @@
             </text>
         </g>
         <g id="pulse-min-badge">
-            <circle cx="48" cy="48" r="30" fill="none" stroke="#7db07d" stroke-width="2" opacity="0.0">
+            <circle cx="48" cy="48" r="30" fill="none" stroke="#006e99" stroke-width="2" opacity="0.0">
                 <animate attributeName="r" values="30;40;30" dur="2.8s" repeatCount="indefinite"/>
                 <animate attributeName="opacity" values="0.0;0.5;0.0" dur="2.8s" repeatCount="indefinite"/>
             </circle>

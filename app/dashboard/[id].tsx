@@ -12,7 +12,6 @@ import {
     CreateMeasurementDictionary,
     GetLatestMeasurements,
     formatMeasurementValue,
-    getIconBackground,
     getMeasurementColor,
     getMeasurementIcon,
     getMeasurementTypeSymbol,
@@ -344,7 +343,6 @@ export default function DashboardScreen() {
                                                     width={56}
                                                     height={56}
                                                     borderRadius="$4"
-                                                    backgroundColor={getIconBackground(measurement.measurementType)}
                                                     alignItems="center"
                                                     justifyContent="center"
                                                 >

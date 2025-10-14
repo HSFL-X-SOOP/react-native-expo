@@ -1,7 +1,7 @@
 import { PointAnnotation } from "@maplibre/maplibre-react-native";
 import React from "react";
 import { View } from "react-native";
-import { ClusterMarkerSvg } from "./ClusterMarkerSvg";
+import { ClusterMarkerSvg } from "../ClusterMarkerSvg";
 import { useThemeContext } from "@/context/ThemeSwitch";
 
 interface ClusterMarkerProps {

@@ -1,5 +1,5 @@
 import { Marker } from "@vis.gl/react-maplibre";
-import { ClusterMarkerSvg } from "./ClusterMarkerSvg";
+import { ClusterMarkerSvg } from "../ClusterMarkerSvg";
 import { useThemeContext } from "@/context/ThemeSwitch";
 import { YStack } from "tamagui";
 

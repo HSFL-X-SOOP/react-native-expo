@@ -2,20 +2,20 @@ import { LocationWithBoxes } from "@/api/models/sensor";
 import { PointAnnotation } from "@maplibre/maplibre-react-native";
 import React, { useState } from "react";
 import { View } from "react-native";
-import { SensorPopup } from "./MapSensorMeasurements";
-import { SensorMarkerContent } from "./MapSensorTemperatureText";
+import { SensorPopup } from "../MapSensorMeasurements";
+import { SensorMarkerContent } from "../MapSensorTemperatureText";
 import { Sheet } from "tamagui";
-import { useThemeContext } from "@/context/ThemeSwitch";
 
-export default function AndroidMarker({
-    locationWithBoxes,
-    index,
-}: {
+interface SensorMarkerProps {
     locationWithBoxes: LocationWithBoxes;
     index?: number;
-}) {
+}
+
+export default function SensorMarker({
+    locationWithBoxes,
+    index,
+}: SensorMarkerProps) {
     const [open, setOpen] = useState(false);
-    const { isDark } = useThemeContext();
 
     return (
         <>

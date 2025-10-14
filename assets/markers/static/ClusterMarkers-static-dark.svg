@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img"
+     aria-label="Sensor Cluster Marker Dark">
+    <defs>
+        <radialGradient id="g-accent-cluster-dark" cx="50%" cy="45%" r="60%">
+            <stop offset="0%" stop-color="#7EE3FF" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#7db07d" stop-opacity="1"/>
+        </radialGradient>
+        <linearGradient id="g-dark-cluster-dark" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2a2a2a"/>
+            <stop offset="100%" stop-color="#1a1a1a"/>
+        </linearGradient>
+        <filter id="f-glow-cluster-dark" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="marker-minimal-badge">
+        <circle cx="48" cy="48" r="26" fill="url(#g-accent-cluster-dark)" opacity="0.35"/>
+        <circle cx="48" cy="48" r="34" fill="url(#g-dark-cluster-dark)"/>
+        <circle cx="48" cy="48" r="28" fill="url(#g-accent-cluster-dark)"/>
+        <circle cx="48" cy="48" r="20" fill="url(#g-dark-cluster-dark)" opacity="0.85"/>
+        <g id="logo-wrap">
+            <text x="48" y="54" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white"
+                  text-anchor="middle">12+
+            </text>
+        </g>
+    </g>
+</svg>

@@ -1,10 +1,10 @@
-import { useSensorDataNew } from "@/hooks/useSensors";
-import { useSupercluster } from "@/hooks/useSupercluster";
-import { Camera, MapView } from "@maplibre/maplibre-react-native";
-import { useMemo, useState } from "react";
-import { View } from "react-native";
-import SensorMarker from "./map/MapSensorMarker.native";
-import ClusterMarker from "./map/ClusterMarker.native";
+import {useSensorDataNew} from "@/hooks/useSensors";
+import {useSupercluster} from "@/hooks/useSupercluster";
+import {Camera, MapView} from "@maplibre/maplibre-react-native";
+import {useMemo, useState} from "react";
+import {View} from "react-native";
+import SensorMarker from "./map/native/SensorMarker";
+import ClusterMarker from "./map/native/ClusterMarker";
 import MapZoomControl from "./map/MapZoomControl";
 
 interface MapProps {
@@ -16,10 +16,10 @@ interface MapProps {
 }
 
 export default function NativeMap(props: MapProps) {
-    const { data: content, loading } = useSensorDataNew();
+    const {data: content} = useSensorDataNew();
 
     const homeCoordinate: [number, number] = [9.26, 54.46];
-    const minMaxZoomLevel = { min: 3, max: 16 };
+    const minMaxZoomLevel = {min: 3, max: 16};
     const mapBoundariesLongLat = {
         ne: [49.869301, 71.185001],
         sw: [-31.266001, 27.560001]
@@ -52,7 +52,7 @@ export default function NativeMap(props: MapProps) {
     }, []);
 
     // Only use supercluster when we have valid content
-    const { clusters, getClusterExpansionZoom } = useSupercluster(
+    const {clusters, getClusterExpansionZoom} = useSupercluster(
         content && content.length > 0 ? content : [],
         bounds,
         zoomLevel
@@ -61,7 +61,7 @@ export default function NativeMap(props: MapProps) {
     const pins = useMemo(() => {
         return clusters.map((cluster, index) => {
             const [longitude, latitude] = cluster.geometry.coordinates;
-            const { cluster: isCluster, point_count, locationWithBoxes } = cluster.properties;
+            const {cluster: isCluster, point_count, locationWithBoxes} = cluster.properties;
 
             if (isCluster) {
                 return (
@@ -91,9 +91,9 @@ export default function NativeMap(props: MapProps) {
     }, [clusters, getClusterExpansionZoom]);
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
             <MapView
-                style={{ flex: 1 }}
+                style={{flex: 1}}
                 mapStyle={require('../assets/style.json')}
                 compassEnabled={true}
                 zoomEnabled={true}
