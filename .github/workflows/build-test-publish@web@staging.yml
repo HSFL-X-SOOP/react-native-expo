@@ -24,8 +24,12 @@ jobs:
         with:
           node-version: 20
 
+      - name: Create .env file
+        run: |
+          echo "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=${{ secrets.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID }}" > .env
+
       - name: Install dependencies
-        run: npm i
+        run: npm ci
 
       - name: Build frontend artifacts
         run: npm run web:build:test
