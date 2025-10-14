@@ -96,7 +96,17 @@ export default function WebMap(props: MapProps) {
     // Automatically load the correct style based on styleType and isDark
     const mapStyle = useMemo(() => {
         if (styleType === 'old') {
-            return require('../assets/markers/mapStyles/style.json');
+            // Load the old style and modify its background color based on isDark
+            const baseStyle = require('../assets/markers/mapStyles/style.json');
+            const modifiedStyle = JSON.parse(JSON.stringify(baseStyle)); // Deep clone
+
+            // Find and update the background layer
+            const backgroundLayer = modifiedStyle.layers.find((layer: any) => layer.id === 'background');
+            if (backgroundLayer) {
+                backgroundLayer.paint['background-color'] = isDark ? '#1a1a1a' : 'rgba(255,255,255,1)';
+            }
+
+            return modifiedStyle;
         } else {
             // For new style, use light or dark version based on isDark
             return isDark
@@ -137,23 +147,6 @@ export default function WebMap(props: MapProps) {
             );
         });
     }, [clusters, getClusterExpansionZoom]);
-
-    // Update map background color when theme or style changes
-    useEffect(() => {
-        const map = mapRef.current?.getMap();
-        if (!map) return;
-
-        const backgroundColor = isDark ? '#1a1a1a' : '#ffffff';
-
-        // Wait for map to be loaded before changing style
-        if (!map.isStyleLoaded()) {
-            map.once('load', () => {
-                map.setPaintProperty('background', 'background-color', backgroundColor);
-            });
-        } else {
-            map.setPaintProperty('background', 'background-color', backgroundColor);
-        }
-    }, [isDark, mapStyle]);
 
     return (
         <View style={{flex: 1}}>
