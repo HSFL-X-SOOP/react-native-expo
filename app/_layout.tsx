@@ -6,11 +6,11 @@ import {
     Oswald_700Bold,
     useFonts
 } from '@expo-google-fonts/oswald'
-import {Slot} from 'expo-router'
 import {StatusBar} from 'expo-status-bar'
 import {Platform, View} from 'react-native'
 import {useEffect} from 'react'
 import 'react-native-reanimated'
+
 
 import config from '@/tamagui.config'
 import {PortalProvider} from '@tamagui/portal'
@@ -23,9 +23,14 @@ import {NavbarWeb} from '@/components/navigation/web/navbar'
 import {Footer} from '@/components/navigation/web/Footer'
 import {AuthProvider} from '@/context/SessionContext'
 import {ThemeProvider, useThemeContext} from '@/context/ThemeSwitch.tsx'
-import {usePathname} from 'expo-router'
+import {usePathname, Slot} from 'expo-router'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import type {ToastType} from '@/components/useToast'
+
+if (Platform.OS === 'web') {
+    require('../global.css')
+}
+
 
 function CurrentToast() {
     const currentToast = useToastState()
