@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native';
 import {Lock} from '@tamagui/lucide-icons';
 import {Button, Checkbox, Text, View, YStack, XStack, Separator, Spinner, ScrollView} from 'tamagui';
 import {useTranslation} from '@/hooks/useTranslation';
+import {useToast} from '@/components/useToast';
 import {GoogleIcon} from '@/components/ui/Icons';
 import {useGoogleSignIn} from '@/hooks/useGoogleSignIn';
 import {AuthCard} from '@/components/auth/AuthCard';
@@ -21,6 +22,7 @@ export default function LoginScreen() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
+    const toast = useToast();
 
     const {login, loginStatus} = useAuth();
     const {login: logUserIn, session} = useSession();
@@ -45,9 +47,17 @@ export default function LoginScreen() {
                 lastTokenRefresh: null,
                 profile: res.profile
             });
+            toast.success(t('auth.loginSuccess'), {
+                message: t('auth.welcomeBack'),
+                duration: 3000
+            });
             router.push("/map");
         } else {
             logger.error('Login failed', loginStatus.error);
+            toast.error(t('auth.loginError'), {
+                message: loginStatus.error?.message || t('auth.loginErrorGeneric'),
+                duration: 5000
+            });
         }
     };
 
@@ -145,7 +155,20 @@ export default function LoginScreen() {
                         <Button
                             variant="outlined"
                             size="$4"
-                            onPress={() => handleGoogleSignIn('/map')}
+                            onPress={async () => {
+                                const result = await handleGoogleSignIn('/map');
+                                if (result?.success) {
+                                    toast.success(t('auth.googleSignInSuccess'), {
+                                        message: t('auth.welcomeBack'),
+                                        duration: 3000
+                                    });
+                                } else if (result && !result.success) {
+                                    toast.error(t('auth.googleSignInError'), {
+                                        message: result.error || t('auth.googleSignInErrorGeneric'),
+                                        duration: 5000
+                                    });
+                                }
+                            }}
                             disabled={googleLoading}
                             opacity={googleLoading ? 0.6 : 1}
                             borderColor="$borderColor"

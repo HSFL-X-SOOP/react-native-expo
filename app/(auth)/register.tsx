@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native';
 import {Button, Checkbox, Text, View, YStack, XStack, Separator, Spinner, ScrollView} from 'tamagui';
 import {User} from '@tamagui/lucide-icons';
 import {useTranslation} from '@/hooks/useTranslation';
+import {useToast} from '@/components/useToast';
 import {GoogleIcon} from '@/components/ui/Icons';
 import {useGoogleSignIn} from '@/hooks/useGoogleSignIn';
 import {usePasswordValidation, useEmailValidation} from '@/hooks/usePasswordValidation';
@@ -28,6 +29,7 @@ export default function RegisterScreen() {
     const {login, session} = useSession();
     const {t} = useTranslation();
     const {handleGoogleSignIn, isLoading: googleLoading} = useGoogleSignIn();
+    const toast = useToast();
 
     const {
         validation: passwordValidation,
@@ -46,18 +48,34 @@ export default function RegisterScreen() {
     const handleSubmit = async () => {
         if (password !== confirmPassword) {
             logger.warn('Password mismatch');
+            toast.error(t('auth.registerError'), {
+                message: t('auth.passwordsDoNotMatch'),
+                duration: 4000
+            });
             return;
         }
         if (!agreeTermsOfService) {
             logger.warn('Terms of service not accepted');
+            toast.error(t('auth.registerError'), {
+                message: t('auth.agreeToTermsRequired'),
+                duration: 4000
+            });
             return;
         }
         if (!isPasswordValid) {
             logger.warn('Invalid password format');
+            toast.error(t('auth.registerError'), {
+                message: t('auth.invalidPasswordFormat'),
+                duration: 4000
+            });
             return;
         }
         if (!isEmailValid) {
             logger.warn('Invalid email format');
+            toast.error(t('auth.registerError'), {
+                message: t('auth.invalidEmail'),
+                duration: 4000
+            });
             return;
         }
 
@@ -72,9 +90,17 @@ export default function RegisterScreen() {
                 lastTokenRefresh: null,
                 profile: res.profile
             });
+            toast.success(t('auth.registerSuccess'), {
+                message: t('auth.accountCreated'),
+                duration: 3000
+            });
             router.push("/");
         } else {
             logger.error('Registration failed', registerStatus.error);
+            toast.error(t('auth.registerError'), {
+                message: registerStatus.error?.message || t('auth.registerErrorGeneric'),
+                duration: 5000
+            });
         }
     };
 
@@ -196,7 +222,20 @@ export default function RegisterScreen() {
                     <Button
                         variant="outlined"
                         size="$4"
-                        onPress={() => handleGoogleSignIn('/')}
+                        onPress={async () => {
+                            const result = await handleGoogleSignIn('/');
+                            if (result?.success) {
+                                toast.success(t('auth.googleSignInSuccess'), {
+                                    message: t('auth.accountCreated'),
+                                    duration: 3000
+                                });
+                            } else if (result && !result.success) {
+                                toast.error(t('auth.googleSignInError'), {
+                                    message: result.error || t('auth.googleSignInErrorGeneric'),
+                                    duration: 5000
+                                });
+                            }
+                        }}
                         disabled={googleLoading}
                         opacity={googleLoading ? 0.6 : 1}
                         borderColor="$borderColor"

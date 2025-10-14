@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { Button, Text, View, YStack, XStack, Card, H2, H5, H4, Spinner, Separator, RadioGroup, Label, Tabs } from "tamagui";
 import { User, Globe, Activity, Ruler, Check, Anchor } from '@tamagui/lucide-icons';
+import { useToast } from '@/components/useToast';
 import { styles as LayoutStyle } from './_layout';
 import { useSession } from '@/context/SessionContext';
 import { useUser } from '@/hooks/useUser';
@@ -14,6 +15,7 @@ export default function ProfileScreen() {
   const { t, changeLanguage } = useTranslation();
   const { session, updateProfile: updateSessionProfile } = useSession();
   const { getProfile, getProfileStatus, updateProfile, updateProfileStatus } = useUser();
+  const toast = useToast();
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -69,9 +71,18 @@ export default function ProfileScreen() {
       const langCode = selectedLanguage === Language.DE ? 'de' : 'en';
       changeLanguage(langCode);
 
+      toast.success(t('profile.saveSuccess'), {
+        message: t('profile.settingsUpdated'),
+        duration: 3000
+      });
+
       setIsEditing(false);
     } catch (error) {
       console.error('Failed to update profile:', error);
+      toast.error(t('profile.saveError'), {
+        message: error instanceof Error ? error.message : t('profile.saveErrorGeneric'),
+        duration: 5000
+      });
     }
   };
 

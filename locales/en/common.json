@@ -57,6 +57,20 @@
     "passwordDigit": "At least one digit",
     "passwordSpecial": "At least one special character (@$!%*?&#-)",
     "passwordStrength": "Password Strength",
+    "loginSuccess": "Login Successful",
+    "loginError": "Login Failed",
+    "loginErrorGeneric": "An error occurred during login. Please try again.",
+    "registerSuccess": "Registration Successful",
+    "registerError": "Registration Failed",
+    "registerErrorGeneric": "An error occurred during registration. Please try again.",
+    "accountCreated": "Your account has been created successfully!",
+    "agreeToTermsRequired": "Please agree to the Terms of Service to continue.",
+    "invalidPasswordFormat": "Password does not meet the requirements.",
+    "googleSignInSuccess": "Google Sign-In Successful",
+    "googleSignInError": "Google Sign-In Failed",
+    "googleSignInErrorGeneric": "An error occurred during Google Sign-In. Please try again.",
+    "logoutSuccess": "Logged Out Successfully",
+    "logoutMessage": "You have been logged out. See you soon!",
     "magicLink": {
       "title": "Magic Link",
       "description": "Enter your email and we'll send you a secure sign-in link.",
@@ -70,7 +84,12 @@
       "verifyingMessage": "Please wait while we sign you in...",
       "invalidOrExpired": "Invalid or Expired Link",
       "requestNewLink": "Request a new magic link",
-      "validEmail": "Please enter a valid email address"
+      "validEmail": "Please enter a valid email address",
+      "linkSentSuccess": "Magic Link Sent",
+      "linkSentError": "Failed to Send Magic Link",
+      "linkSentErrorGeneric": "An error occurred while sending the magic link. Please try again.",
+      "loginSuccess": "Login Successful",
+      "loginError": "Login Failed"
     }
   },
   "profile": {
@@ -139,7 +158,11 @@
     },
     "validation": {
       "selectAtLeastOneActivity": "Please select at least one activity"
-    }
+    },
+    "saveSuccess": "Profile Saved",
+    "saveError": "Failed to Save Profile",
+    "saveErrorGeneric": "An error occurred while saving your profile. Please try again.",
+    "settingsUpdated": "Your settings have been updated successfully!"
   },
   "map": {
     "title": "Map",

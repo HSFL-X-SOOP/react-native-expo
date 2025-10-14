@@ -44,6 +44,7 @@
     "@tamagui/metro-plugin": "^1.134.1",
     "@tamagui/portal": "1.134.2",
     "@tamagui/theme-builder": "^1.134.1",
+    "@tamagui/toast": "^1.134.2",
     "@vis.gl/react-maplibre": "^8.0.4",
     "axios": "^1.12.2",
     "date-fns-tz": "^3.2.0",

@@ -62,12 +62,14 @@ export const useGoogleSignIn = () => {
           profile: res.profile,
         });
         router.push(redirectPath);
+        return { success: true };
       } else {
         logger.error('Backend authentication failed');
+        return { success: false, error: 'Backend authentication failed' };
       }
     } catch (error) {
       logger.error('Google Sign-In failed', error);
-      throw error;
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
     }
   };
 

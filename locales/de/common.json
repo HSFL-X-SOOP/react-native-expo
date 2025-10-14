@@ -57,6 +57,20 @@
     "passwordDigit": "Mindestens eine Ziffer",
     "passwordSpecial": "Mindestens ein Sonderzeichen (@$!%*?&#-)",
     "passwordStrength": "Passwortstärke",
+    "loginSuccess": "Anmeldung erfolgreich",
+    "loginError": "Anmeldung fehlgeschlagen",
+    "loginErrorGeneric": "Bei der Anmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "registerSuccess": "Registrierung erfolgreich",
+    "registerError": "Registrierung fehlgeschlagen",
+    "registerErrorGeneric": "Bei der Registrierung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "accountCreated": "Ihr Konto wurde erfolgreich erstellt!",
+    "agreeToTermsRequired": "Bitte stimmen Sie den Nutzungsbedingungen zu, um fortzufahren.",
+    "invalidPasswordFormat": "Das Passwort erfüllt nicht die Anforderungen.",
+    "googleSignInSuccess": "Google-Anmeldung erfolgreich",
+    "googleSignInError": "Google-Anmeldung fehlgeschlagen",
+    "googleSignInErrorGeneric": "Bei der Google-Anmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "logoutSuccess": "Erfolgreich abgemeldet",
+    "logoutMessage": "Sie wurden abgemeldet. Bis bald!",
     "magicLink": {
       "title": "Magic Link",
       "description": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen sicheren Anmeldelink.",
@@ -70,7 +84,12 @@
       "verifyingMessage": "Bitte warten Sie, während wir Sie anmelden...",
       "invalidOrExpired": "Ungültiger oder abgelaufener Link",
       "requestNewLink": "Neuen Magic Link anfordern",
-      "validEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+      "validEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+      "linkSentSuccess": "Magic Link gesendet",
+      "linkSentError": "Magic Link konnte nicht gesendet werden",
+      "linkSentErrorGeneric": "Beim Senden des Magic Links ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+      "loginSuccess": "Anmeldung erfolgreich",
+      "loginError": "Anmeldung fehlgeschlagen"
     }
   },
   "profile": {
@@ -139,7 +158,11 @@
     },
     "validation": {
       "selectAtLeastOneActivity": "Bitte wählen Sie mindestens eine Aktivität aus"
-    }
+    },
+    "saveSuccess": "Profil gespeichert",
+    "saveError": "Profil konnte nicht gespeichert werden",
+    "saveErrorGeneric": "Beim Speichern Ihres Profils ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "settingsUpdated": "Ihre Einstellungen wurden erfolgreich aktualisiert!"
   },
   "map": {
     "title": "Karte",

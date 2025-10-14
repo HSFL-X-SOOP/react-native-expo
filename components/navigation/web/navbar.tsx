@@ -1,5 +1,6 @@
 import {Link, useRouter, Href} from 'expo-router';
 import {Button, Popover, Sheet, Text, XStack, YStack, useMedia, useTheme, ScrollView, Tooltip} from 'tamagui';
+import {useToast} from '@/components/useToast';
 
 import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
 import {LOGO, MapIcon, InfoIcon, CloudIcon} from '@/components/ui/Icons';
@@ -18,9 +19,14 @@ export function NavbarWeb() {
     const {t: translate} = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const media = useMedia();
+    const toast = useToast();
 
     const handleLogout = () => {
         logout();
+        toast.info(translate('auth.logoutSuccess'), {
+            message: translate('auth.logoutMessage'),
+            duration: 3000
+        });
         router.push('/map');
     };
 
@@ -378,7 +384,7 @@ export function NavbarWeb() {
                             )}
 
                             {session && (
-                                <YStack paddingTop="$4">
+                                <YStack gap="$3" paddingTop="$4">
                                     <Link href={"/(profile)/profile" as Href} onPress={() => setIsMenuOpen(false)}>
                                         <Button variant="outlined" width="100%">
                                             <XStack alignItems="center" gap="$2">
@@ -387,6 +393,15 @@ export function NavbarWeb() {
                                             </XStack>
                                         </Button>
                                     </Link>
+                                    <Button variant="outlined" width="100%" onPress={() => {
+                                        handleLogout();
+                                        setIsMenuOpen(false);
+                                    }}>
+                                        <XStack alignItems="center" gap="$2">
+                                            <LogOut size={24} color={"$accent8"}/>
+                                            <Text fontSize="$5">{translate('auth.logout')}</Text>
+                                        </XStack>
+                                    </Button>
                                 </YStack>
                             )}
                         </YStack>

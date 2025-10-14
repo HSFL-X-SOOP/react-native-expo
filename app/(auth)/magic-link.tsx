@@ -8,6 +8,7 @@ import {useSession} from '@/context/SessionContext';
 import {AuthCard} from '@/components/auth/AuthCard';
 import {EmailInput} from '@/components/auth/EmailInput';
 import {useTranslation} from '@/hooks/useTranslation';
+import {useToast} from '@/components/useToast';
 import {createLogger} from '@/utils/logger';
 
 const logger = createLogger('Auth:MagicLink');
@@ -20,6 +21,7 @@ export default function MagicLinkScreen() {
     const {requestMagicLink, requestMagicLinkStatus, magicLinkLogin, magicLinkLoginStatus} = useAuth();
     const {login: logUserIn} = useSession();
     const {t} = useTranslation();
+    const toast = useToast();
 
     const hasErrors = () => {
         return email.length > 0 && !email.includes('@');
@@ -30,9 +32,17 @@ export default function MagicLinkScreen() {
         const result = await requestMagicLink({email});
         if (result !== undefined) {
             logger.info('Magic link sent successfully');
+            toast.success(t('auth.magicLink.linkSentSuccess'), {
+                message: t('auth.magicLink.checkYourEmail'),
+                duration: 4000
+            });
             setSent(true);
         } else {
             logger.error('Magic link request failed', requestMagicLinkStatus.error);
+            toast.error(t('auth.magicLink.linkSentError'), {
+                message: requestMagicLinkStatus.error?.message || t('auth.magicLink.linkSentErrorGeneric'),
+                duration: 5000
+            });
         }
     };
 
@@ -50,9 +60,17 @@ export default function MagicLinkScreen() {
                         lastTokenRefresh: null,
                         profile: result.profile
                     });
+                    toast.success(t('auth.magicLink.loginSuccess'), {
+                        message: t('auth.welcomeBack'),
+                        duration: 3000
+                    });
                     router.replace("/map");
                 } else {
                     logger.error('Magic link login failed', magicLinkLoginStatus.error);
+                    toast.error(t('auth.magicLink.loginError'), {
+                        message: magicLinkLoginStatus.error?.message || t('auth.magicLink.invalidOrExpired'),
+                        duration: 5000
+                    });
                 }
             })();
         }
