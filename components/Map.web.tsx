@@ -89,8 +89,21 @@ export default function WebMap(props: MapProps) {
         zoomLevel
     );
 
-    const [mapStyle, setMapStyle] = useState(require('../assets/markers/mapStyles/style.json'));
+    // Track which style type is selected: 'old' or 'new'
+    const [styleType, setStyleType] = useState<'old' | 'new'>('old');
     const t = useTheme();
+
+    // Automatically load the correct style based on styleType and isDark
+    const mapStyle = useMemo(() => {
+        if (styleType === 'old') {
+            return require('../assets/markers/mapStyles/style.json');
+        } else {
+            // For new style, use light or dark version based on isDark
+            return isDark
+                ? require('../assets/markers/mapStyles/dark_mode_openfreemap.json')
+                : require('../assets/markers/mapStyles/light_mode_openfreemap.json');
+        }
+    }, [styleType, isDark]);
 
     const pins = useMemo(() => {
         return clusters.map((cluster) => {
@@ -125,20 +138,22 @@ export default function WebMap(props: MapProps) {
         });
     }, [clusters, getClusterExpansionZoom]);
 
-    // Update map background color when theme changes
+    // Update map background color when theme or style changes
     useEffect(() => {
         const map = mapRef.current?.getMap();
         if (!map) return;
 
+        const backgroundColor = isDark ? '#1a1a1a' : '#ffffff';
+
         // Wait for map to be loaded before changing style
         if (!map.isStyleLoaded()) {
             map.once('load', () => {
-                map.setPaintProperty('background', 'background-color', isDark ? '#1a1a1a' : '#ffffff');
+                map.setPaintProperty('background', 'background-color', backgroundColor);
             });
         } else {
-            map.setPaintProperty('background', 'background-color', isDark ? '#1a1a1a' : '#ffffff');
+            map.setPaintProperty('background', 'background-color', backgroundColor);
         }
-    }, [isDark]);
+    }, [isDark, mapStyle]);
 
     return (
         <View style={{flex: 1}}>
@@ -171,41 +186,32 @@ export default function WebMap(props: MapProps) {
                     style={[styles.button, {
                         borderTopLeftRadius: 8,
                         borderTopRightRadius: 8,
-                        borderBottomLeftRadius: 0,
-                        borderBottomRightRadius: 0,
-                        backgroundColor: t.background?.val
-                    }]}
-                    onPress={() => setMapStyle(require('../assets/markers/mapStyles/light_mode_openfreemap.json'))}
-                    activeOpacity={0.7}
-                >
-                    <Palette color={t.color?.val} size={24}/>
-                    <Text style={{fontSize: 13}}>Neu</Text>
-                </TouchableOpacity>
-                <View style={{height: 1, backgroundColor: t.borderColor?.val}}/>
-                <TouchableOpacity
-                    style={[styles.button, {
-                        backgroundColor: t.background?.val
-                    }]}
-                    onPress={() => setMapStyle(require('../assets/markers/mapStyles/dark_mode_openfreemap.json'))}
-                    activeOpacity={0.7}
-                >
-                    <Palette color={t.color?.val} size={24}/>
-                    <Text style={{fontSize: 13}}>Neu Dark</Text>
-                </TouchableOpacity>
-                <View style={{height: 1, backgroundColor: t.borderColor?.val}}/>
-                <TouchableOpacity
-                    style={[styles.button, {
-                        borderTopLeftRadius: 0,
-                        borderTopRightRadius: 0,
                         borderBottomLeftRadius: 8,
                         borderBottomRightRadius: 8,
-                        backgroundColor: t.background?.val
+                        backgroundColor: styleType === 'new' ? t.color?.val : t.background?.val
                     }]}
-                    onPress={() => setMapStyle(require('../assets/markers/mapStyles/style.json'))}
+                    onPress={() => setStyleType('new')}
                     activeOpacity={0.7}
                 >
-                    <Palette color={t.color?.val} size={24}/>
-                    <Text style={{fontSize: 13}}>Alt</Text>
+                    <Palette color={styleType === 'new' ? t.background?.val : t.color?.val} size={24}/>
+                    <Text
+                        style={{fontSize: 13, color: styleType === 'new' ? t.background?.val : t.color?.val}}>Neu</Text>
+                </TouchableOpacity>
+                <View style={{height: 8}}/>
+                <TouchableOpacity
+                    style={[styles.button, {
+                        borderTopLeftRadius: 8,
+                        borderTopRightRadius: 8,
+                        borderBottomLeftRadius: 8,
+                        borderBottomRightRadius: 8,
+                        backgroundColor: styleType === 'old' ? t.color?.val : t.background?.val
+                    }]}
+                    onPress={() => setStyleType('old')}
+                    activeOpacity={0.7}
+                >
+                    <Palette color={styleType === 'old' ? t.background?.val : t.color?.val} size={24}/>
+                    <Text
+                        style={{fontSize: 13, color: styleType === 'old' ? t.background?.val : t.color?.val}}>Alt</Text>
                 </TouchableOpacity>
             </View>
         </View>);
