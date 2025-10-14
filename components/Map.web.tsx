@@ -8,12 +8,21 @@ import {
 } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
+import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
+import { View } from 'react-native';
+import '../Global.css';
+import SensorMarker from './map/web/SensorMarker';
 import {useMemo, useState, useEffect} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text, useTheme} from 'tamagui';
 import ClusterMarker from './map/web/ClusterMarker';
-import MapLegend from './map/MapLegend';
 import MapZoomControl from './map/MapZoomControl';
+import { useSupercluster } from '@/hooks/useSupercluster';
+import type { MapRef } from '@vis.gl/react-maplibre';
+import { BoxType, LocationWithBoxes } from '@/api/models/sensor';
+import MapSensorDrawer from './map/MapSensorDrawer';
+import SensorList from './map/SensorList';
+import MapDrawerToggle from './map/MapDrawerToggle';
 import SensorMarker from './map/web/SensorMarker';
 import {BoxType} from '@/api/models/sensor';
 
@@ -34,7 +43,7 @@ export default function WebMap(props: MapProps) {
         module3Visible = false,
         isDark = false
     } = props;
-    const {data: content} = useSensorDataNew();
+    const { data: content, loading } = useSensorDataNew();
     const mapRef = React.useRef<MapRef>(null);
 
     const homeCoordinate: [number, number] = [9.26, 54.47926];
@@ -48,6 +57,9 @@ export default function WebMap(props: MapProps) {
         latitude: homeCoordinate[1],
         zoom: zoomLevel
     });
+    const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+    const [highlightedSensorId, setHighlightedSensorId] = useState<number | null>(null);
+    const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const bounds: [number, number, number, number] = useMemo(() => {
         const map = mapRef.current?.getMap();
@@ -82,6 +94,42 @@ export default function WebMap(props: MapProps) {
             return false;
         });
     }, [content, module1Visible, module2Visible, module3Visible]);
+
+    const {clusters, getClusterExpansionZoom} = useSupercluster(
+        filteredContent,
+        bounds,
+        zoomLevel
+    );
+    // Filter sensors by viewport bounds
+    const visibleSensors = useMemo(() => {
+        return filteredContent.filter(sensor => {
+            const {lat, lon} = sensor.location.coordinates;
+            return (
+                lon >= bounds[0] &&
+                lat >= bounds[1] &&
+                lon <= bounds[2] &&
+                lat <= bounds[3]
+            );
+        });
+    }, [filteredContent, bounds]);
+
+    // Handle sensor selection from list - center map and highlight marker
+    const handleSensorSelect = (sensor: LocationWithBoxes) => {
+        const {lat, lon} = sensor.location.coordinates;
+        setHighlightedSensorId(sensor.location.id);
+
+        // Center the map on the selected sensor
+        mapRef.current?.flyTo({
+            center: [lon, lat],
+            zoom: Math.max(zoomLevel, 12), // Zoom in if needed
+            duration: 1000,
+        });
+
+        // Clear highlight after animation
+        setTimeout(() => {
+            setHighlightedSensorId(null);
+        }, 3000);
+    };
 
     const {clusters, getClusterExpansionZoom} = useSupercluster(
         filteredContent,
@@ -148,8 +196,32 @@ export default function WebMap(props: MapProps) {
         });
     }, [clusters, getClusterExpansionZoom]);
 
+    // Update map background color when theme changes
+    useEffect(() => {
+        const map = mapRef.current?.getMap();
+        if (!map) return;
+
+        // Wait for map to be loaded before changing style
+        if (!map.isStyleLoaded()) {
+            map.once('load', () => {
+                map.setPaintProperty('background', 'background-color', isDark ? '#1a1a1a' : '#ffffff');
+            });
+        } else {
+            map.setPaintProperty('background', 'background-color', isDark ? '#1a1a1a' : '#ffffff');
+        }
+    }, [isDark]);
+
     return (
         <View style={{flex: 1}}>
+            <MapSensorDrawer isOpen={isDrawerOpen} onToggle={() => setIsDrawerOpen(!isDrawerOpen)}>
+                <SensorList
+                    sensors={visibleSensors}
+                    onSensorSelect={handleSensorSelect}
+                    highlightedSensorId={highlightedSensorId}
+                    loading={loading}
+                    mapCenter={currentCoordinate}
+                />
+            </MapSensorDrawer>
             <Map
                 ref={mapRef}
                 initialViewState={viewState}
@@ -174,60 +246,6 @@ export default function WebMap(props: MapProps) {
                     homeCoordinate={homeCoordinate}
                 />
             </Map>
-            <View style={styles.container}>
-                <TouchableOpacity
-                    style={[styles.button, {
-                        borderTopLeftRadius: 8,
-                        borderTopRightRadius: 8,
-                        borderBottomLeftRadius: 8,
-                        borderBottomRightRadius: 8,
-                        backgroundColor: styleType === 'new' ? t.color?.val : t.background?.val
-                    }]}
-                    onPress={() => setStyleType('new')}
-                    activeOpacity={0.7}
-                >
-                    <Palette color={styleType === 'new' ? t.background?.val : t.color?.val} size={24}/>
-                    <Text
-                        style={{fontSize: 13, color: styleType === 'new' ? t.background?.val : t.color?.val}}>Neu</Text>
-                </TouchableOpacity>
-                <View style={{height: 8}}/>
-                <TouchableOpacity
-                    style={[styles.button, {
-                        borderTopLeftRadius: 8,
-                        borderTopRightRadius: 8,
-                        borderBottomLeftRadius: 8,
-                        borderBottomRightRadius: 8,
-                        backgroundColor: styleType === 'old' ? t.color?.val : t.background?.val
-                    }]}
-                    onPress={() => setStyleType('old')}
-                    activeOpacity={0.7}
-                >
-                    <Palette color={styleType === 'old' ? t.background?.val : t.color?.val} size={24}/>
-                    <Text
-                        style={{fontSize: 13, color: styleType === 'old' ? t.background?.val : t.color?.val}}>Alt</Text>
-                </TouchableOpacity>
-            </View>
         </View>);
 }
 
-const styles = StyleSheet.create({
-    container: {
-        position: "absolute",
-        right: 20,
-        bottom: 300,
-        flexDirection: "column",
-        alignItems: "center",
-        zIndex: 10,
-    },
-    button: {
-        width: 56,
-        height: 40,
-        justifyContent: "center",
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        elevation: 4,
-    }
-});

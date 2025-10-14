@@ -353,13 +353,13 @@ function getMeasurementIcon(measurementType: string): { icon: React.ReactNode; c
             };
         case "waveHeight":
             return {
-                icon: <Activity size={size} color="#10B981"/>,
+                icon: <Waves size={size} color="#10B981"/>,
                 color: "#10B981",
                 bgColor: "#A7F3D0"
             };
         case "waterLevel":
             return {
-                icon: <Waves size={size} color="#3B82F6"/>,
+                icon: <Activity size={size} color="#3B82F6"/>,
                 color: "#3B82F6",
                 bgColor: "#BFDBFE"
             };
