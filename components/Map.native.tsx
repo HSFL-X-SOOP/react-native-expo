@@ -6,16 +6,25 @@ import {View} from "react-native";
 import SensorMarker from "./map/native/SensorMarker";
 import ClusterMarker from "./map/native/ClusterMarker";
 import MapZoomControl from "./map/MapZoomControl";
+import {BoxType} from "@/api/models/sensor";
 
 interface MapProps {
     module1Visible?: boolean;
     module2Visible?: boolean;
     module3Visible?: boolean;
-    temperatureVisible?: boolean;
-    windDirectionVisible?: boolean;
+    isDark?: boolean;
+    // Overlay props - currently disabled
+    // temperatureVisible?: boolean;
+    // windDirectionVisible?: boolean;
 }
 
 export default function NativeMap(props: MapProps) {
+    const {
+        module1Visible = true,
+        module2Visible = true,
+        module3Visible = false,
+        isDark = false
+    } = props;
     const {data: content} = useSensorDataNew();
 
     const homeCoordinate: [number, number] = [9.26, 54.46];
@@ -51,9 +60,31 @@ export default function NativeMap(props: MapProps) {
         ];
     }, []);
 
+    // Filter locations based on module visibility
+    const filteredContent = useMemo(() => {
+        if (!content || content.length === 0) return [];
+
+        return content.filter(locationWithBoxes => {
+            // Check if this location has any boxes matching the enabled modules
+            const hasWaterBoxes = locationWithBoxes.boxes.some(box =>
+                box.type === BoxType.WaterBox || box.type === BoxType.WaterTemperatureOnlyBox
+            );
+            const hasAirBoxes = locationWithBoxes.boxes.some(box =>
+                box.type === BoxType.AirBox
+            );
+
+            // Show location if it has boxes matching any enabled module
+            if (module1Visible && hasWaterBoxes) return true;
+            if (module2Visible && hasAirBoxes) return true;
+            // module3Visible is for future use (Air Quality)
+
+            return false;
+        });
+    }, [content, module1Visible, module2Visible, module3Visible]);
+
     // Only use supercluster when we have valid content
     const {clusters, getClusterExpansionZoom} = useSupercluster(
-        content && content.length > 0 ? content : [],
+        filteredContent,
         bounds,
         zoomLevel
     );
@@ -91,7 +122,7 @@ export default function NativeMap(props: MapProps) {
     }, [clusters, getClusterExpansionZoom]);
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5'}}>
             <MapView
                 style={{flex: 1}}
                 mapStyle={require('../assets/style.json')}

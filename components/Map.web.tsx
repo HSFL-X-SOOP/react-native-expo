@@ -5,7 +5,7 @@ import {
 } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { View } from 'react-native';
 import '../Global.css';
 import SensorMarker from './map/web/SensorMarker';
@@ -13,8 +13,25 @@ import ClusterMarker from './map/web/ClusterMarker';
 import MapZoomControl from './map/MapZoomControl';
 import { useSupercluster } from '@/hooks/useSupercluster';
 import type { MapRef } from '@vis.gl/react-maplibre';
+import { BoxType } from '@/api/models/sensor';
 
-export default function WebMap() {
+interface MapProps {
+  module1Visible?: boolean;
+  module2Visible?: boolean;
+  module3Visible?: boolean;
+  isDark?: boolean;
+  // Overlay props - currently disabled
+  // temperatureVisible?: boolean;
+  // windDirectionVisible?: boolean;
+}
+
+export default function WebMap(props: MapProps) {
+  const {
+    module1Visible = true,
+    module2Visible = true,
+    module3Visible = false,
+    isDark = false
+  } = props;
   const { data: content } = useSensorDataNew();
   const mapRef = React.useRef<MapRef>(null);
 
@@ -42,8 +59,30 @@ export default function WebMap() {
     ];
   }, [viewState]);
 
+  // Filter locations based on module visibility
+  const filteredContent = useMemo(() => {
+    if (!content) return [];
+
+    return content.filter(locationWithBoxes => {
+      // Check if this location has any boxes matching the enabled modules
+      const hasWaterBoxes = locationWithBoxes.boxes.some(box =>
+        box.type === BoxType.WaterBox || box.type === BoxType.WaterTemperatureOnlyBox
+      );
+      const hasAirBoxes = locationWithBoxes.boxes.some(box =>
+        box.type === BoxType.AirBox
+      );
+
+      // Show location if it has boxes matching any enabled module
+      if (module1Visible && hasWaterBoxes) return true;
+      if (module2Visible && hasAirBoxes) return true;
+      // module3Visible is for future use (Air Quality)
+
+      return false;
+    });
+  }, [content, module1Visible, module2Visible, module3Visible]);
+
   const { clusters, getClusterExpansionZoom } = useSupercluster(
-    content,
+    filteredContent,
     bounds,
     zoomLevel
   );
@@ -81,8 +120,23 @@ export default function WebMap() {
     });
   }, [clusters, getClusterExpansionZoom]);
 
+  // Update map background color when theme changes
+  useEffect(() => {
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+
+    // Wait for map to be loaded before changing style
+    if (!map.isStyleLoaded()) {
+      map.once('load', () => {
+        map.setPaintProperty('background', 'background-color', isDark ? '#1a1a1a' : '#ffffff');
+      });
+    } else {
+      map.setPaintProperty('background', 'background-color', isDark ? '#1a1a1a' : '#ffffff');
+    }
+  }, [isDark]);
+
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5'}}>
       <Map
         ref={mapRef}
         initialViewState={viewState}
