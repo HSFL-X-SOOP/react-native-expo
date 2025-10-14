@@ -10,7 +10,7 @@ import {StatusBar} from 'expo-status-bar'
 import {Platform, View} from 'react-native'
 import {useEffect} from 'react'
 import 'react-native-reanimated'
-
+import '../global.css'
 
 import config from '@/tamagui.config'
 import {PortalProvider} from '@tamagui/portal'
@@ -26,10 +26,6 @@ import {ThemeProvider, useThemeContext} from '@/context/ThemeSwitch.tsx'
 import {usePathname, Slot} from 'expo-router'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import type {ToastType} from '@/components/useToast'
-
-if (Platform.OS === 'web') {
-    require('../global.css')
-}
 
 
 function CurrentToast() {
@@ -153,7 +149,6 @@ export default function RootLayout() {
         Oswald_500Medium,
         Oswald_600SemiBold,
         Oswald_700Bold,
-        SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     })
 
     if (!loaded) return null
