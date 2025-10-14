@@ -7,6 +7,7 @@ import SensorListItem from './SensorListItem';
 
 interface SensorListProps {
     sensors: LocationWithBoxes[];
+    allSensors: LocationWithBoxes[];
     onSensorSelect: (sensor: LocationWithBoxes) => void;
     highlightedSensorId?: number | null;
     loading?: boolean;
@@ -18,6 +19,7 @@ type FilterType = 'all' | 'water' | 'air';
 
 export default function SensorList({
                                        sensors,
+                                       allSensors,
                                        onSensorSelect,
                                        highlightedSensorId,
                                        loading = false,
@@ -28,6 +30,10 @@ export default function SensorList({
     const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState<SortOption>('distance');
     const [filterType, setFilterType] = useState<FilterType>('all');
+    const [showAllSensors, setShowAllSensors] = useState(false);
+
+    // Use either viewport sensors or all sensors based on toggle
+    const sensorsToDisplay = showAllSensors ? allSensors : sensors;
 
     // Calculate distance from map center to sensor
     const calculateDistance = (sensor: LocationWithBoxes) => {
@@ -53,7 +59,7 @@ export default function SensorList({
 
     // Filter and sort sensors
     const processedSensors = useMemo(() => {
-        let filtered = sensors;
+        let filtered = sensorsToDisplay;
 
         // Apply search filter
         if (searchQuery) {
@@ -104,7 +110,7 @@ export default function SensorList({
         });
 
         return sorted;
-    }, [sensors, searchQuery, filterType, sortBy, mapCenter]);
+    }, [sensorsToDisplay, searchQuery, filterType, sortBy, mapCenter, calculateDistance]);
 
     if (loading) {
         return (
@@ -126,11 +132,11 @@ export default function SensorList({
 
     return (
         <YStack flex={1}>
-            {/* Header with count */}
+            {/* Header with count and toggle */}
             <YStack padding="$3" paddingBottom="$2" backgroundColor="$background">
                 <XStack justifyContent="space-between" alignItems="center" marginBottom="$2">
                     <H4 fontSize="$5" fontWeight="700" color="$color">
-                        {t('sensor.sensorsInView')}
+                        {showAllSensors ? t('sensor.allSensors') : t('sensor.sensorsInView')}
                     </H4>
                     <XStack
                         paddingHorizontal="$2.5"
@@ -142,6 +148,52 @@ export default function SensorList({
                             {processedSensors.length}
                         </Text>
                     </XStack>
+                </XStack>
+
+                {/* Toggle between viewport and all sensors */}
+                <XStack gap="$2" flexWrap="wrap">
+                    <Button
+                        size="$2"
+                        flex={1}
+                        variant={!showAllSensors ? "outlined" : undefined}
+                        backgroundColor={!showAllSensors ? "$accent5" : "$content2"}
+                        color={!showAllSensors ? "white" : "$color"}
+                        onPress={() => setShowAllSensors(false)}
+                        borderWidth={!showAllSensors ? 0 : 1}
+                        borderColor="$borderColor"
+                        hoverStyle={{
+                            backgroundColor: !showAllSensors ? "$accent6" : "$content3",
+                            borderColor: !showAllSensors ? "$accent7" : "$accent6"
+                        }}
+                        pressStyle={{
+                            backgroundColor: !showAllSensors ? "$accent7" : "$content3",
+                            scale: 0.98
+                        }}
+                        animation="quick"
+                    >
+                        {t('sensor.inViewport')}
+                    </Button>
+                    <Button
+                        size="$2"
+                        flex={1}
+                        variant={showAllSensors ? "outlined" : undefined}
+                        backgroundColor={showAllSensors ? "$accent5" : "$content2"}
+                        color={showAllSensors ? "white" : "$color"}
+                        onPress={() => setShowAllSensors(true)}
+                        borderWidth={showAllSensors ? 0 : 1}
+                        borderColor="$borderColor"
+                        hoverStyle={{
+                            backgroundColor: showAllSensors ? "$accent6" : "$content3",
+                            borderColor: showAllSensors ? "$accent7" : "$accent6"
+                        }}
+                        pressStyle={{
+                            backgroundColor: showAllSensors ? "$accent7" : "$content3",
+                            scale: 0.98
+                        }}
+                        animation="quick"
+                    >
+                        {t('sensor.showAll')}
+                    </Button>
                 </XStack>
             </YStack>
 

@@ -170,12 +170,13 @@ export default function WebMap(props: MapProps) {
             <MapSensorDrawer isOpen={isDrawerOpen} onToggle={() => setIsDrawerOpen(!isDrawerOpen)}>
                 <SensorList
                     sensors={visibleSensors}
-                    onSensorSelect={handleSensorSelect}
-                    highlightedSensorId={highlightedSensorId}
-                    loading={loading}
-                    mapCenter={currentCoordinate}
-                />
-            </MapSensorDrawer>
+                    allSensors={filteredContent}
+          onSensorSelect={handleSensorSelect}
+          highlightedSensorId={highlightedSensorId}
+          loading={loading}
+          mapCenter={currentCoordinate}
+        />
+      </MapSensorDrawer>
 
             <MapDrawerToggle onPress={() => setIsDrawerOpen(!isDrawerOpen)} isOpen={isDrawerOpen}/>
 
