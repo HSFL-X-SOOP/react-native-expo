@@ -188,17 +188,23 @@ export function NavbarWeb() {
                     size="$4"
                     backgroundColor="$background"
                     borderWidth={2}
-                    borderColor="$borderColor"
+                    borderColor="$accent8"
+                    elevation="$6"
+                    shadowColor="$shadowColor"
+                    shadowRadius={8}
+                    shadowOffset={{width: 0, height: 2}}
                     hoverStyle={{
                         backgroundColor: "$backgroundHover",
-                        borderColor: "$accent8"
+                        borderColor: "$accent9",
+                        elevation: "$8"
                     }}
                     pressStyle={{
                         backgroundColor: "$backgroundPress",
+                        borderColor: "$accent10",
                         scale: 0.95
                     }}
                 >
-                    <Menu size={24} color={t.accent8?.val}/>
+                    <Menu size={24} color={t.accent8?.val} strokeWidth={2.5}/>
                 </Button>
             )}
 

@@ -97,8 +97,8 @@ export default function MapFilterButton({
             circular
             size="$5"
             backgroundColor="$background"
-            borderWidth={1}
-            borderColor="$borderColor"
+            borderWidth={2}
+            borderColor="$accent8"
             onPress={() => {
                 if (useSheet) {
                     setSheetVisible(true);
@@ -106,17 +106,22 @@ export default function MapFilterButton({
                     setPopoverOpen(!popoverOpen);
                 }
             }}
-            elevation="$4"
+            elevation="$6"
+            shadowColor="$shadowColor"
+            shadowRadius={8}
+            shadowOffset={{width: 0, height: 2}}
             hoverStyle={{
                 backgroundColor: "$backgroundHover",
-                borderColor: "$accent7"
+                borderColor: "$accent9",
+                elevation: "$8"
             }}
             pressStyle={{
                 backgroundColor: "$backgroundPress",
+                borderColor: "$accent10",
                 scale: 0.95
             }}
         >
-            <SlidersHorizontal size={20} color="$accent7" />
+            <SlidersHorizontal size={20} color="$accent8" strokeWidth={2.5} />
         </Button>
     );
 
