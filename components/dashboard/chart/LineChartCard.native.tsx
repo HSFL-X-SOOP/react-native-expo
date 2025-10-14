@@ -33,7 +33,6 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             return {data: [], displayLabels: [], filteredChartData: []};
         }
 
-        // Backend handles data aggregation, so use all data points
         const dataValues = chartData.map(item => item.value);
         const labelValues = chartData.map(item => item.label);
         const showEvery = Math.ceil(labelValues.length / 6);

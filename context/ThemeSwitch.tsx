@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { TouchableOpacity, useColorScheme } from 'react-native';
+import { TouchableOpacity, useColorScheme, Platform } from 'react-native';
 import {MoonFilledIcon, SunFilledIcon} from "@/components/ui/Icons.tsx";
 
 type ThemeContextType = {
@@ -26,6 +26,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const currentTheme = isDark ? 'dark' : 'light';
+
+  useEffect(() => {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+    }
+  }, [currentTheme]);
 
   return (
     <ThemeContext.Provider value={{ isDark, toggleTheme, currentTheme }}>

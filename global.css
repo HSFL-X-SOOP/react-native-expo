@@ -1,9 +1,9 @@
 :root {
     --scrollbar-width: 8px;
-    --scrollbar-thumb-light: #b8b8b8;
-    --scrollbar-thumb-hover-light: #8f8f8f;
-    --scrollbar-thumb-dark: #4f4f4f;
-    --scrollbar-thumb-hover-dark: #6f6f6f;
+    --scrollbar-thumb-light: #315666;
+    --scrollbar-thumb-hover-light: #04293a;
+    --scrollbar-thumb-dark: #5a8f5a;
+    --scrollbar-thumb-hover-dark: #6ba06b;
 }
 
 * {

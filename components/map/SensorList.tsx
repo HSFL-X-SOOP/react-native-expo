@@ -78,7 +78,7 @@ export default function SensorList({
             });
         }
 
-        const sorted = [...filtered].sort((a, b) => {
+        return [...filtered].sort((a, b) => {
             if (sortBy === 'distance') {
                 const distA = calculateDistance(a);
                 const distB = calculateDistance(b);
@@ -100,8 +100,6 @@ export default function SensorList({
             }
             return 0;
         });
-
-        return sorted;
     }, [sensorsToDisplay, searchQuery, filterType, sortBy, mapCenter, calculateDistance]);
 
     if (loading) {
@@ -136,7 +134,7 @@ export default function SensorList({
                         borderRadius="$3"
                         backgroundColor="$accent3"
                     >
-                        <Text fontSize="$3" fontWeight="700" color="$accent11">
+                        <Text fontSize="$3" fontWeight="700" color="$accent12">
                             {processedSensors.length}
                         </Text>
                     </XStack>

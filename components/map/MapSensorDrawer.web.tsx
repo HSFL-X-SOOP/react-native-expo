@@ -1,4 +1,4 @@
-import {LocationWithBoxes} from '@/api/models/sensor';
+
 import {ChevronLeft, ChevronRight} from '@tamagui/lucide-icons';
 import {AnimatePresence, Button, ScrollView, View, XStack, YStack, useMedia} from 'tamagui';
 import {ReactNode} from 'react';

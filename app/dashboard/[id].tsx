@@ -62,7 +62,6 @@ export default function DashboardScreen() {
 
     const [timeRange, setTimeRange] = useState<ChartTimeRange>('today');
 
-    // Only used for the sensor location dropdown
     const {data: allSensorData} = useSensorDataNew();
 
     const GetAllAvailableSensorLocations = (data: LocationWithBoxes[]): MarinaNameWithId[] => {
@@ -121,7 +120,6 @@ export default function DashboardScreen() {
 
     const {data: timeRangeData} = useSensorDataTimeRange(Number(id), apiTimeRange);
 
-    // Get location name from timeRangeData instead of useSensorDataNew
     const name = useMemo(() => timeRangeData?.location.name || "", [timeRangeData]);
 
     useEffect(() => {
@@ -144,13 +142,11 @@ export default function DashboardScreen() {
             m => !excludedMeasurements.includes(m.measurementType)
         );
 
-        // Sort to display in desired order: Water Temp, Water Level, Wave Height
         const order = ["Temperature, water", "Tide", "Wave Height"];
         return filtered.sort((a, b) => {
             const indexA = order.indexOf(a.measurementType);
             const indexB = order.indexOf(b.measurementType);
 
-            // If not in order array, push to end
             if (indexA === -1 && indexB === -1) return 0;
             if (indexA === -1) return 1;
             if (indexB === -1) return -1;
@@ -462,8 +458,4 @@ export default function DashboardScreen() {
         </SafeAreaView>
     );
 }
-
-
-
-
 

@@ -30,7 +30,6 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             return {data: [], displayData: [], minValue: 0, maxValue: 1};
         }
 
-        // Backend handles data aggregation, so use all data points
         const values = chartData.map(item => item.value);
         const minValue = Math.min(...values);
         const maxValue = Math.max(...values);
