@@ -134,7 +134,7 @@ export default function SensorList({
                         borderRadius="$3"
                         backgroundColor="$accent3"
                     >
-                        <Text fontSize="$3" fontWeight="700" color="$accent12">
+                        <Text fontSize="$3" fontWeight="700" color="$color12">
                             {processedSensors.length}
                         </Text>
                     </XStack>
