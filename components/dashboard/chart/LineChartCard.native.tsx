@@ -26,7 +26,6 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
     const {t} = useTranslation();
     const media = useMedia();
 
-    // Helper function to format values
     const formatValue = (value: number): string => {
         return value < 1 ? value.toFixed(2) : value.toFixed(1);
     };

@@ -17,7 +17,6 @@ export default function SensorListItem({
 }: SensorListItemProps) {
   const { t } = useTranslation();
 
-  // Get the first 2-3 key measurements to display
   const getKeyMeasurements = () => {
     const measurements: Array<{ label: string; value: string; icon: React.ReactNode }> = [];
 
@@ -58,7 +57,6 @@ export default function SensorListItem({
       }
     }
 
-    // Return max 3 measurements
     return measurements.slice(0, 3);
   };
 

@@ -18,7 +18,6 @@ export function TabBarNative() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const insets = useSafeAreaInsets();
 
-    // Get theme context safely
     const {isDark, toggleTheme} = useThemeContext();
 
     const closeMenu = () => setIsMenuOpen(false);

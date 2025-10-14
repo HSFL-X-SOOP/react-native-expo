@@ -11,9 +11,6 @@ export default function MapDrawerToggle({ onPress, isOpen = false }: MapDrawerTo
   const media = useMedia();
   const isNative = Platform.OS !== 'web';
 
-  // Show toggle button only on:
-  // 1. Native platforms (iOS/Android)
-  // 2. Mobile web (screen width <= medium breakpoint)
   const shouldShowToggle = isNative || !media.gtMd;
 
   if (!shouldShowToggle) {

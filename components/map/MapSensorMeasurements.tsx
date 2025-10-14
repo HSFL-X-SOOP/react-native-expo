@@ -312,8 +312,6 @@ function MeasurementCard({measurementType, value}: MeasurementCardProps) {
     );
 }
 
-// Helper Functions
-
 function getBoxTypeIcon(boxType: BoxType) {
     const size = 14;
     switch (boxType) {

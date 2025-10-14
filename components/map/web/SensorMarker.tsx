@@ -67,7 +67,6 @@ export default function SensorMarker({locationWithBoxes}: SensorMarkerProps) {
         );
     }
 
-    // Desktop: Use Popover
     return (
         <Marker
             key={locationWithBoxes.location.id}

@@ -16,9 +16,6 @@ interface MapProps {
     module2Visible?: boolean;
     module3Visible?: boolean;
     isDark?: boolean;
-    // Overlay props - currently disabled
-    // temperatureVisible?: boolean;
-    // windDirectionVisible?: boolean;
 }
 
 export default function NativeMap(props: MapProps) {
@@ -50,14 +47,12 @@ export default function NativeMap(props: MapProps) {
         mapBoundariesLongLat.ne[1]
     ]);
 
-    // Custom setZoomLevel that triggers camera update
     const handleSetZoomLevel = (newZoom: number | ((prev: number) => number)) => {
         const actualNewZoom = typeof newZoom === 'function' ? newZoom(zoomLevel) : newZoom;
         setZoomLevel(actualNewZoom);
         setCameraUpdateTrigger(prev => prev + 1);
     };
 
-    // Custom setCurrentCoordinate that triggers camera update
     const handleSetCurrentCoordinate = (newCoord: [number, number]) => {
         setCurrentCoordinate(newCoord);
         setCameraUpdateTrigger(prev => prev + 1);
@@ -67,12 +62,10 @@ export default function NativeMap(props: MapProps) {
         return viewportBounds;
     }, [viewportBounds]);
 
-    // Filter locations based on module visibility
     const filteredContent = useMemo(() => {
         if (!content || content.length === 0) return [];
 
         return content.filter(locationWithBoxes => {
-            // Check if this location has any boxes matching the enabled modules
             const hasWaterBoxes = locationWithBoxes.boxes.some(box =>
                 box.type === BoxType.WaterBox || box.type === BoxType.WaterTemperatureOnlyBox
             );
@@ -80,16 +73,13 @@ export default function NativeMap(props: MapProps) {
                 box.type === BoxType.AirBox
             );
 
-            // Show location if it has boxes matching any enabled module
             if (module1Visible && hasWaterBoxes) return true;
             if (module2Visible && hasAirBoxes) return true;
-            // module3Visible is for future use (Air Quality)
 
             return false;
         });
     }, [content, module1Visible, module2Visible, module3Visible]);
 
-    // Filter sensors by viewport bounds
     const visibleSensors = useMemo(() => {
         return filteredContent.filter(sensor => {
             const { lat, lon } = sensor.location.coordinates;
@@ -102,25 +92,20 @@ export default function NativeMap(props: MapProps) {
         });
     }, [filteredContent, bounds]);
 
-    // Handle sensor selection from list - center map and highlight marker
     const handleSensorSelect = (sensor: LocationWithBoxes) => {
         const { lat, lon } = sensor.location.coordinates;
         setHighlightedSensorId(sensor.location.id);
 
-        // Center the map on the selected sensor
-        handleSetZoomLevel(Math.max(zoomLevel, 12)); // Zoom in if needed
+        handleSetZoomLevel(Math.max(zoomLevel, 12));
         handleSetCurrentCoordinate([lon, lat]);
 
-        // Close drawer after selection (mobile UX)
         setIsDrawerOpen(false);
 
-        // Clear highlight after animation
         setTimeout(() => {
             setHighlightedSensorId(null);
         }, 3000);
     };
 
-    // Only use supercluster when we have valid content
     const {clusters, getClusterExpansionZoom} = useSupercluster(
         filteredContent,
         bounds,
@@ -171,9 +156,6 @@ export default function NativeMap(props: MapProps) {
                     setCurrentCoordinate(region.centerCoordinate);
                     setZoomLevel(region.zoomLevel);
 
-                    // Update viewport bounds for filtering
-                    // Note: This is an approximation. For precise bounds,
-                    // we would need to get the actual visible region from MapLibre
                     const approximateBounds: [number, number, number, number] = [
                         region.centerCoordinate[0] - 0.5,
                         region.centerCoordinate[1] - 0.5,
@@ -202,10 +184,8 @@ export default function NativeMap(props: MapProps) {
                 homeCoordinate={homeCoordinate}
             />
 
-            {/* Floating Toggle Button */}
             <MapDrawerToggle onPress={() => setIsDrawerOpen(!isDrawerOpen)} isOpen={isDrawerOpen} />
 
-            {/* Sensor List Drawer */}
             <MapSensorDrawer isOpen={isDrawerOpen} onToggle={() => setIsDrawerOpen(!isDrawerOpen)}>
                 <SensorList
                     sensors={visibleSensors}

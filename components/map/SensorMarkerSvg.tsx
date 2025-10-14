@@ -55,7 +55,6 @@ export const SensorMarkerSvg: React.FC<SensorMarkerSvgProps> = ({
 
     useEffect(() => {
         if (!enableAnimations) {
-            // Keep animations at static state when disabled
             path1T.value = 0;
             path2T.value = 0;
             pulseT.value = 0;

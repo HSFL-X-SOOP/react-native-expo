@@ -32,10 +32,8 @@ export default function SensorList({
     const [filterType, setFilterType] = useState<FilterType>('all');
     const [showAllSensors, setShowAllSensors] = useState(false);
 
-    // Use either viewport sensors or all sensors based on toggle
     const sensorsToDisplay = showAllSensors ? allSensors : sensors;
 
-    // Calculate distance from map center to sensor
     const calculateDistance = (sensor: LocationWithBoxes) => {
         if (!mapCenter) return 0;
 
@@ -43,8 +41,7 @@ export default function SensorList({
         const sensorLat = sensor.location.coordinates.lat;
         const sensorLon = sensor.location.coordinates.lon;
 
-        // Haversine formula for distance calculation
-        const R = 6371; // Earth's radius in km
+        const R = 6371;
         const dLat = ((sensorLat - mapLat) * Math.PI) / 180;
         const dLon = ((sensorLon - mapLon) * Math.PI) / 180;
         const a =
@@ -57,18 +54,15 @@ export default function SensorList({
         return R * c;
     };
 
-    // Filter and sort sensors
     const processedSensors = useMemo(() => {
         let filtered = sensorsToDisplay;
 
-        // Apply search filter
         if (searchQuery) {
             filtered = filtered.filter((sensor) =>
                 sensor.location.name.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 
-        // Apply type filter
         if (filterType !== 'all') {
             filtered = filtered.filter((sensor) => {
                 if (filterType === 'water') {
@@ -84,7 +78,6 @@ export default function SensorList({
             });
         }
 
-        // Apply sorting
         const sorted = [...filtered].sort((a, b) => {
             if (sortBy === 'distance') {
                 const distA = calculateDistance(a);
@@ -93,7 +86,6 @@ export default function SensorList({
             } else if (sortBy === 'name') {
                 return a.location.name.localeCompare(b.location.name);
             } else if (sortBy === 'recent') {
-                // Sort by most recent measurement
                 const getLatestTime = (sensor: LocationWithBoxes) => {
                     let latest = 0;
                     for (const box of sensor.boxes) {

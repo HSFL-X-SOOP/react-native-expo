@@ -14,10 +14,8 @@ const COLLAPSED_WIDTH = 56;
 
 export default function MapSensorDrawer({isOpen, onToggle, children}: MapSensorDrawerProps) {
     const media = useMedia();
-    const isMobileWeb = !media.gtMd; // Mobile web = screen width <= medium breakpoint
+    const isMobileWeb = !media.gtMd;
 
-    // Mobile web: Drawer is either fully open (400px) or hidden (0px)
-    // Desktop web: Drawer can be open (400px) or collapsed (56px)
     const drawerWidth = isOpen
         ? DRAWER_WIDTH
         : (isMobileWeb ? 0 : COLLAPSED_WIDTH);

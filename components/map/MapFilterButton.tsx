@@ -140,7 +140,6 @@ export default function MapFilterButton({
             </View>
         );
     } else {
-        // Desktop web - use Popover
         return (
             <Popover open={popoverOpen} onOpenChange={setPopoverOpen} placement="top-end">
                 <Popover.Trigger asChild>
