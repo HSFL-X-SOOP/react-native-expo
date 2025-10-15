@@ -90,7 +90,7 @@ export function NavbarWeb() {
                                 circular
                                 size="$3"
                                 chromeless
-                                onPress={() => window.open('https://github.com/Bukutsu/marlin-application', '_blank')}
+                                onPress={() => window.open('http://projekt.marlin-live.com', '_blank')}
                                 cursor="pointer"
                             >
                                 <AlertCircle color={t.accent8?.val} size={24}/>
