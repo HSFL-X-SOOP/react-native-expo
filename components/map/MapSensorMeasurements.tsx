@@ -294,7 +294,7 @@ function MeasurementCard({measurementType, value}: MeasurementCardProps) {
                 >
                     {icon}
                 </YStack>
-                <Text fontSize="$2" color="$color" fontWeight="500" numberOfLines={2}
+                <Text fontSize="$5" color="$color" fontWeight="500" numberOfLines={2}
                       lineHeight="$1">
                     {getMeasurementLabel(measurementType, t)}
                 </Text>

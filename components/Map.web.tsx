@@ -1,13 +1,11 @@
 import {useSensorDataNew} from '@/hooks/useSensors';
 import {useSupercluster} from '@/hooks/useSupercluster';
-import {Palette} from '@tamagui/lucide-icons';
 import type {MapRef} from '@vis.gl/react-maplibre';
 import {LngLatBoundsLike, Map} from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
 import {useMemo, useState, useRef} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Text, useTheme} from 'tamagui';
+import {StyleSheet, View} from 'react-native';
 import ClusterMarker from './map/web/ClusterMarker';
 import MapZoomControl from './map/MapZoomControl';
 import SensorMarker from './map/web/SensorMarker';
@@ -44,7 +42,7 @@ export default function WebMap(props: MapProps) {
         latitude: homeCoordinate[1],
         zoom: zoomLevel
     });
-    const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [highlightedSensorId, setHighlightedSensorId] = useState<number | null>(null);
     const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -111,26 +109,13 @@ export default function WebMap(props: MapProps) {
         }, 3000);
     };
 
-    const [styleType, setStyleType] = useState<'old' | 'new'>('old');
-    const t = useTheme();
 
     const mapStyle = useMemo(() => {
-        if (styleType === 'old') {
-            const baseStyle = require('../assets/markers/mapStyles/style.json');
-            const modifiedStyle = JSON.parse(JSON.stringify(baseStyle));
+        return isDark
+            ? require('@/assets/mapStyles/dark_mode.json')
+            : require('@/assets/mapStyles/light_mode.json');
 
-            const backgroundLayer = modifiedStyle.layers.find((layer: any) => layer.id === 'background');
-            if (backgroundLayer) {
-                backgroundLayer.paint['background-color'] = isDark ? '#1a1a1a' : 'rgba(255,255,255,1)';
-            }
-
-            return modifiedStyle;
-        } else {
-            return isDark
-                ? require('../assets/markers/mapStyles/dark_mode_openfreemap.json')
-                : require('../assets/markers/mapStyles/light_mode_openfreemap.json');
-        }
-    }, [styleType, isDark]);
+    }, [isDark]);
 
     const pins = useMemo(() => {
         return clusters.map((cluster) => {
@@ -171,12 +156,12 @@ export default function WebMap(props: MapProps) {
                 <SensorList
                     sensors={visibleSensors}
                     allSensors={filteredContent}
-          onSensorSelect={handleSensorSelect}
-          highlightedSensorId={highlightedSensorId}
-          loading={loading}
-          mapCenter={currentCoordinate}
-        />
-      </MapSensorDrawer>
+                    onSensorSelect={handleSensorSelect}
+                    highlightedSensorId={highlightedSensorId}
+                    loading={loading}
+                    mapCenter={currentCoordinate}
+                />
+            </MapSensorDrawer>
 
             <MapDrawerToggle onPress={() => setIsDrawerOpen(!isDrawerOpen)} isOpen={isDrawerOpen}/>
 
@@ -211,40 +196,6 @@ export default function WebMap(props: MapProps) {
                     homeCoordinate={homeCoordinate}
                 />
             </Map>
-
-            <View style={styles.container}>
-                <TouchableOpacity
-                    style={[styles.button, {
-                        borderTopLeftRadius: 8,
-                        borderTopRightRadius: 8,
-                        borderBottomLeftRadius: 8,
-                        borderBottomRightRadius: 8,
-                        backgroundColor: styleType === 'new' ? t.color?.val : t.background?.val
-                    }]}
-                    onPress={() => setStyleType('new')}
-                    activeOpacity={0.7}
-                >
-                    <Palette color={styleType === 'new' ? t.background?.val : t.color?.val} size={24}/>
-                    <Text
-                        style={{fontSize: 13, color: styleType === 'new' ? t.background?.val : t.color?.val}}>Neu</Text>
-                </TouchableOpacity>
-                <View style={{height: 8}}/>
-                <TouchableOpacity
-                    style={[styles.button, {
-                        borderTopLeftRadius: 8,
-                        borderTopRightRadius: 8,
-                        borderBottomLeftRadius: 8,
-                        borderBottomRightRadius: 8,
-                        backgroundColor: styleType === 'old' ? t.color?.val : t.background?.val
-                    }]}
-                    onPress={() => setStyleType('old')}
-                    activeOpacity={0.7}
-                >
-                    <Palette color={styleType === 'old' ? t.background?.val : t.color?.val} size={24}/>
-                    <Text
-                        style={{fontSize: 13, color: styleType === 'old' ? t.background?.val : t.color?.val}}>Alt</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 }

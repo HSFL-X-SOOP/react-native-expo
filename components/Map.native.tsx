@@ -149,7 +149,7 @@ export default function NativeMap(props: MapProps) {
             <MapView
                 ref={mapRef}
                 style={{flex: 1}}
-                mapStyle={require('../assets/markers/mapStyles/style.json')}
+                mapStyle={require('@/assets/mapStyles/style.json')}
                 compassEnabled={true}
                 zoomEnabled={true}
                 onRegionDidChange={(region: any) => {
