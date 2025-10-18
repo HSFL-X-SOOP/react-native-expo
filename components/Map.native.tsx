@@ -153,6 +153,10 @@ export default function NativeMap(props: MapProps) {
                 compassEnabled={true}
                 zoomEnabled={true}
                 onRegionDidChange={(region: any) => {
+                    if (!region || !region.centerCoordinate || typeof region.zoomLevel === 'undefined') {
+                        return;
+                    }
+
                     setCurrentCoordinate(region.centerCoordinate);
                     setZoomLevel(region.zoomLevel);
 
