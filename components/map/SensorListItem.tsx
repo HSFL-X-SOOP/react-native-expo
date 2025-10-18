@@ -119,7 +119,6 @@ export default function SensorListItem({
                                 width={24}
                                 height={24}
                                 borderRadius="$2"
-                                backgroundColor="$content3"
                                 alignItems="center"
                                 justifyContent="center"
                             >

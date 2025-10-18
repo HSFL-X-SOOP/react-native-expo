@@ -147,6 +147,7 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
                     }}
                     borderRadius="$3"
                     fontWeight="600"
+                    userSelect="none"
                     fontSize="$4"
                 >
                     {t('sensor.viewDashboard')}

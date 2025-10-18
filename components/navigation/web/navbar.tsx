@@ -4,7 +4,7 @@ import {useToast} from '@/components/useToast';
 
 import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
 import {LOGO, MapIcon, CloudIcon} from '@/components/ui/Icons';
-import {User, Languages, Menu, LogOut, LayoutDashboard, AlertCircle} from '@tamagui/lucide-icons';
+import {User, Languages, Menu, LogOut, LayoutDashboard, BookOpen} from '@tamagui/lucide-icons';
 import {useSession} from '@/context/SessionContext';
 import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
 import {useTranslation} from '@/hooks/useTranslation';
@@ -90,10 +90,10 @@ export function NavbarWeb() {
                                 circular
                                 size="$3"
                                 chromeless
-                                onPress={() => window.open('http://projekt.marlin-live.com', '_blank')}
+                                onPress={() => window.open('https://projekt.marlin-live.com', '_blank')}
                                 cursor="pointer"
                             >
-                                <AlertCircle color={t.accent8?.val} size={24}/>
+                                <BookOpen color={t.accent8?.val} size={24}/>
                             </Button>
                         </Tooltip.Trigger>
                         <Tooltip.Content
@@ -337,7 +337,7 @@ export function NavbarWeb() {
                                         setIsMenuOpen(false);
                                     }}
                                 >
-                                    <AlertCircle size={24} color={t.accent8?.val}/>
+                                    <BookOpen size={24} color={t.accent8?.val}/>
                                     <Text fontSize="$5" fontWeight="500" color="$accent8">
                                         {translate('navigation.projectWebsite')}
                                     </Text>

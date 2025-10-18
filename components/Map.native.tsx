@@ -186,7 +186,12 @@ export default function NativeMap(props: MapProps) {
 
             <MapDrawerToggle onPress={() => setIsDrawerOpen(!isDrawerOpen)} isOpen={isDrawerOpen} />
 
-            <MapSensorDrawer isOpen={isDrawerOpen} onToggle={() => setIsDrawerOpen(!isDrawerOpen)}>
+            <MapSensorDrawer
+                isOpen={isDrawerOpen}
+                onToggle={() => setIsDrawerOpen(!isDrawerOpen)}
+                sensors={visibleSensors}
+                onSensorSelect={handleSensorSelect}
+            >
                 <SensorList
                     sensors={visibleSensors}
                     allSensors={filteredContent}

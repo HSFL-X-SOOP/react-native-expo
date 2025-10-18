@@ -1,20 +1,30 @@
-
 import {ChevronLeft, ChevronRight} from '@tamagui/lucide-icons';
-import {AnimatePresence, Button, ScrollView, View, XStack, YStack, useMedia} from 'tamagui';
+import {AnimatePresence, Button, ScrollView, View, XStack, YStack, useMedia, Image, Text, useTheme} from 'tamagui';
 import {ReactNode} from 'react';
+import {LocationWithBoxes} from '@/api/models/sensor';
+import {SmallBadgeIcon} from "@/components/ui/Icons.tsx";
 
 interface MapSensorDrawerProps {
     isOpen: boolean;
     onToggle: () => void;
     children: ReactNode;
+    sensors?: LocationWithBoxes[];
+    onSensorSelect?: (sensor: LocationWithBoxes) => void;
 }
 
 const DRAWER_WIDTH = 400;
-const COLLAPSED_WIDTH = 56;
+const COLLAPSED_WIDTH = 70;
 
-export default function MapSensorDrawer({isOpen, onToggle, children}: MapSensorDrawerProps) {
+export default function MapSensorDrawer({
+                                            isOpen,
+                                            onToggle,
+                                            children,
+                                            sensors = [],
+                                            onSensorSelect
+                                        }: MapSensorDrawerProps) {
     const media = useMedia();
     const isMobileWeb = !media.gtMd;
+    const t = useTheme();
 
     const drawerWidth = isOpen
         ? DRAWER_WIDTH
@@ -60,7 +70,9 @@ export default function MapSensorDrawer({isOpen, onToggle, children}: MapSensorD
                                     size="$3"
                                     chromeless
                                     icon={ChevronLeft}
+                                    backgroundColor={"$background"}
                                     onPress={onToggle}
+                                    borderColor={"$borderColor"}
                                     circular
                                     aria-label="Collapse drawer"
                                 />
@@ -72,6 +84,8 @@ export default function MapSensorDrawer({isOpen, onToggle, children}: MapSensorD
                         <Button
                             size="$3"
                             chromeless
+                            backgroundColor={"$background"}
+                            borderColor={"$borderColor"}
                             icon={ChevronRight}
                             onPress={onToggle}
                             circular
@@ -96,11 +110,47 @@ export default function MapSensorDrawer({isOpen, onToggle, children}: MapSensorD
                     )}
                 </AnimatePresence>
 
-                {/* Collapsed state - just show icons */}
+                {/* Collapsed state - show compact sensor list */}
                 {!isOpen && (
-                    <YStack flex={1} alignItems="center" paddingTop="$4" gap="$3">
-                        {/* Could add quick action icons here in future */}
-                    </YStack>
+                    <ScrollView flex={1} paddingTop="$2">
+                        <YStack gap="$2" paddingHorizontal="$1">
+                            {sensors.slice(0, 10).map((sensor) => (
+                                <Button
+                                    key={sensor.location.id}
+                                    size="$2"
+                                    chromeless
+                                    padding="$2"
+                                    onPress={() => onSensorSelect?.(sensor)}
+                                    backgroundColor="$content2"
+                                    borderRadius="$2"
+                                    hoverStyle={{
+                                        backgroundColor: "$accent1"
+                                    }}
+                                    pressStyle={{
+                                        backgroundColor: "$accent2",
+                                        scale: 0.95
+                                    }}
+                                    animation="quick"
+                                    height="auto"
+                                    minHeight={40}
+                                >
+                                    <YStack gap="$1.5" alignItems="center" width="100%">
+                                        <SmallBadgeIcon size={20} color={t.accent8?.val}/>
+                                        <Text
+                                            fontSize={9}
+                                            color="$color"
+                                            textAlign="center"
+                                            numberOfLines={1}
+                                            width="100%"
+                                            lineHeight={10}
+                                        >
+                                            {sensor.location.name}
+                                        </Text>
+                                    </YStack>
+                                </Button>
+                            ))}
+                        </YStack>
+                    </ScrollView>
                 )}
             </YStack>
         </View>

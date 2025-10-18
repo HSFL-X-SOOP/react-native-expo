@@ -152,7 +152,12 @@ export default function WebMap(props: MapProps) {
 
     return (
         <View style={{flex: 1}}>
-            <MapSensorDrawer isOpen={isDrawerOpen} onToggle={() => setIsDrawerOpen(!isDrawerOpen)}>
+            <MapSensorDrawer
+                isOpen={isDrawerOpen}
+                onToggle={() => setIsDrawerOpen(!isDrawerOpen)}
+                sensors={visibleSensors}
+                onSensorSelect={handleSensorSelect}
+            >
                 <SensorList
                     sensors={visibleSensors}
                     allSensors={filteredContent}
