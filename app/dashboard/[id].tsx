@@ -316,8 +316,9 @@ export default function DashboardScreen() {
                             <H3 fontSize="$5" fontWeight="600">{t('dashboard.currentMeasurements')}</H3>
                             <XStack gap="$1" alignItems="center">
                                 <Stack width={6} height={6} borderRadius="$5" backgroundColor="$green9"/>
-                                <Text fontSize="$2"
-                                      color="$gray11">{t('dashboard.live')} {formatTimeToLocal(latestTime)}</Text>
+                                <Text fontSize="$2" color="$gray11">
+                                    {(timeRange === 'today' || timeRange === 'yesterday') ? t('dashboard.live') : t('last.measurement')} {formatTimeToLocal(latestTime)}
+                                </Text>
                             </XStack>
                         </XStack>
                         <XStack
