@@ -179,8 +179,6 @@ export default function WebMap(props: MapProps) {
                     ref={bottomSheetRef}
                     isOpen={isDrawerOpen}
                     onOpenChange={setIsDrawerOpen}
-                    sensors={visibleSensors}
-                    onSensorSelect={handleSensorSelect}
                 >
                     <SensorList
                         sensors={visibleSensors}
@@ -189,6 +187,7 @@ export default function WebMap(props: MapProps) {
                         highlightedSensorId={highlightedSensorId}
                         loading={loading}
                         mapCenter={currentCoordinate}
+                        horizontal
                     />
                 </MapSensorBottomSheet>
             )}

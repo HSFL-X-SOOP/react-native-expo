@@ -12,6 +12,7 @@ interface SensorListProps {
     highlightedSensorId?: number | null;
     loading?: boolean;
     mapCenter?: [number, number];
+    horizontal?: boolean;
 }
 
 type SortOption = 'distance' | 'name' | 'recent';
@@ -23,7 +24,8 @@ export default function SensorList({
                                        onSensorSelect,
                                        highlightedSensorId,
                                        loading = false,
-                                       mapCenter
+                                       mapCenter,
+                                       horizontal = false
                                    }: SensorListProps) {
     const {t} = useTranslation();
 
@@ -318,43 +320,86 @@ export default function SensorList({
             <Separator/>
 
             {/* Sensor List */}
-            <ScrollView flex={1}>
-                {processedSensors.length === 0 ? (
-                    <YStack padding="$4" alignItems="center" gap="$3">
-                        <AlertCircle size={48} color="$gray10"/>
-                        <Text fontSize="$5" fontWeight="600" color="$color" textAlign="center">
-                            {searchQuery
-                                ? t('sensor.noSearchResults')
-                                : t('sensor.noSensorsInView')}
-                        </Text>
-                        <Text fontSize="$3" color="$gray11" textAlign="center">
-                            {t('sensor.noSensorsHint')}
-                        </Text>
-                        {(searchQuery || filterType !== 'all') && (
-                            <Button
-                                size="$3"
-                                onPress={() => {
-                                    setSearchQuery('');
-                                    setFilterType('all');
-                                }}
-                            >
-                                {t('sensor.clearFilters')}
-                            </Button>
+            {horizontal ? (
+                // Horizontal scrolling for mobile bottom sheet
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    <XStack gap="$3" paddingHorizontal="$3" paddingVertical="$2">
+                        {processedSensors.length === 0 ? (
+                            <YStack padding="$4" alignItems="center" gap="$3" minWidth={300}>
+                                <AlertCircle size={48} color="$gray10"/>
+                                <Text fontSize="$5" fontWeight="600" color="$color" textAlign="center">
+                                    {searchQuery
+                                        ? t('sensor.noSearchResults')
+                                        : t('sensor.noSensorsInView')}
+                                </Text>
+                                <Text fontSize="$3" color="$gray11" textAlign="center">
+                                    {t('sensor.noSensorsHint')}
+                                </Text>
+                                {(searchQuery || filterType !== 'all') && (
+                                    <Button
+                                        size="$3"
+                                        onPress={() => {
+                                            setSearchQuery('');
+                                            setFilterType('all');
+                                        }}
+                                    >
+                                        {t('sensor.clearFilters')}
+                                    </Button>
+                                )}
+                            </YStack>
+                        ) : (
+                            processedSensors.map((sensor) => (
+                                <YStack key={sensor.location.id} width={280}>
+                                    <SensorListItem
+                                        locationWithBoxes={sensor}
+                                        onPress={() => onSensorSelect(sensor)}
+                                        isHighlighted={sensor.location.id === highlightedSensorId}
+                                    />
+                                </YStack>
+                            ))
                         )}
-                    </YStack>
-                ) : (
-                    <YStack paddingBottom="$4">
-                        {processedSensors.map((sensor) => (
-                            <SensorListItem
-                                key={sensor.location.id}
-                                locationWithBoxes={sensor}
-                                onPress={() => onSensorSelect(sensor)}
-                                isHighlighted={sensor.location.id === highlightedSensorId}
-                            />
-                        ))}
-                    </YStack>
-                )}
-            </ScrollView>
+                    </XStack>
+                </ScrollView>
+            ) : (
+                // Vertical scrolling for drawer
+                <ScrollView flex={1}>
+                    {processedSensors.length === 0 ? (
+                        <YStack padding="$4" alignItems="center" gap="$3">
+                            <AlertCircle size={48} color="$gray10"/>
+                            <Text fontSize="$5" fontWeight="600" color="$color" textAlign="center">
+                                {searchQuery
+                                    ? t('sensor.noSearchResults')
+                                    : t('sensor.noSensorsInView')}
+                            </Text>
+                            <Text fontSize="$3" color="$gray11" textAlign="center">
+                                {t('sensor.noSensorsHint')}
+                            </Text>
+                            {(searchQuery || filterType !== 'all') && (
+                                <Button
+                                    size="$3"
+                                    onPress={() => {
+                                        setSearchQuery('');
+                                        setFilterType('all');
+                                    }}
+                                >
+                                    {t('sensor.clearFilters')}
+                                </Button>
+                            )}
+                        </YStack>
+                    ) : (
+                        <YStack paddingBottom="$4">
+                            {processedSensors.map((sensor) => (
+                                <SensorListItem
+                                    key={sensor.location.id}
+                                    locationWithBoxes={sensor}
+                                    onPress={() => onSensorSelect(sensor)}
+                                    isHighlighted={sensor.location.id === highlightedSensorId}
+                                />
+                            ))}
+                        </YStack>
+                    )}
+                </ScrollView>
+            )}
         </YStack>
     );
 }

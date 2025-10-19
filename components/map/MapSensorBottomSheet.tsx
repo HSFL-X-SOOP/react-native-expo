@@ -1,13 +1,10 @@
-import {Sheet, Text, YStack, ScrollView} from 'tamagui';
+import {Sheet, YStack} from 'tamagui';
 import {ReactNode, useState, useImperativeHandle, forwardRef} from 'react';
-import {LocationWithBoxes} from '@/api/models/sensor';
 
 interface MapSensorBottomSheetProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
     children: ReactNode;
-    sensors?: LocationWithBoxes[];
-    onSensorSelect?: (sensor: LocationWithBoxes) => void;
 }
 
 export interface MapSensorBottomSheetRef {
@@ -15,25 +12,24 @@ export interface MapSensorBottomSheetRef {
 }
 
 const MapSensorBottomSheet = forwardRef<MapSensorBottomSheetRef, MapSensorBottomSheetProps>(({
-    isOpen,
-    onOpenChange,
-    children,
-    sensors = [],
-    onSensorSelect
-}, ref) => {
-    const [position, setPosition] = useState(2);
+                                                                                                 isOpen,
+                                                                                                 onOpenChange,
+                                                                                                 children
+                                                                                             }, ref) => {
+    const [position, setPosition] = useState(1);
 
     useImperativeHandle(ref, () => ({
         snapToPeek: () => {
-            setPosition(2);
+            setPosition(1);
         }
     }));
+
     return (
         <Sheet
             modal={false}
             open={isOpen}
             onOpenChange={onOpenChange}
-            snapPoints={[85, 50, 25]}
+            snapPoints={[52.5, 17.5]}
             snapPointsMode="percent"
             dismissOnSnapToBottom
             dismissOnOverlayPress={false}
@@ -48,7 +44,7 @@ const MapSensorBottomSheet = forwardRef<MapSensorBottomSheetRef, MapSensorBottom
                 exitStyle={{opacity: 0}}
                 backgroundColor="$colorTransparent"
                 pointerEvents="none"
-                style={{ pointerEvents: 'none' }}
+                style={{pointerEvents: 'none'}}
             />
 
             <Sheet.Handle
@@ -62,11 +58,9 @@ const MapSensorBottomSheet = forwardRef<MapSensorBottomSheetRef, MapSensorBottom
                 borderTopLeftRadius="$6"
                 borderTopRightRadius="$6"
             >
-                <ScrollView>
-                    <YStack padding="$4" gap="$3">
-                        {children}
-                    </YStack>
-                </ScrollView>
+                <YStack flex={1}>
+                    {children}
+                </YStack>
             </Sheet.Frame>
         </Sheet>
     );

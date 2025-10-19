@@ -78,6 +78,7 @@ export default function SensorListItem({
             padding="$3"
             marginHorizontal="$3"
             marginVertical="$2"
+            height={210}
             backgroundColor={isHighlighted ? '$accent2' : '$background'}
             borderColor={isHighlighted ? '$accent8' : '$borderColor'}
             borderWidth={isHighlighted ? 2 : 1}
