@@ -2,8 +2,10 @@ import {BoxType, LocationWithBoxes} from '@/api/models/sensor';
 import {useTranslation} from '@/hooks/useTranslation';
 import {AlertCircle, ArrowUpDown, Filter, Search} from '@tamagui/lucide-icons';
 import {useMemo, useState} from 'react';
-import {Button, H4, Input, ScrollView, Select, Separator, Text, XStack, YStack} from 'tamagui';
+import {Button, H4, Input, ScrollView, Separator, Text, XStack, YStack} from 'tamagui';
 import SensorListItem from './SensorListItem';
+import {SelectWithSheet} from '@/components/ui/SelectWithSheet';
+import {SelectItem} from '@/types/select';
 
 interface SensorListProps {
     sensors: LocationWithBoxes[];
@@ -35,6 +37,20 @@ export default function SensorList({
     const [showAllSensors, setShowAllSensors] = useState(false);
 
     const sensorsToDisplay = showAllSensors ? allSensors : sensors;
+
+    // Select items for filter type
+    const filterTypeItems: SelectItem<FilterType>[] = [
+        { value: 'all', label: t('sensor.allTypes') },
+        { value: 'water', label: t('sensor.waterSensors') },
+        { value: 'air', label: t('sensor.airSensors') },
+    ];
+
+    // Select items for sort by
+    const sortByItems: SelectItem<SortOption>[] = [
+        { value: 'distance', label: t('sensor.sortByDistance') },
+        { value: 'name', label: t('sensor.sortByName') },
+        { value: 'recent', label: t('sensor.sortByRecent') },
+    ];
 
     const normalize = (s: string) =>
         s
@@ -272,49 +288,59 @@ export default function SensorList({
                         {/* Filter Type */}
                         <XStack flex={1} minWidth="45%" gap="$2" alignItems="center">
                             <Filter size={16} color="$color"/>
-                            <Select value={filterType} onValueChange={(val) => setFilterType(val as FilterType)}>
-                                <Select.Trigger flex={1} size="$3" iconAfter={null}>
-                                    <Select.Value placeholder={t('sensor.filterType')}/>
-                                </Select.Trigger>
-
-                                <Select.Content zIndex={200000}>
-                                    <Select.Viewport>
-                                        <Select.Item index={0} value="all">
-                                            <Select.ItemText>{t('sensor.allTypes')}</Select.ItemText>
-                                        </Select.Item>
-                                        <Select.Item index={1} value="water">
-                                            <Select.ItemText>{t('sensor.waterSensors')}</Select.ItemText>
-                                        </Select.Item>
-                                        <Select.Item index={2} value="air">
-                                            <Select.ItemText>{t('sensor.airSensors')}</Select.ItemText>
-                                        </Select.Item>
-                                    </Select.Viewport>
-                                </Select.Content>
-                            </Select>
+                            <SelectWithSheet
+                                id="filter-type-select"
+                                name="filterType"
+                                items={filterTypeItems}
+                                value={filterType}
+                                onValueChange={setFilterType}
+                                placeholder={t('sensor.filterType')}
+                                triggerProps={{
+                                    flex: 1,
+                                    size: "$3",
+                                    iconAfter: null,
+                                    backgroundColor: "$content2",
+                                    borderColor: "$borderColor",
+                                    borderWidth: 1,
+                                    hoverStyle: {
+                                        backgroundColor: "$content3",
+                                        borderColor: "$accent6"
+                                    },
+                                    pressStyle: {
+                                        backgroundColor: "$content3",
+                                        borderColor: "$accent7"
+                                    }
+                                }}
+                            />
                         </XStack>
 
                         {/* Sort By */}
                         <XStack flex={1} minWidth="45%" gap="$2" alignItems="center">
                             <ArrowUpDown size={16} color="$color"/>
-                            <Select value={sortBy} onValueChange={(val) => setSortBy(val as SortOption)}>
-                                <Select.Trigger flex={1} size="$3" iconAfter={null}>
-                                    <Select.Value placeholder={t('sensor.sortBy')}/>
-                                </Select.Trigger>
-
-                                <Select.Content zIndex={200000}>
-                                    <Select.Viewport>
-                                        <Select.Item index={0} value="distance">
-                                            <Select.ItemText>{t('sensor.sortByDistance')}</Select.ItemText>
-                                        </Select.Item>
-                                        <Select.Item index={1} value="name">
-                                            <Select.ItemText>{t('sensor.sortByName')}</Select.ItemText>
-                                        </Select.Item>
-                                        <Select.Item index={2} value="recent">
-                                            <Select.ItemText>{t('sensor.sortByRecent')}</Select.ItemText>
-                                        </Select.Item>
-                                    </Select.Viewport>
-                                </Select.Content>
-                            </Select>
+                            <SelectWithSheet
+                                id="sort-by-select"
+                                name="sortBy"
+                                items={sortByItems}
+                                value={sortBy}
+                                onValueChange={setSortBy}
+                                placeholder={t('sensor.sortBy')}
+                                triggerProps={{
+                                    flex: 1,
+                                    size: "$3",
+                                    iconAfter: null,
+                                    backgroundColor: "$content2",
+                                    borderColor: "$borderColor",
+                                    borderWidth: 1,
+                                    hoverStyle: {
+                                        backgroundColor: "$content3",
+                                        borderColor: "$accent6"
+                                    },
+                                    pressStyle: {
+                                        backgroundColor: "$content3",
+                                        borderColor: "$accent7"
+                                    }
+                                }}
+                            />
                         </XStack>
                     </XStack>
                 </YStack>
@@ -326,33 +352,34 @@ export default function SensorList({
             <YStack flex={1}>
                 {horizontal ? (
                     // Horizontal scrolling for mobile bottom sheet
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        <XStack gap="$3" paddingHorizontal="$3" paddingVertical="$2">
-                            {processedSensors.length === 0 ? (
-                                <YStack padding="$4" alignItems="center" gap="$3" minWidth={300}>
-                                    <AlertCircle size={48} color="$gray10"/>
-                                    <Text fontSize="$5" fontWeight="600" color="$color" textAlign="center">
-                                        {searchQuery
-                                            ? t('sensor.noSearchResults')
-                                            : t('sensor.noSensorsInView')}
-                                    </Text>
-                                    <Text fontSize="$3" color="$gray11" textAlign="center">
-                                        {t('sensor.noSensorsHint')}
-                                    </Text>
-                                    {(searchQuery || filterType !== 'all') && (
-                                        <Button
-                                            size="$3"
-                                            onPress={() => {
-                                                setSearchQuery('');
-                                                setFilterType('all');
-                                            }}
-                                        >
-                                            {t('sensor.clearFilters')}
-                                        </Button>
-                                    )}
-                                </YStack>
-                            ) : (
-                                processedSensors.map((sensor) => (
+                    processedSensors.length === 0 ? (
+                        // No horizontal scroll when no sensors
+                        <YStack padding="$4" alignItems="center" gap="$3" flex={1} justifyContent="center">
+                            <AlertCircle size={48} color="$gray10"/>
+                            <Text fontSize="$5" fontWeight="600" color="$color" textAlign="center">
+                                {searchQuery
+                                    ? t('sensor.noSearchResults')
+                                    : t('sensor.noSensorsInView')}
+                            </Text>
+                            <Text fontSize="$3" color="$gray11" textAlign="center">
+                                {t('sensor.noSensorsHint')}
+                            </Text>
+                            {(searchQuery || filterType !== 'all') && (
+                                <Button
+                                    size="$3"
+                                    onPress={() => {
+                                        setSearchQuery('');
+                                        setFilterType('all');
+                                    }}
+                                >
+                                    {t('sensor.clearFilters')}
+                                </Button>
+                            )}
+                        </YStack>
+                    ) : (
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            <XStack gap="$3" paddingHorizontal="$3" paddingVertical="$2">
+                                {processedSensors.map((sensor) => (
                                     <YStack key={sensor.location.id} width={280}>
                                         <SensorListItem
                                             locationWithBoxes={sensor}
@@ -360,10 +387,10 @@ export default function SensorList({
                                             isHighlighted={sensor.location.id === highlightedSensorId}
                                         />
                                     </YStack>
-                                ))
-                            )}
-                        </XStack>
-                    </ScrollView>
+                                ))}
+                            </XStack>
+                        </ScrollView>
+                    )
                 ) : (
                     // Vertical scrolling for drawer
                     <ScrollView>
