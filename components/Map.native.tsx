@@ -28,8 +28,9 @@ export default function NativeMap(props: MapProps) {
     const {data: content, loading} = useSensorDataNew();
     const mapRef = useRef<any>(null);
     const bottomSheetRef = useRef<MapSensorBottomSheetRef>(null);
+    const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const homeCoordinate: [number, number] = [9.26, 54.46];
+    const homeCoordinate: [number, number] = [9.26, 54.47926];
     const minMaxZoomLevel = {min: 3, max: 16};
     const mapBoundariesLongLat = {
         ne: [49.869301, 71.185001],
@@ -64,7 +65,7 @@ export default function NativeMap(props: MapProps) {
     }, [viewportBounds]);
 
     const filteredContent = useMemo(() => {
-        if (!content || content.length === 0) return [];
+        if (!content) return [];
 
         return content.filter(locationWithBoxes => {
             const hasWaterBoxes = locationWithBoxes.boxes.some(box =>
@@ -75,9 +76,9 @@ export default function NativeMap(props: MapProps) {
             );
 
             if (module1Visible && hasWaterBoxes) return true;
-            if (module2Visible && hasAirBoxes) return true;
+            return module2Visible && hasAirBoxes;
 
-            return false;
+
         });
     }, [content, module1Visible, module2Visible, module3Visible]);
 
@@ -114,8 +115,14 @@ export default function NativeMap(props: MapProps) {
         zoomLevel
     );
 
+    const mapStyle = useMemo(() => {
+        return isDark
+            ? require('@/assets/mapStyles/dark_mode.json')
+            : require('@/assets/mapStyles/light_mode.json');
+    }, [isDark]);
+
     const pins = useMemo(() => {
-        return clusters.map((cluster, index) => {
+        return clusters.map((cluster) => {
             const [longitude, latitude] = cluster.geometry.coordinates;
             const {cluster: isCluster, point_count, locationWithBoxes} = cluster.properties;
 
@@ -140,7 +147,6 @@ export default function NativeMap(props: MapProps) {
                 <SensorMarker
                     key={locationWithBoxes!.location.id}
                     locationWithBoxes={locationWithBoxes!}
-                    index={index}
                 />
             );
         });
@@ -151,7 +157,7 @@ export default function NativeMap(props: MapProps) {
             <MapView
                 ref={mapRef}
                 style={{flex: 1}}
-                mapStyle={require('@/assets/mapStyles/style.json')}
+                mapStyle={mapStyle}
                 compassEnabled={true}
                 zoomEnabled={true}
                 onRegionDidChange={(region: any) => {
@@ -159,16 +165,27 @@ export default function NativeMap(props: MapProps) {
                         return;
                     }
 
+                    if (debounceTimerRef.current) {
+                        clearTimeout(debounceTimerRef.current);
+                    }
+
                     setCurrentCoordinate(region.centerCoordinate);
                     setZoomLevel(region.zoomLevel);
 
-                    const approximateBounds: [number, number, number, number] = [
-                        region.centerCoordinate[0] - 0.5,
-                        region.centerCoordinate[1] - 0.5,
-                        region.centerCoordinate[0] + 0.5,
-                        region.centerCoordinate[1] + 0.5,
-                    ];
-                    setViewportBounds(approximateBounds);
+                    // Snap bottom sheet to peek position when map moves
+                    if (bottomSheetRef.current) {
+                        bottomSheetRef.current.snapToPeek();
+                    }
+
+                    debounceTimerRef.current = setTimeout(() => {
+                        const approximateBounds: [number, number, number, number] = [
+                            region.centerCoordinate[0] - 0.5,
+                            region.centerCoordinate[1] - 0.5,
+                            region.centerCoordinate[0] + 0.5,
+                            region.centerCoordinate[1] + 0.5,
+                        ];
+                        setViewportBounds(approximateBounds);
+                    }, 300);
                 }}
             >
                 <Camera
