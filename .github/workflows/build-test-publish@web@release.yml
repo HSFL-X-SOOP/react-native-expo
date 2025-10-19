@@ -1,4 +1,4 @@
-name: CI – Build & Deploy Frontend to Release Server
+name: Web – Build & Deploy Frontend to Release Server
 
 on:
   push:

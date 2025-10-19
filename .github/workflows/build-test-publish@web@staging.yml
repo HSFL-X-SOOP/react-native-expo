@@ -3,7 +3,7 @@ name: Web – Build & Deploy Frontend to Test Server
 on:
   push:
     branches:
-      - staging@web
+      - 'staging@web'
 
 jobs:
   build-and-publish:
