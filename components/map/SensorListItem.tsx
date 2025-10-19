@@ -94,50 +94,50 @@ export default function SensorListItem({
             }}
             animation="quick"
         >
-            <YStack gap="$2.5">
-                {/* Header: Location Name */}
-                <XStack gap="$2" alignItems="center">
-                    <MapPin size={16} color="$color"/>
-                    <H4 fontSize="$5" fontWeight="600" color="$color" numberOfLines={1} flex={1}>
-                        {locationWithBoxes.location.name}
-                    </H4>
-                </XStack>
+            <YStack flex={1} justifyContent="space-between">
+                <YStack gap="$2.5">
+                    {/* Header: Location Name */}
+                    <XStack gap="$2" alignItems="center">
+                        <MapPin size={16} color="$color"/>
+                        <H4 fontSize="$5" fontWeight="600" color="$color" numberOfLines={1} flex={1}>
+                            {locationWithBoxes.location.name}
+                        </H4>
+                    </XStack>
 
-                {/* Key Measurements */}
-                <XStack flexWrap="wrap" gap="$2">
-                    {keyMeasurements.map((measurement, index) => (
-                        <XStack
-                            key={index}
-                            flex={1}
-                            minWidth="45%"
-                            padding="$2"
-                            backgroundColor="$content2"
-                            borderRadius="$2"
-                            alignItems="center"
-                            gap="$1.5"
-                        >
-                            <YStack
-                                width={24}
-                                height={24}
+                    {/* Key Measurements */}
+                    <YStack gap="$2">
+                        {keyMeasurements.map((measurement, index) => (
+                            <XStack
+                                key={index}
+                                padding="$2"
+                                backgroundColor="$content2"
                                 borderRadius="$2"
                                 alignItems="center"
-                                justifyContent="center"
+                                gap="$1.5"
                             >
-                                {measurement.icon}
-                            </YStack>
-                            <YStack flex={1}>
-                                <Text fontSize="$1" color="$gray11" numberOfLines={1}>
-                                    {measurement.label}
-                                </Text>
-                                <Text fontSize="$3" fontWeight="700" color="$color">
-                                    {measurement.value}
-                                </Text>
-                            </YStack>
-                        </XStack>
-                    ))}
-                </XStack>
+                                <YStack
+                                    width={24}
+                                    height={24}
+                                    borderRadius="$2"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
+                                    {measurement.icon}
+                                </YStack>
+                                <YStack flex={1}>
+                                    <Text fontSize="$1" color="$gray11" numberOfLines={1}>
+                                        {measurement.label}
+                                    </Text>
+                                    <Text fontSize="$3" fontWeight="700" color="$color">
+                                        {measurement.value}
+                                    </Text>
+                                </YStack>
+                            </XStack>
+                        ))}
+                    </YStack>
+                </YStack>
 
-                {/* Last Measurement Time */}
+                {/* Last Measurement Time - positioned at bottom */}
                 <XStack
                     alignItems="center"
                     gap="$1.5"
