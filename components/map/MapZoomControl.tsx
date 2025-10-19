@@ -16,8 +16,8 @@ export default function MapZoomControl({ zoomLevel, minMaxZoomLevel, setZoomLeve
     <View style={styles.container}>
       <TouchableOpacity
         style={[styles.button, {
-          borderTopLeftRadius: 8,
-          borderTopRightRadius: 8,
+          borderTopLeftRadius: 6,
+          borderTopRightRadius: 6,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
           backgroundColor: t.background?.val
@@ -29,7 +29,7 @@ export default function MapZoomControl({ zoomLevel, minMaxZoomLevel, setZoomLeve
         }}
         activeOpacity={0.7}
       >
-        <Plus color={t.color?.val} size={28} />
+        <Plus color={t.color?.val} size={20} />
       </TouchableOpacity>
 
       {/* Linie */}
@@ -41,7 +41,7 @@ export default function MapZoomControl({ zoomLevel, minMaxZoomLevel, setZoomLeve
         onPress={() => {/* z.B. auf Norden ausrichten */}}
         activeOpacity={0.7}
       >
-        <Navigation color={t.color?.val} size={28} />
+        <Navigation color={t.color?.val} size={20} />
       </TouchableOpacity>
 
       {/* Linie */}
@@ -53,7 +53,7 @@ export default function MapZoomControl({ zoomLevel, minMaxZoomLevel, setZoomLeve
         onPress={() => setCurrentCoordinate(homeCoordinate)}
         activeOpacity={0.7}
       >
-        <Home color={t.color?.val} size={28} />
+        <Home color={t.color?.val} size={20} />
       </TouchableOpacity>
 
       {/* Linie */}
@@ -63,8 +63,8 @@ export default function MapZoomControl({ zoomLevel, minMaxZoomLevel, setZoomLeve
         style={[styles.button, {
           borderTopLeftRadius: 0,
           borderTopRightRadius: 0,
-          borderBottomLeftRadius: 8,
-          borderBottomRightRadius: 8,
+          borderBottomLeftRadius: 6,
+          borderBottomRightRadius: 6,
           backgroundColor: t.background?.val
         }]}
         onPress={() => {
@@ -74,7 +74,7 @@ export default function MapZoomControl({ zoomLevel, minMaxZoomLevel, setZoomLeve
         }}
         activeOpacity={0.7}
       >
-        <Minus color={t.color?.val} size={28} />
+        <Minus color={t.color?.val} size={20} />
       </TouchableOpacity>
     </View>
   );
@@ -90,14 +90,14 @@ const styles = StyleSheet.create({
         zIndex: 10,
     },
     button: {
-        width: 56,
-        height: 40,
+        width: 44,
+        height: 32,
         justifyContent: "center",
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        elevation: 4,
+        shadowOpacity: 0.18,
+        shadowRadius: 3,
+        elevation: 3,
     }
 });

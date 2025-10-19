@@ -21,7 +21,7 @@ export default function MapDrawerToggle({onPress, isOpen = false}: MapDrawerTogg
     return (
         <XStack
             position="absolute"
-            top={isNative ? '$12' : '$4'}
+            top="$4"
             left="$4"
             zIndex={999}
             animation="quick"
