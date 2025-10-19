@@ -180,152 +180,195 @@ export default function SensorList({
 
     return (
         <YStack flex={1}>
-            {/* Header with count and toggle */}
-            <YStack padding="$3" paddingBottom="$2" backgroundColor="$background">
-                <XStack justifyContent="space-between" alignItems="center" marginBottom="$2">
-                    <H4 fontSize="$5" fontWeight="700" color="$color">
-                        {showAllSensors ? t('sensor.allSensors') : t('sensor.sensorsInView')}
-                    </H4>
-                    <XStack
-                        paddingHorizontal="$2.5"
-                        paddingVertical="$1.5"
-                        borderRadius="$3"
-                        backgroundColor="$accent3"
-                    >
-                        <Text fontSize="$3" fontWeight="700" color="$color12">
-                            {processedSensors.length}
-                        </Text>
+            {/* Fixed Header Section - NOT scrollable */}
+            <YStack backgroundColor="$background" zIndex={1}>
+                {/* Header with count and toggle */}
+                <YStack padding="$3" paddingBottom="$2">
+                    <XStack justifyContent="space-between" alignItems="center" marginBottom="$2">
+                        <H4 fontSize="$5" fontWeight="700" color="$color">
+                            {showAllSensors ? t('sensor.allSensors') : t('sensor.sensorsInView')}
+                        </H4>
+                        <XStack
+                            paddingHorizontal="$2.5"
+                            paddingVertical="$1.5"
+                            borderRadius="$3"
+                            backgroundColor="$accent3"
+                        >
+                            <Text fontSize="$3" fontWeight="700" color="$color12">
+                                {processedSensors.length}
+                            </Text>
+                        </XStack>
                     </XStack>
-                </XStack>
 
-                {/* Toggle between viewport and all sensors */}
-                <XStack gap="$2" flexWrap="wrap">
-                    <Button
-                        size="$2"
-                        flex={1}
-                        variant={!showAllSensors ? "outlined" : undefined}
-                        backgroundColor={!showAllSensors ? "$accent5" : "$content2"}
-                        color={!showAllSensors ? "white" : "$color"}
-                        onPress={() => setShowAllSensors(false)}
-                        borderWidth={!showAllSensors ? 0 : 1}
-                        borderColor="$borderColor"
-                        hoverStyle={{
-                            backgroundColor: !showAllSensors ? "$accent6" : "$content3",
-                            borderColor: !showAllSensors ? "$accent7" : "$accent6"
-                        }}
-                        pressStyle={{
-                            backgroundColor: !showAllSensors ? "$accent7" : "$content3",
-                            scale: 0.98
-                        }}
-                        animation="quick"
-                    >
-                        {t('sensor.inViewport')}
-                    </Button>
-                    <Button
-                        size="$2"
-                        flex={1}
-                        variant={showAllSensors ? "outlined" : undefined}
-                        backgroundColor={showAllSensors ? "$accent5" : "$content2"}
-                        color={showAllSensors ? "white" : "$color"}
-                        onPress={() => setShowAllSensors(true)}
-                        borderWidth={showAllSensors ? 0 : 1}
-                        borderColor="$borderColor"
-                        hoverStyle={{
-                            backgroundColor: showAllSensors ? "$accent6" : "$content3",
-                            borderColor: showAllSensors ? "$accent7" : "$accent6"
-                        }}
-                        pressStyle={{
-                            backgroundColor: showAllSensors ? "$accent7" : "$content3",
-                            scale: 0.98
-                        }}
-                        animation="quick"
-                    >
-                        {t('sensor.showAll')}
-                    </Button>
-                </XStack>
+                    {/* Toggle between viewport and all sensors */}
+                    <XStack gap="$2" flexWrap="wrap">
+                        <Button
+                            size="$2"
+                            flex={1}
+                            variant={!showAllSensors ? "outlined" : undefined}
+                            backgroundColor={!showAllSensors ? "$accent5" : "$content2"}
+                            color={!showAllSensors ? "white" : "$color"}
+                            onPress={() => setShowAllSensors(false)}
+                            borderWidth={!showAllSensors ? 0 : 1}
+                            borderColor="$borderColor"
+                            hoverStyle={{
+                                backgroundColor: !showAllSensors ? "$accent6" : "$content3",
+                                borderColor: !showAllSensors ? "$accent7" : "$accent6"
+                            }}
+                            pressStyle={{
+                                backgroundColor: !showAllSensors ? "$accent7" : "$content3",
+                                scale: 0.98
+                            }}
+                            animation="quick"
+                        >
+                            {t('sensor.inViewport')}
+                        </Button>
+                        <Button
+                            size="$2"
+                            flex={1}
+                            variant={showAllSensors ? "outlined" : undefined}
+                            backgroundColor={showAllSensors ? "$accent5" : "$content2"}
+                            color={showAllSensors ? "white" : "$color"}
+                            onPress={() => setShowAllSensors(true)}
+                            borderWidth={showAllSensors ? 0 : 1}
+                            borderColor="$borderColor"
+                            hoverStyle={{
+                                backgroundColor: showAllSensors ? "$accent6" : "$content3",
+                                borderColor: showAllSensors ? "$accent7" : "$accent6"
+                            }}
+                            pressStyle={{
+                                backgroundColor: showAllSensors ? "$accent7" : "$content3",
+                                scale: 0.98
+                            }}
+                            animation="quick"
+                        >
+                            {t('sensor.showAll')}
+                        </Button>
+                    </XStack>
+                </YStack>
+
+                {/* Search Bar */}
+                <YStack paddingHorizontal="$3" paddingBottom="$2">
+                    <XStack alignItems="center" gap="$2" position="relative">
+                        <XStack position="absolute" left="$3" zIndex={1} pointerEvents="none">
+                            <Search size={16} color="$gray10"/>
+                        </XStack>
+                        <Input
+                            placeholder={t('sensor.searchSensors')}
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                            size="$3"
+                            flex={1}
+                            paddingLeft="$8"
+                            borderColor="$borderColor"
+                            backgroundColor="$content2"
+                        />
+                    </XStack>
+                </YStack>
+
+                {/* Filter and Sort Controls */}
+                <YStack paddingHorizontal="$3" paddingBottom="$2">
+                    <XStack gap="$2" flexWrap="wrap">
+                        {/* Filter Type */}
+                        <XStack flex={1} minWidth="45%" gap="$2" alignItems="center">
+                            <Filter size={16} color="$color"/>
+                            <Select value={filterType} onValueChange={(val) => setFilterType(val as FilterType)}>
+                                <Select.Trigger flex={1} size="$3" iconAfter={null}>
+                                    <Select.Value placeholder={t('sensor.filterType')}/>
+                                </Select.Trigger>
+
+                                <Select.Content zIndex={200000}>
+                                    <Select.Viewport>
+                                        <Select.Item index={0} value="all">
+                                            <Select.ItemText>{t('sensor.allTypes')}</Select.ItemText>
+                                        </Select.Item>
+                                        <Select.Item index={1} value="water">
+                                            <Select.ItemText>{t('sensor.waterSensors')}</Select.ItemText>
+                                        </Select.Item>
+                                        <Select.Item index={2} value="air">
+                                            <Select.ItemText>{t('sensor.airSensors')}</Select.ItemText>
+                                        </Select.Item>
+                                    </Select.Viewport>
+                                </Select.Content>
+                            </Select>
+                        </XStack>
+
+                        {/* Sort By */}
+                        <XStack flex={1} minWidth="45%" gap="$2" alignItems="center">
+                            <ArrowUpDown size={16} color="$color"/>
+                            <Select value={sortBy} onValueChange={(val) => setSortBy(val as SortOption)}>
+                                <Select.Trigger flex={1} size="$3" iconAfter={null}>
+                                    <Select.Value placeholder={t('sensor.sortBy')}/>
+                                </Select.Trigger>
+
+                                <Select.Content zIndex={200000}>
+                                    <Select.Viewport>
+                                        <Select.Item index={0} value="distance">
+                                            <Select.ItemText>{t('sensor.sortByDistance')}</Select.ItemText>
+                                        </Select.Item>
+                                        <Select.Item index={1} value="name">
+                                            <Select.ItemText>{t('sensor.sortByName')}</Select.ItemText>
+                                        </Select.Item>
+                                        <Select.Item index={2} value="recent">
+                                            <Select.ItemText>{t('sensor.sortByRecent')}</Select.ItemText>
+                                        </Select.Item>
+                                    </Select.Viewport>
+                                </Select.Content>
+                            </Select>
+                        </XStack>
+                    </XStack>
+                </YStack>
+
+                <Separator/>
             </YStack>
 
-            {/* Search Bar */}
-            <YStack paddingHorizontal="$3" paddingBottom="$2">
-                <XStack alignItems="center" gap="$2" position="relative">
-                    <XStack position="absolute" left="$3" zIndex={1} pointerEvents="none">
-                        <Search size={16} color="$gray10"/>
-                    </XStack>
-                    <Input
-                        placeholder={t('sensor.searchSensors')}
-                        value={searchQuery}
-                        onChangeText={setSearchQuery}
-                        size="$3"
-                        flex={1}
-                        paddingLeft="$8"
-                        borderColor="$borderColor"
-                        backgroundColor="$content2"
-                    />
-                </XStack>
-            </YStack>
-
-            {/* Filter and Sort Controls */}
-            <YStack paddingHorizontal="$3" paddingBottom="$2">
-                <XStack gap="$2" flexWrap="wrap">
-                    {/* Filter Type */}
-                    <XStack flex={1} minWidth="45%" gap="$2" alignItems="center">
-                        <Filter size={16} color="$color"/>
-                        <Select value={filterType} onValueChange={(val) => setFilterType(val as FilterType)}>
-                            <Select.Trigger flex={1} size="$3" iconAfter={null}>
-                                <Select.Value placeholder={t('sensor.filterType')}/>
-                            </Select.Trigger>
-
-                            <Select.Content zIndex={200000}>
-                                <Select.Viewport>
-                                    <Select.Item index={0} value="all">
-                                        <Select.ItemText>{t('sensor.allTypes')}</Select.ItemText>
-                                    </Select.Item>
-                                    <Select.Item index={1} value="water">
-                                        <Select.ItemText>{t('sensor.waterSensors')}</Select.ItemText>
-                                    </Select.Item>
-                                    <Select.Item index={2} value="air">
-                                        <Select.ItemText>{t('sensor.airSensors')}</Select.ItemText>
-                                    </Select.Item>
-                                </Select.Viewport>
-                            </Select.Content>
-                        </Select>
-                    </XStack>
-
-                    {/* Sort By */}
-                    <XStack flex={1} minWidth="45%" gap="$2" alignItems="center">
-                        <ArrowUpDown size={16} color="$color"/>
-                        <Select value={sortBy} onValueChange={(val) => setSortBy(val as SortOption)}>
-                            <Select.Trigger flex={1} size="$3" iconAfter={null}>
-                                <Select.Value placeholder={t('sensor.sortBy')}/>
-                            </Select.Trigger>
-
-                            <Select.Content zIndex={200000}>
-                                <Select.Viewport>
-                                    <Select.Item index={0} value="distance">
-                                        <Select.ItemText>{t('sensor.sortByDistance')}</Select.ItemText>
-                                    </Select.Item>
-                                    <Select.Item index={1} value="name">
-                                        <Select.ItemText>{t('sensor.sortByName')}</Select.ItemText>
-                                    </Select.Item>
-                                    <Select.Item index={2} value="recent">
-                                        <Select.ItemText>{t('sensor.sortByRecent')}</Select.ItemText>
-                                    </Select.Item>
-                                </Select.Viewport>
-                            </Select.Content>
-                        </Select>
-                    </XStack>
-                </XStack>
-            </YStack>
-
-            <Separator/>
-
-            {/* Sensor List */}
-            {horizontal ? (
-                // Horizontal scrolling for mobile bottom sheet
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                    <XStack gap="$3" paddingHorizontal="$3" paddingVertical="$2">
+            {/* Scrollable Sensor List - takes remaining space */}
+            <YStack flex={1}>
+                {horizontal ? (
+                    // Horizontal scrolling for mobile bottom sheet
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        <XStack gap="$3" paddingHorizontal="$3" paddingVertical="$2">
+                            {processedSensors.length === 0 ? (
+                                <YStack padding="$4" alignItems="center" gap="$3" minWidth={300}>
+                                    <AlertCircle size={48} color="$gray10"/>
+                                    <Text fontSize="$5" fontWeight="600" color="$color" textAlign="center">
+                                        {searchQuery
+                                            ? t('sensor.noSearchResults')
+                                            : t('sensor.noSensorsInView')}
+                                    </Text>
+                                    <Text fontSize="$3" color="$gray11" textAlign="center">
+                                        {t('sensor.noSensorsHint')}
+                                    </Text>
+                                    {(searchQuery || filterType !== 'all') && (
+                                        <Button
+                                            size="$3"
+                                            onPress={() => {
+                                                setSearchQuery('');
+                                                setFilterType('all');
+                                            }}
+                                        >
+                                            {t('sensor.clearFilters')}
+                                        </Button>
+                                    )}
+                                </YStack>
+                            ) : (
+                                processedSensors.map((sensor) => (
+                                    <YStack key={sensor.location.id} width={280}>
+                                        <SensorListItem
+                                            locationWithBoxes={sensor}
+                                            onPress={() => onSensorSelect(sensor)}
+                                            isHighlighted={sensor.location.id === highlightedSensorId}
+                                        />
+                                    </YStack>
+                                ))
+                            )}
+                        </XStack>
+                    </ScrollView>
+                ) : (
+                    // Vertical scrolling for drawer
+                    <ScrollView>
                         {processedSensors.length === 0 ? (
-                            <YStack padding="$4" alignItems="center" gap="$3" minWidth={300}>
+                            <YStack padding="$4" alignItems="center" gap="$3">
                                 <AlertCircle size={48} color="$gray10"/>
                                 <Text fontSize="$5" fontWeight="600" color="$color" textAlign="center">
                                     {searchQuery
@@ -348,58 +391,20 @@ export default function SensorList({
                                 )}
                             </YStack>
                         ) : (
-                            processedSensors.map((sensor) => (
-                                <YStack key={sensor.location.id} width={280}>
+                            <YStack paddingBottom="$4">
+                                {processedSensors.map((sensor) => (
                                     <SensorListItem
+                                        key={sensor.location.id}
                                         locationWithBoxes={sensor}
                                         onPress={() => onSensorSelect(sensor)}
                                         isHighlighted={sensor.location.id === highlightedSensorId}
                                     />
-                                </YStack>
-                            ))
+                                ))}
+                            </YStack>
                         )}
-                    </XStack>
-                </ScrollView>
-            ) : (
-                // Vertical scrolling for drawer
-                <ScrollView flex={1}>
-                    {processedSensors.length === 0 ? (
-                        <YStack padding="$4" alignItems="center" gap="$3">
-                            <AlertCircle size={48} color="$gray10"/>
-                            <Text fontSize="$5" fontWeight="600" color="$color" textAlign="center">
-                                {searchQuery
-                                    ? t('sensor.noSearchResults')
-                                    : t('sensor.noSensorsInView')}
-                            </Text>
-                            <Text fontSize="$3" color="$gray11" textAlign="center">
-                                {t('sensor.noSensorsHint')}
-                            </Text>
-                            {(searchQuery || filterType !== 'all') && (
-                                <Button
-                                    size="$3"
-                                    onPress={() => {
-                                        setSearchQuery('');
-                                        setFilterType('all');
-                                    }}
-                                >
-                                    {t('sensor.clearFilters')}
-                                </Button>
-                            )}
-                        </YStack>
-                    ) : (
-                        <YStack paddingBottom="$4">
-                            {processedSensors.map((sensor) => (
-                                <SensorListItem
-                                    key={sensor.location.id}
-                                    locationWithBoxes={sensor}
-                                    onPress={() => onSensorSelect(sensor)}
-                                    isHighlighted={sensor.location.id === highlightedSensorId}
-                                />
-                            ))}
-                        </YStack>
-                    )}
-                </ScrollView>
-            )}
+                    </ScrollView>
+                )}
+            </YStack>
         </YStack>
     );
 }

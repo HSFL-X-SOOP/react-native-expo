@@ -103,9 +103,7 @@ export default function MapSensorDrawer({
                             enterStyle={{opacity: 0, x: -20}}
                             exitStyle={{opacity: 0, x: -20}}
                         >
-                            <ScrollView flex={1}>
-                                {children}
-                            </ScrollView>
+                            {children}
                         </View>
                     )}
                 </AnimatePresence>
