@@ -3,7 +3,7 @@ name: Android - Build & Deploy to Google Play Closed-Testing
 on:
   push:
     branches:
-      - staging
+      - staging@android
     paths:
       - 'android/**'
       - 'app/**'
