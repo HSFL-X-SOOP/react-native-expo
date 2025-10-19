@@ -7,7 +7,7 @@ import SensorMarker from "./map/native/SensorMarker";
 import ClusterMarker from "./map/native/ClusterMarker";
 import MapZoomControl from "./map/MapZoomControl";
 import {BoxType, LocationWithBoxes} from "@/api/models/sensor";
-import MapSensorDrawer from "./map/MapSensorDrawer";
+import MapSensorBottomSheet, {MapSensorBottomSheetRef} from "./map/MapSensorBottomSheet";
 import SensorList from "./map/SensorList";
 import MapDrawerToggle from "./map/MapDrawerToggle";
 
@@ -27,6 +27,7 @@ export default function NativeMap(props: MapProps) {
     } = props;
     const {data: content, loading} = useSensorDataNew();
     const mapRef = useRef<any>(null);
+    const bottomSheetRef = useRef<MapSensorBottomSheetRef>(null);
 
     const homeCoordinate: [number, number] = [9.26, 54.46];
     const minMaxZoomLevel = {min: 3, max: 16};
@@ -190,11 +191,10 @@ export default function NativeMap(props: MapProps) {
 
             <MapDrawerToggle onPress={() => setIsDrawerOpen(!isDrawerOpen)} isOpen={isDrawerOpen} />
 
-            <MapSensorDrawer
+            <MapSensorBottomSheet
+                ref={bottomSheetRef}
                 isOpen={isDrawerOpen}
-                onToggle={() => setIsDrawerOpen(!isDrawerOpen)}
-                sensors={visibleSensors}
-                onSensorSelect={handleSensorSelect}
+                onOpenChange={setIsDrawerOpen}
             >
                 <SensorList
                     sensors={visibleSensors}
@@ -203,8 +203,9 @@ export default function NativeMap(props: MapProps) {
                     highlightedSensorId={highlightedSensorId}
                     loading={loading}
                     mapCenter={currentCoordinate}
+                    horizontal
                 />
-            </MapSensorDrawer>
+            </MapSensorBottomSheet>
         </View>
     );
 }
