@@ -13,6 +13,8 @@ import {BoxType, LocationWithBoxes} from '@/api/models/sensor';
 import MapSensorDrawer from './map/MapSensorDrawer';
 import SensorList from './map/SensorList';
 import MapDrawerToggle from './map/MapDrawerToggle';
+import MapSensorBottomSheet from './map/MapSensorBottomSheet';
+import {useIsMobileWeb} from '@/hooks/useIsMobileWeb';
 
 interface MapProps {
     module1Visible?: boolean;
@@ -30,6 +32,7 @@ export default function WebMap(props: MapProps) {
     } = props;
     const {data: content, loading} = useSensorDataNew();
     const mapRef = React.useRef<MapRef>(null);
+    const isMobileWeb = useIsMobileWeb();
 
     const homeCoordinate: [number, number] = [9.26, 54.47926];
     const minMaxZoomLevel = {min: 3, max: 16};
@@ -152,21 +155,41 @@ export default function WebMap(props: MapProps) {
 
     return (
         <View style={{flex: 1}}>
-            <MapSensorDrawer
-                isOpen={isDrawerOpen}
-                onToggle={() => setIsDrawerOpen(!isDrawerOpen)}
-                sensors={visibleSensors}
-                onSensorSelect={handleSensorSelect}
-            >
-                <SensorList
+            {!isMobileWeb && (
+                <MapSensorDrawer
+                    isOpen={isDrawerOpen}
+                    onToggle={() => setIsDrawerOpen(!isDrawerOpen)}
                     sensors={visibleSensors}
-                    allSensors={filteredContent}
                     onSensorSelect={handleSensorSelect}
-                    highlightedSensorId={highlightedSensorId}
-                    loading={loading}
-                    mapCenter={currentCoordinate}
-                />
-            </MapSensorDrawer>
+                >
+                    <SensorList
+                        sensors={visibleSensors}
+                        allSensors={filteredContent}
+                        onSensorSelect={handleSensorSelect}
+                        highlightedSensorId={highlightedSensorId}
+                        loading={loading}
+                        mapCenter={currentCoordinate}
+                    />
+                </MapSensorDrawer>
+            )}
+
+            {isMobileWeb && (
+                <MapSensorBottomSheet
+                    isOpen={isDrawerOpen}
+                    onOpenChange={setIsDrawerOpen}
+                    sensors={visibleSensors}
+                    onSensorSelect={handleSensorSelect}
+                >
+                    <SensorList
+                        sensors={visibleSensors}
+                        allSensors={filteredContent}
+                        onSensorSelect={handleSensorSelect}
+                        highlightedSensorId={highlightedSensorId}
+                        loading={loading}
+                        mapCenter={currentCoordinate}
+                    />
+                </MapSensorBottomSheet>
+            )}
 
             <MapDrawerToggle onPress={() => setIsDrawerOpen(!isDrawerOpen)} isOpen={isDrawerOpen}/>
 
@@ -205,24 +228,3 @@ export default function WebMap(props: MapProps) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        position: "absolute",
-        right: 20,
-        bottom: 300,
-        flexDirection: "column",
-        alignItems: "center",
-        zIndex: 10,
-    },
-    button: {
-        width: 56,
-        height: 40,
-        justifyContent: "center",
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        elevation: 4,
-    }
-});

@@ -1,8 +1,9 @@
 import {ChevronLeft, ChevronRight} from '@tamagui/lucide-icons';
-import {AnimatePresence, Button, ScrollView, View, XStack, YStack, useMedia, Image, Text, useTheme} from 'tamagui';
+import {AnimatePresence, Button, ScrollView, View, XStack, YStack, Text, useTheme} from 'tamagui';
 import {ReactNode} from 'react';
 import {LocationWithBoxes} from '@/api/models/sensor';
 import {SmallBadgeIcon} from "@/components/ui/Icons.tsx";
+import {useIsMobileWeb} from '@/hooks/useIsMobileWeb';
 
 interface MapSensorDrawerProps {
     isOpen: boolean;
@@ -22,8 +23,7 @@ export default function MapSensorDrawer({
                                             sensors = [],
                                             onSensorSelect
                                         }: MapSensorDrawerProps) {
-    const media = useMedia();
-    const isMobileWeb = !media.gtMd;
+    const isMobileWeb = useIsMobileWeb();
     const t = useTheme();
 
     const drawerWidth = isOpen

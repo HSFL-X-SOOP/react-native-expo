@@ -1,6 +1,7 @@
 import { List } from '@tamagui/lucide-icons';
-import { Button, XStack, useMedia } from 'tamagui';
+import { Button, XStack } from 'tamagui';
 import { Platform } from 'react-native';
+import { useIsMobileWeb } from '@/hooks/useIsMobileWeb';
 
 interface MapDrawerToggleProps {
   onPress: () => void;
@@ -8,10 +9,10 @@ interface MapDrawerToggleProps {
 }
 
 export default function MapDrawerToggle({ onPress, isOpen = false }: MapDrawerToggleProps) {
-  const media = useMedia();
+  const isMobileWeb = useIsMobileWeb();
   const isNative = Platform.OS !== 'web';
 
-  const shouldShowToggle = isNative || !media.gtMd;
+  const shouldShowToggle = isNative || isMobileWeb;
 
   if (!shouldShowToggle) {
     return null; // Don't show on desktop web

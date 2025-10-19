@@ -1,5 +1,5 @@
 import {Link, useRouter, Href} from 'expo-router';
-import {Button, Popover, Sheet, Text, XStack, YStack, useMedia, useTheme, ScrollView, Tooltip} from 'tamagui';
+import {Button, Popover, Sheet, Text, XStack, YStack, useTheme, ScrollView, Tooltip} from 'tamagui';
 import {useToast} from '@/components/useToast';
 
 import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
@@ -10,6 +10,7 @@ import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
 import {useTranslation} from '@/hooks/useTranslation';
 import {LanguageSelector} from '@/components/common/LanguageSelector';
 import {useState} from 'react';
+import {useIsMobileWeb} from '@/hooks/useIsMobileWeb';
 
 
 export function NavbarWeb() {
@@ -18,7 +19,7 @@ export function NavbarWeb() {
     const {session, logout} = useSession();
     const {t: translate} = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const media = useMedia();
+    const isMobileWeb = useIsMobileWeb();
     const toast = useToast();
 
     const handleLogout = () => {
@@ -36,13 +37,13 @@ export function NavbarWeb() {
                 py={"$1"}>
             <Link href={"/map" as Href}>
                 <XStack ac="center" jc="flex-start" gap="$2">
-                    <LOGO size={media.gtMd ? 55 : 50} color={t.accent8?.val}/>
-                    <Text fontSize={media.gtMd ? 32 : 28} fontFamily={"$oswald"} alignSelf={"center"} fontWeight="bold"
+                    <LOGO size={isMobileWeb ? 50 : 55} color={t.accent8?.val}/>
+                    <Text fontSize={isMobileWeb ? 28 : 32} fontFamily={"$oswald"} alignSelf={"center"} fontWeight="bold"
                           textAlign={"left"} color={"$accent8"}>Marlin</Text>
                 </XStack>
             </Link>
 
-            {media.gtMd && (
+            {!isMobileWeb && (
                 <XStack alignItems={"center"} gap={"$8"}>
                     <Link href={"/map" as Href}>
                         <XStack alignItems="center" gap="$3">
@@ -82,7 +83,7 @@ export function NavbarWeb() {
                 </XStack>
             )}
 
-            {media.gtMd && (
+            {!isMobileWeb && (
                 <XStack gap="$6" alignItems="center">
                     <Tooltip placement="bottom" delay={200}>
                         <Tooltip.Trigger>
@@ -181,7 +182,7 @@ export function NavbarWeb() {
                 </XStack>
             )}
 
-            {!media.gtMd && (
+            {isMobileWeb && (
                 <Button
                     onPress={() => setIsMenuOpen(true)}
                     circular

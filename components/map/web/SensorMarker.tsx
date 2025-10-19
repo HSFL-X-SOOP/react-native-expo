@@ -1,9 +1,10 @@
 import {LocationWithBoxes} from "@/api/models/sensor";
 import {Marker} from "@vis.gl/react-maplibre";
 import {SensorMarkerContent} from "../MapSensorTemperatureText";
-import {Popover, useMedia, Dialog, YStack} from "tamagui";
+import {Popover, Dialog, YStack} from "tamagui";
 import {SensorPopup} from "../MapSensorMeasurements";
 import {useState} from "react";
+import {useIsMobileWeb} from "@/hooks/useIsMobileWeb";
 
 interface SensorMarkerProps {
     locationWithBoxes: LocationWithBoxes;
@@ -11,9 +12,9 @@ interface SensorMarkerProps {
 
 export default function SensorMarker({locationWithBoxes}: SensorMarkerProps) {
     const [open, setOpen] = useState(false);
-    const media = useMedia();
+    const isMobileWeb = useIsMobileWeb();
 
-    if (!media.gtMd) {
+    if (isMobileWeb) {
         return (
             <>
                 <Marker
