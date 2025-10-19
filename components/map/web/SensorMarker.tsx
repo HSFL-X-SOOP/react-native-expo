@@ -110,7 +110,7 @@ export default function SensorMarker({locationWithBoxes}: SensorMarkerProps) {
                         },
                     ]}
                 >
-                    <Popover.Arrow borderWidth={1} borderColor="$borderColor"/>
+                    <Popover.Arrow borderWidth={1} backgroundColor={"$content4"}/>
                     <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)}/>
                 </Popover.Content>
             </Popover>
