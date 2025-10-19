@@ -23,3 +23,26 @@ export function useIsMobileWeb(): boolean {
   // Return true only if both conditions are met
   return isWeb && isMobileViewport;
 }
+
+/**
+ * Hook to detect if the current platform is mobile (web or native)
+ * Returns true when:
+ * - Platform is iOS OR
+ * - Platform is Android OR
+ * - Platform is web with mobile viewport (smaller than medium breakpoint)
+ *
+ * Returns false for:
+ * - Desktop web (large screens)
+ */
+export function useIsMobile(): boolean {
+  const media = useMedia();
+
+  // Check if it's native platform (iOS or Android)
+  const isNative = Platform.OS === 'ios' || Platform.OS === 'android';
+
+  // Check if it's web platform with mobile viewport
+  const isMobileWeb = Platform.OS === 'web' && !media.gtMd;
+
+  // Return true if either native or mobile web
+  return isNative || isMobileWeb;
+}

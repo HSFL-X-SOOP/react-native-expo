@@ -14,7 +14,7 @@ import MapSensorDrawer from './map/MapSensorDrawer';
 import SensorList from './map/SensorList';
 import MapDrawerToggle from './map/MapDrawerToggle';
 import MapSensorBottomSheet, {MapSensorBottomSheetRef} from './map/MapSensorBottomSheet';
-import {useIsMobileWeb} from '@/hooks/useIsMobileWeb';
+import {useIsMobileWeb, useIsMobile} from '@/hooks/useIsMobileWeb';
 
 interface MapProps {
     module1Visible?: boolean;
@@ -34,6 +34,7 @@ export default function WebMap(props: MapProps) {
     const mapRef = React.useRef<MapRef>(null);
     const bottomSheetRef = React.useRef<MapSensorBottomSheetRef>(null);
     const isMobileWeb = useIsMobileWeb();
+    const isMobile = useIsMobile();
 
     const homeCoordinate: [number, number] = [9.26, 54.47926];
     const minMaxZoomLevel = {min: 3, max: 16};
@@ -107,6 +108,11 @@ export default function WebMap(props: MapProps) {
             zoom: Math.max(zoomLevel, 12),
             duration: 1000,
         });
+
+        // Snap bottom sheet to peek position on mobile (web or native)
+        if (isMobile) {
+            bottomSheetRef.current?.snapToPeek();
+        }
 
         setTimeout(() => {
             setHighlightedSensorId(null);

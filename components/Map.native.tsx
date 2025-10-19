@@ -100,7 +100,8 @@ export default function NativeMap(props: MapProps) {
         handleSetZoomLevel(Math.max(zoomLevel, 12));
         handleSetCurrentCoordinate([lon, lat]);
 
-        setIsDrawerOpen(false);
+        // Snap bottom sheet to peek position (don't close it completely)
+        bottomSheetRef.current?.snapToPeek();
 
         setTimeout(() => {
             setHighlightedSensorId(null);
