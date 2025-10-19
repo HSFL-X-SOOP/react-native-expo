@@ -1,15 +1,15 @@
-import {useSensorDataNew} from "@/hooks/useSensors";
-import {useSupercluster} from "@/hooks/useSupercluster";
-import {Camera, MapView} from "@maplibre/maplibre-react-native";
-import {useMemo, useState, useRef} from "react";
-import {View} from "react-native";
-import SensorMarker from "./map/native/SensorMarker";
-import ClusterMarker from "./map/native/ClusterMarker";
-import MapZoomControl from "./map/MapZoomControl";
-import {BoxType, LocationWithBoxes} from "@/api/models/sensor";
-import MapSensorDrawer from "./map/MapSensorDrawer";
-import SensorList from "./map/SensorList";
+import { BoxType, LocationWithBoxes } from "@/api/models/sensor";
+import { useSensorDataNew } from "@/hooks/useSensors";
+import { useSupercluster } from "@/hooks/useSupercluster";
+import { Camera, MapView } from "@maplibre/maplibre-react-native";
+import { useMemo, useRef, useState } from "react";
+import { View } from "react-native";
 import MapDrawerToggle from "./map/MapDrawerToggle";
+import MapSensorDrawer from "./map/MapSensorDrawer";
+import MapZoomControl from "./map/MapZoomControl";
+import ClusterMarker from "./map/native/ClusterMarker";
+import SensorMarker from "./map/native/SensorMarker";
+import SensorList from "./map/SensorList";
 
 interface MapProps {
     module1Visible?: boolean;
@@ -36,6 +36,8 @@ export default function NativeMap(props: MapProps) {
     };
 
     const [zoomLevel, setZoomLevel] = useState(7);
+    const [bearing, setBearing] = useState(0);
+    const [pitch, setPitch] = useState(0);
     const [currentCoordinate, setCurrentCoordinate] = useState<[number, number]>(homeCoordinate);
     const [cameraUpdateTrigger, setCameraUpdateTrigger] = useState(0);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -153,8 +155,14 @@ export default function NativeMap(props: MapProps) {
                 compassEnabled={true}
                 zoomEnabled={true}
                 onRegionDidChange={(region: any) => {
+                    if (!region || !region.centerCoordinate || typeof region.zoomLevel === 'undefined') {
+                        return;
+                    }
+
                     setCurrentCoordinate(region.centerCoordinate);
                     setZoomLevel(region.zoomLevel);
+                    setBearing(region.heading);
+                    setPitch(region.pitch);
 
                     const approximateBounds: [number, number, number, number] = [
                         region.centerCoordinate[0] - 0.5,
@@ -171,7 +179,9 @@ export default function NativeMap(props: MapProps) {
                     centerCoordinate={currentCoordinate}
                     maxZoomLevel={18}
                     minZoomLevel={3}
-                    animationDuration={300}
+                    animationDuration={0}
+                    pitch={pitch}
+                    heading={bearing}
                 />
                 {pins}
             </MapView>
@@ -182,6 +192,9 @@ export default function NativeMap(props: MapProps) {
                 setZoomLevel={handleSetZoomLevel}
                 setCurrentCoordinate={handleSetCurrentCoordinate}
                 homeCoordinate={homeCoordinate}
+                setBearing={setBearing}
+                setPitch={setPitch}
+                bearing={bearing}
             />
 
             <MapDrawerToggle onPress={() => setIsDrawerOpen(!isDrawerOpen)} isOpen={isDrawerOpen} />
