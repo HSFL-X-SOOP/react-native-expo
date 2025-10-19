@@ -1,20 +1,20 @@
-import {useSensorDataNew} from '@/hooks/useSensors';
-import {useSupercluster} from '@/hooks/useSupercluster';
-import {Palette} from '@tamagui/lucide-icons';
-import type {MapRef} from '@vis.gl/react-maplibre';
-import {LngLatBoundsLike, Map} from '@vis.gl/react-maplibre';
+import { BoxType, LocationWithBoxes } from '@/api/models/sensor';
+import { useSensorDataNew } from '@/hooks/useSensors';
+import { useSupercluster } from '@/hooks/useSupercluster';
+import { Palette } from '@tamagui/lucide-icons';
+import type { MapRef } from '@vis.gl/react-maplibre';
+import { LngLatBoundsLike, Map } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
-import {useMemo, useState, useRef} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Text, useTheme} from 'tamagui';
-import ClusterMarker from './map/web/ClusterMarker';
-import MapZoomControl from './map/MapZoomControl';
-import SensorMarker from './map/web/SensorMarker';
-import {BoxType, LocationWithBoxes} from '@/api/models/sensor';
-import MapSensorDrawer from './map/MapSensorDrawer';
-import SensorList from './map/SensorList';
+import { useMemo, useRef, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Text, useTheme } from 'tamagui';
 import MapDrawerToggle from './map/MapDrawerToggle';
+import MapSensorDrawer from './map/MapSensorDrawer';
+import MapZoomControl from './map/MapZoomControl';
+import SensorList from './map/SensorList';
+import ClusterMarker from './map/web/ClusterMarker';
+import SensorMarker from './map/web/SensorMarker';
 
 interface MapProps {
     module1Visible?: boolean;
@@ -38,6 +38,8 @@ export default function WebMap(props: MapProps) {
     const mapBoundariesLongLat: LngLatBoundsLike = [[-31.266001, 27.560001], [49.869301, 71.185001]];
 
     const [zoomLevel, setZoomLevel] = useState(7);
+    const [bearing, setBearing] = useState(0);
+    const [pitch, setPitch] = useState(0);
     const [currentCoordinate, setCurrentCoordinate] = useState<[number, number]>(homeCoordinate);
     const [viewState, setViewState] = useState({
         longitude: homeCoordinate[0],
@@ -190,6 +192,8 @@ export default function WebMap(props: MapProps) {
 
                     setCurrentCoordinate([e.viewState.longitude, e.viewState.latitude]);
                     setZoomLevel(e.viewState.zoom);
+                    setBearing(e.viewState.bearing);
+                    setPitch(e.viewState.pitch);
 
                     debounceTimerRef.current = setTimeout(() => {
                         setViewState(e.viewState);
@@ -201,6 +205,8 @@ export default function WebMap(props: MapProps) {
                 longitude={currentCoordinate[0]}
                 latitude={currentCoordinate[1]}
                 zoom={zoomLevel}
+                bearing={bearing}
+                pitch={pitch}
             >
                 {pins}
                 <MapZoomControl
@@ -209,6 +215,9 @@ export default function WebMap(props: MapProps) {
                     setZoomLevel={setZoomLevel}
                     setCurrentCoordinate={setCurrentCoordinate}
                     homeCoordinate={homeCoordinate}
+                    setBearing={setBearing}
+                    setPitch={setPitch}
+                    bearing={bearing}
                 />
             </Map>
 
