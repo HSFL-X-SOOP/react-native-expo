@@ -51,7 +51,7 @@ platform :android do
     )
 
     upload_to_play_store(
-      track: 'beta',
+      track: 'Marlin',
       aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH],
       json_key_data: ENV['PLAY_STORE_JSON_KEY'],
       skip_upload_metadata: true,
