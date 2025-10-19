@@ -13,7 +13,7 @@ import {BoxType, LocationWithBoxes} from '@/api/models/sensor';
 import MapSensorDrawer from './map/MapSensorDrawer';
 import SensorList from './map/SensorList';
 import MapDrawerToggle from './map/MapDrawerToggle';
-import MapSensorBottomSheet from './map/MapSensorBottomSheet';
+import MapSensorBottomSheet, {MapSensorBottomSheetRef} from './map/MapSensorBottomSheet';
 import {useIsMobileWeb} from '@/hooks/useIsMobileWeb';
 
 interface MapProps {
@@ -32,6 +32,7 @@ export default function WebMap(props: MapProps) {
     } = props;
     const {data: content, loading} = useSensorDataNew();
     const mapRef = React.useRef<MapRef>(null);
+    const bottomSheetRef = React.useRef<MapSensorBottomSheetRef>(null);
     const isMobileWeb = useIsMobileWeb();
 
     const homeCoordinate: [number, number] = [9.26, 54.47926];
@@ -175,6 +176,7 @@ export default function WebMap(props: MapProps) {
 
             {isMobileWeb && (
                 <MapSensorBottomSheet
+                    ref={bottomSheetRef}
                     isOpen={isDrawerOpen}
                     onOpenChange={setIsDrawerOpen}
                     sensors={visibleSensors}
@@ -203,6 +205,10 @@ export default function WebMap(props: MapProps) {
 
                     setCurrentCoordinate([e.viewState.longitude, e.viewState.latitude]);
                     setZoomLevel(e.viewState.zoom);
+
+                    if (isMobileWeb && bottomSheetRef.current) {
+                        bottomSheetRef.current.snapToPeek();
+                    }
 
                     debounceTimerRef.current = setTimeout(() => {
                         setViewState(e.viewState);

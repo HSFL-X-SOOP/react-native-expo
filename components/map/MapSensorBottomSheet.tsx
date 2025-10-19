@@ -1,5 +1,5 @@
 import {Sheet, Text, YStack, ScrollView} from 'tamagui';
-import {ReactNode} from 'react';
+import {ReactNode, useState, useImperativeHandle, forwardRef} from 'react';
 import {LocationWithBoxes} from '@/api/models/sensor';
 
 interface MapSensorBottomSheetProps {
@@ -10,13 +10,24 @@ interface MapSensorBottomSheetProps {
     onSensorSelect?: (sensor: LocationWithBoxes) => void;
 }
 
-export default function MapSensorBottomSheet({
+export interface MapSensorBottomSheetRef {
+    snapToPeek: () => void;
+}
+
+const MapSensorBottomSheet = forwardRef<MapSensorBottomSheetRef, MapSensorBottomSheetProps>(({
     isOpen,
     onOpenChange,
     children,
     sensors = [],
     onSensorSelect
-}: MapSensorBottomSheetProps) {
+}, ref) => {
+    const [position, setPosition] = useState(2);
+
+    useImperativeHandle(ref, () => ({
+        snapToPeek: () => {
+            setPosition(2);
+        }
+    }));
     return (
         <Sheet
             modal={false}
@@ -28,6 +39,8 @@ export default function MapSensorBottomSheet({
             dismissOnOverlayPress={false}
             animation="medium"
             zIndex={100000}
+            position={position}
+            onPositionChange={setPosition}
         >
             <Sheet.Overlay
                 animation="lazy"
@@ -35,8 +48,9 @@ export default function MapSensorBottomSheet({
                 exitStyle={{opacity: 0}}
                 backgroundColor="$colorTransparent"
                 pointerEvents="none"
+                style={{ pointerEvents: 'none' }}
             />
-            {/* Keep handle outside of Frame so Frame can be pointer-events:none */}
+
             <Sheet.Handle
                 backgroundColor="$borderColor"
                 pointerEvents="auto"
@@ -47,9 +61,8 @@ export default function MapSensorBottomSheet({
                 backgroundColor="$background"
                 borderTopLeftRadius="$6"
                 borderTopRightRadius="$6"
-                pointerEvents="none"
             >
-                <ScrollView pointerEvents="none">
+                <ScrollView>
                     <YStack padding="$4" gap="$3">
                         {children}
                     </YStack>
@@ -57,4 +70,8 @@ export default function MapSensorBottomSheet({
             </Sheet.Frame>
         </Sheet>
     );
-}
+});
+
+MapSensorBottomSheet.displayName = 'MapSensorBottomSheet';
+
+export default MapSensorBottomSheet;
