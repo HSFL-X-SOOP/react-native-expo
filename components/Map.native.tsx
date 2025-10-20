@@ -101,7 +101,6 @@ export default function NativeMap(props: MapProps) {
         handleSetZoomLevel(Math.max(zoomLevel, 12));
         handleSetCurrentCoordinate([lon, lat]);
 
-        // Snap bottom sheet to peek position (don't close it completely)
         bottomSheetRef.current?.snapToPeek();
 
         setTimeout(() => {
@@ -172,7 +171,7 @@ export default function NativeMap(props: MapProps) {
                     setCurrentCoordinate(region.centerCoordinate);
                     setZoomLevel(region.zoomLevel);
 
-                    // Snap bottom sheet to peek position when map moves
+                    // Snap sheet to peek immediately during map movement (like web onMove)
                     if (bottomSheetRef.current) {
                         bottomSheetRef.current.snapToPeek();
                     }
