@@ -159,6 +159,12 @@ export default function NativeMap(props: MapProps) {
                 mapStyle={mapStyle}
                 compassEnabled={true}
                 zoomEnabled={true}
+                onRegionIsChanging={(region: any) => {
+                    // Snap sheet to peek during map movement (like web onMove)
+                    if (bottomSheetRef.current) {
+                        bottomSheetRef.current.snapToPeek();
+                    }
+                }}
                 onRegionDidChange={(region: any) => {
                     if (!region || !region.centerCoordinate || typeof region.zoomLevel === 'undefined') {
                         return;
@@ -170,11 +176,6 @@ export default function NativeMap(props: MapProps) {
 
                     setCurrentCoordinate(region.centerCoordinate);
                     setZoomLevel(region.zoomLevel);
-
-                    // Snap sheet to peek immediately during map movement (like web onMove)
-                    if (bottomSheetRef.current) {
-                        bottomSheetRef.current.snapToPeek();
-                    }
 
                     debounceTimerRef.current = setTimeout(() => {
                         const approximateBounds: [number, number, number, number] = [

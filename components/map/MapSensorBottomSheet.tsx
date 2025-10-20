@@ -1,5 +1,5 @@
 import {Sheet, YStack} from 'tamagui';
-import {ReactNode, useState, useImperativeHandle, forwardRef} from 'react';
+import {ReactNode, useState, useImperativeHandle, forwardRef, useEffect} from 'react';
 
 interface MapSensorBottomSheetProps {
     isOpen: boolean;
@@ -24,6 +24,13 @@ const MapSensorBottomSheet = forwardRef<MapSensorBottomSheetRef, MapSensorBottom
         }
     }));
 
+    // Ensure position resets to peek when sheet is opened
+    useEffect(() => {
+        if (isOpen) {
+            setPosition(1);
+        }
+    }, [isOpen]);
+
     return (
         <Sheet
             modal={false}
@@ -37,6 +44,7 @@ const MapSensorBottomSheet = forwardRef<MapSensorBottomSheetRef, MapSensorBottom
             zIndex={100000}
             position={position}
             onPositionChange={setPosition}
+            forceRemoveScrollEnabled={false}
         >
             <Sheet.Overlay
                 animation="lazy"
