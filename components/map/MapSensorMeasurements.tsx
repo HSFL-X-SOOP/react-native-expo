@@ -38,8 +38,10 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
     const cardWidth = 350;
 
     const handleNavigateToDashboard = () => {
-        closeOverlay?.();
         router.push(`/dashboard/${locationWithBoxes.location.id}`);
+        setTimeout(() => {
+            closeOverlay?.();
+        }, 100);
     };
 
     return (
