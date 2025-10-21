@@ -120,10 +120,8 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             elevate
             bordered
             backgroundColor={isDark ? '$gray1' : '$background'}
-            flex={media.md ? undefined : 1}
-            width={media.md ? "100%" : undefined}
+            width="100%"
             minWidth={280}
-            marginBottom={media.md ? "$3" : 0}
         >
             <Card.Header padded>
                 <XStack gap="$2" alignItems="center" justifyContent="space-between">
