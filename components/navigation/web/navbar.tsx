@@ -1,15 +1,15 @@
 import {Link, useRouter, Href} from 'expo-router';
 import {Button, Popover, Sheet, Text, XStack, YStack, useTheme, ScrollView, Tooltip} from 'tamagui';
-import {useToast} from '@/components/useToast';
+import {useState} from 'react';
 
-import {ThemeSwitch} from '@/context/ThemeSwitch.tsx';
+import {useToast} from '@/components/useToast';
+import {ThemeSwitch} from '@/context/ThemeSwitch';
 import {LOGO, MapIcon, CloudIcon} from '@/components/ui/Icons';
 import {User, Languages, Menu, LogOut, LayoutDashboard, BookOpen} from '@tamagui/lucide-icons';
 import {useSession} from '@/context/SessionContext';
-import {PrimaryButton, SecondaryButton} from "@/types/button.ts";
+import {PrimaryButton, SecondaryButton} from '@/types/button';
 import {useTranslation} from '@/hooks/useTranslation';
 import {LanguageSelector} from '@/components/common/LanguageSelector';
-import {useState} from 'react';
 import {useIsMobileWeb} from '@/hooks/useIsMobileWeb';
 
 
@@ -73,39 +73,6 @@ export function NavbarWeb() {
                                 circular
                                 size="$3"
                                 chromeless
-                                onPress={() => window.open('https://projekt.marlin-live.com', '_blank')}
-                                cursor="pointer"
-                            >
-                                <BookOpen color={t.accent8?.val} size={24}/>
-                            </Button>
-                        </Tooltip.Trigger>
-                        <Tooltip.Content
-                            enterStyle={{x: 0, y: -5, opacity: 0, scale: 0.9}}
-                            exitStyle={{x: 0, y: -5, opacity: 0, scale: 0.9}}
-                            scale={1}
-                            x={0}
-                            y={0}
-                            opacity={1}
-                            animation={[
-                                'quick',
-                                {
-                                    opacity: {
-                                        overshootClamping: true,
-                                    },
-                                },
-                            ]}
-                        >
-                            <Tooltip.Arrow/>
-                            <Text fontSize="$3">{translate('navigation.projectWebsite')}</Text>
-                        </Tooltip.Content>
-                    </Tooltip>
-
-                    <Tooltip placement="bottom" delay={200}>
-                        <Tooltip.Trigger>
-                            <Button
-                                circular
-                                size="$3"
-                                chromeless
                                 onPress={() => router.push("/(about)/api")}
                                 cursor="pointer"
                             >
@@ -163,6 +130,39 @@ export function NavbarWeb() {
                         >
                             <Tooltip.Arrow/>
                             <Text fontSize="$3">{translate('navigation.sensors')}</Text>
+                        </Tooltip.Content>
+                    </Tooltip>
+
+                    <Tooltip placement="bottom" delay={200}>
+                        <Tooltip.Trigger>
+                            <Button
+                                circular
+                                size="$3"
+                                chromeless
+                                onPress={() => window.open('https://projekt.marlin-live.com', '_blank')}
+                                cursor="pointer"
+                            >
+                                <BookOpen color={t.accent8?.val} size={24}/>
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content
+                            enterStyle={{x: 0, y: -5, opacity: 0, scale: 0.9}}
+                            exitStyle={{x: 0, y: -5, opacity: 0, scale: 0.9}}
+                            scale={1}
+                            x={0}
+                            y={0}
+                            opacity={1}
+                            animation={[
+                                'quick',
+                                {
+                                    opacity: {
+                                        overshootClamping: true,
+                                    },
+                                },
+                            ]}
+                        >
+                            <Tooltip.Arrow/>
+                            <Text fontSize="$3">{translate('navigation.projectWebsite')}</Text>
                         </Tooltip.Content>
                     </Tooltip>
 
@@ -297,6 +297,8 @@ export function NavbarWeb() {
                                         alignItems="center"
                                         gap="$3"
                                         padding="$3"
+                                        borderColor={"$borderColor"}
+                                        borderWidth={"$1"}
                                         borderRadius="$3"
                                         hoverStyle={{
                                             backgroundColor: "$backgroundHover"
@@ -317,6 +319,8 @@ export function NavbarWeb() {
                                         alignItems="center"
                                         gap="$3"
                                         padding="$3"
+                                        borderColor={"$borderColor"}
+                                        borderWidth={"$1"}
                                         borderRadius="$3"
                                         hoverStyle={{
                                             backgroundColor: "$backgroundHover"
@@ -332,69 +336,49 @@ export function NavbarWeb() {
                                     </XStack>
                                 </Link>
 
-                                <Link href={"/sensors" as Href} onPress={() => setIsMenuOpen(false)}>
-                                    <XStack
-                                        alignItems="center"
-                                        gap="$3"
-                                        padding="$3"
-                                        borderRadius="$3"
-                                        hoverStyle={{
-                                            backgroundColor: "$backgroundHover"
-                                        }}
-                                        pressStyle={{
-                                            backgroundColor: "$backgroundPress"
-                                        }}
-                                    >
-                                        <LOGO size={24} color={t.accent8?.val}/>
-                                        <Text fontSize="$5" fontWeight="500"
-                                              color="$accent8">{translate('navigation.sensors')}</Text>
-                                    </XStack>
-                                </Link>
-
-                                <Link href={"/api" as Href} onPress={() => setIsMenuOpen(false)}>
-                                    <XStack
-                                        alignItems="center"
-                                        gap="$3"
-                                        padding="$3"
-                                        borderRadius="$3"
-                                        hoverStyle={{
-                                            backgroundColor: "$backgroundHover"
-                                        }}
-                                        pressStyle={{
-                                            backgroundColor: "$backgroundPress"
-                                        }}
-                                    >
-                                        <CloudIcon size={24} color={t.accent8?.val}/>
-                                        <Text fontSize="$5" fontWeight="500"
-                                              color="$accent8">{translate('navigation.api')}</Text>
-                                    </XStack>
-                                </Link>
-
                                 <XStack
-                                    alignItems="center"
-                                    gap="$3"
-                                    padding="$3"
-                                    borderRadius="$3"
-                                    hoverStyle={{
-                                        backgroundColor: "$backgroundHover"
-                                    }}
-                                    pressStyle={{
-                                        backgroundColor: "$backgroundPress"
-                                    }}
-                                    onPress={() => {
-                                        window.open('https://github.com/Bukutsu/marlin-application', '_blank');
-                                        setIsMenuOpen(false);
-                                    }}
+                                    alignItems={"center"}
+                                    justifyContent="center"
+                                    gap="$4"
+                                    paddingVertical="$2"
                                 >
-                                    <BookOpen size={24} color={t.accent8?.val}/>
-                                    <Text fontSize="$5" fontWeight="500" color="$accent8">
-                                        {translate('navigation.projectWebsite')}
-                                    </Text>
+                                    <Button
+                                        circular
+                                        size="$3"
+                                        padding={"$2"}
+                                        backgroundColor={"$accent1"}
+                                        chromeless
+                                        onPress={() => router.push("/(about)/api")}
+                                        cursor="pointer"
+                                    >
+                                        <CloudIcon color={t.accent8?.val} size={26}/>
+                                    </Button>
+                                    <Button
+                                        circular
+                                        size="$3"
+                                        padding={"$2"}
+                                        backgroundColor={"$accent1"}
+                                        chromeless
+                                        onPress={() => router.push("/(about)/sensors")}
+                                        cursor="pointer"
+                                    >
+                                        <LOGO color={t.accent8?.val} size={26}/>
+                                    </Button>
+                                    <Button
+                                        circular
+                                        size="$3"
+                                        padding={"$2"}
+                                        backgroundColor={"$accent1"}
+                                        chromeless
+                                        onPress={() => window.open('https://projekt.marlin-live.com', '_blank')}
+                                        cursor="pointer"
+                                    >
+                                        <BookOpen color={t.accent8?.val} size={26}/>
+                                    </Button>
                                 </XStack>
                             </YStack>
 
-                            <YStack gap="$3" paddingTop="$4" borderTopWidth={1} borderTopColor="$borderColor"
-                                    marginTop="$3">
+                            <YStack gap="$3" paddingTop="$4" borderTopWidth={1} borderTopColor="$borderColor">
                                 <YStack gap="$2">
                                     <XStack gap="$3" padding="$3" alignItems="center" justifyContent="space-between">
                                         <XStack gap="$2" alignItems="center">
@@ -461,5 +445,4 @@ export function NavbarWeb() {
         </XStack>
     );
 }
-
 
