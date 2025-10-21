@@ -1,19 +1,20 @@
-import { LanguageSelector } from '@/components/common/LanguageSelector';
-import { CloudIcon, InfoIcon, LOGO, MapIcon, MoonFilledIcon, SunFilledIcon } from '@/components/ui/Icons';
-import { useSession } from '@/context/SessionContext';
-import { useThemeContext } from '@/context/ThemeSwitch.tsx';
-import { useTranslation } from '@/hooks/useTranslation';
-import { Languages, LayoutDashboard, Menu, User, X } from '@tamagui/lucide-icons';
-import { Link, useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Text as RNText, ScrollView, TouchableOpacity, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Sheet, Text, useTheme, XStack } from 'tamagui';
+import {LanguageSelector} from '@/components/common/LanguageSelector';
+import {CloudIcon, LOGO, MapIcon, MoonFilledIcon, SunFilledIcon} from '@/components/ui/Icons';
+import {useSession} from '@/context/SessionContext';
+import {useThemeContext} from '@/context/ThemeSwitch.tsx';
+import {useTranslation} from '@/hooks/useTranslation';
+import {Languages, LayoutDashboard, Menu, User, BookOpen, LogOut} from '@tamagui/lucide-icons';
+import {Link, useRouter, Href} from 'expo-router';
+import React, {useState} from 'react';
+import {ScrollView, Linking} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Sheet, Text, useTheme, XStack, YStack, Button} from 'tamagui';
+import {PrimaryButton, SecondaryButton} from '@/types/button';
 
 export function TabBarNative() {
     const router = useRouter();
     const t = useTheme();
-    const {session} = useSession();
+    const {session, logout} = useSession();
     const {t: translate} = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const insets = useSafeAreaInsets();
@@ -23,9 +24,13 @@ export function TabBarNative() {
     const closeMenu = () => setIsMenuOpen(false);
 
     const navigateAndClose = (path: string) => {
-        console.log('Navigating to:', path);
         setIsMenuOpen(false);
         requestAnimationFrame(() => router.push(path as any));
+    };
+
+    const handleLogout = () => {
+        logout();
+        closeMenu();
     };
 
     return (
@@ -35,18 +40,19 @@ export function TabBarNative() {
                 backgroundColor={"$background"}
                 alignItems={"center"}
                 justifyContent="space-between"
-                px={"$4"}
-                py={"$3"}
-                pt={insets.top + 12}
+                paddingHorizontal={"$4"}
+                paddingVertical={"$3"}
+                paddingTop={insets.top + 12}
                 borderBottomWidth={1}
                 borderBottomColor="$borderColor"
+                width="100%"
             >
                 {/* Logo */}
                 <Link href="/map">
                     <XStack alignItems="center" gap="$2">
-                        <LOGO size={40} color={t.accent8?.val}/>
+                        <LOGO size={50} color={t.accent8?.val}/>
                         <Text
-                            fontSize={24}
+                            fontSize={28}
                             fontFamily={"$oswald"}
                             fontWeight="bold"
                             color={"$accent8"}
@@ -57,26 +63,25 @@ export function TabBarNative() {
                 </Link>
 
                 {/* Right side controls */}
-                <TouchableOpacity
-                    onPress={() => {
-                        console.log('Hamburger menu pressed');
-                        setIsMenuOpen(true);
+                <Button
+                    onPress={() => setIsMenuOpen(true)}
+                    circular
+                    size="$4"
+                    backgroundColor="$background"
+                    borderWidth={2}
+                    borderColor="$accent8"
+                    hoverStyle={{
+                        backgroundColor: "$backgroundHover",
+                        borderColor: "$accent9"
                     }}
-                    style={{
-                        padding: 12,
-                        minWidth: 44,
-                        minHeight: 44,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: 8,
-                        backgroundColor: 'rgba(0,0,0,0.05)',
-                        zIndex: 999,
+                    pressStyle={{
+                        backgroundColor: "$backgroundPress",
+                        borderColor: "$accent10",
+                        scale: 0.95
                     }}
-                    activeOpacity={0.7}
-                    hitSlop={{top: 15, bottom: 15, left: 15, right: 15}}
                 >
-                    <Menu size={28} color={t.accent8?.val}/>
-                </TouchableOpacity>
+                    <Menu size={24} color={t.accent8?.val} strokeWidth={2.5}/>
+                </Button>
             </XStack>
 
             {/* Mobile Menu Sheet */}
@@ -84,312 +89,255 @@ export function TabBarNative() {
                 modal
                 open={isMenuOpen}
                 onOpenChange={setIsMenuOpen}
-                snapPointsMode="percent"
-                snapPoints={[85]}
-                position={0}
+                snapPoints={[85, 50]}
                 dismissOnSnapToBottom
-                dismissOnOverlayPress
-                zIndex={100000}
                 animation="medium"
             >
-                <Sheet.Handle
-                    alignSelf="center"
-                    height={6}
-                    width={56}
-                    opacity={0.35}
-                    backgroundColor="$accent8"
+                <Sheet.Overlay
+                    animation="lazy"
+                    enterStyle={{opacity: 0}}
+                    exitStyle={{opacity: 0}}
+                    opacity={0}
                 />
-                <Sheet.Frame backgroundColor="$background" flex={1}>
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{
-                            paddingHorizontal: 16,
-                            paddingTop: 8,
-                            paddingBottom: (insets.bottom ?? 0) + 32,
-                        }}
-                        keyboardShouldPersistTaps="handled"
-                    >
-                        {/* Header */}
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginBottom: 30
-                        }}>
-                            <RNText style={{
-                                fontSize: 24,
-                                fontWeight: '600',
-                                color: t.color?.val
-                            }}>
-                                {translate('navigation.menu')}
-                            </RNText>
-                            <TouchableOpacity
-                                onPress={closeMenu}
-                                style={{padding: 8, borderRadius: 20, backgroundColor: t.gray5?.val}}
-                            >
-                                <X size={24} color={t.color?.val}/>
-                            </TouchableOpacity>
-                        </View>
+                <Sheet.Frame
+                    padding="$0"
+                    backgroundColor="$background"
+                    borderTopLeftRadius="$6"
+                    borderTopRightRadius="$6"
+                >
+                    <Sheet.Handle backgroundColor="$borderColor"/>
 
-                        {/* Navigation Items */}
-                        <View style={{marginBottom: 24}}>
-                            <TouchableOpacity
-                                onPress={() => navigateAndClose('/map')}
-                                style={{
-                                    padding: 16,
-                                    marginBottom: 12,
-                                    borderRadius: 8,
-                                    backgroundColor: t.gray2?.val,
-                                    borderWidth: 1,
-                                    borderColor: t.accent8?.val,
-                                    flexDirection: 'row',
-                                    alignItems: 'center'
-                                }}
-                            >
-                                <MapIcon color={t.accent8?.val} size={24}/>
-                                <RNText style={{
-                                    fontSize: 18,
-                                    fontWeight: '500',
-                                    color: t.accent8?.val,
-                                    marginLeft: 12
-                                }}>
-                                    {translate('navigation.map')}
-                                </RNText>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                onPress={() => navigateAndClose('/dashboard/5')}
-                                style={{
-                                    padding: 16,
-                                    marginBottom: 12,
-                                    borderRadius: 8,
-                                    backgroundColor: t.gray2?.val,
-                                    borderWidth: 1,
-                                    borderColor: t.accent8?.val,
-                                    flexDirection: 'row',
-                                    alignItems: 'center'
-                                }}
-                            >
-                                <LayoutDashboard color={t.accent8?.val} size={24}/>
-                                <RNText style={{
-                                    fontSize: 18,
-                                    fontWeight: '500',
-                                    color: t.accent8?.val,
-                                    marginLeft: 12
-                                }}>
-                                    {translate('dashboard.dashboard')}
-                                </RNText>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                onPress={() => navigateAndClose('/about')}
-                                style={{
-                                    padding: 16,
-                                    marginBottom: 12,
-                                    borderRadius: 8,
-                                    backgroundColor: t.gray2?.val,
-                                    borderWidth: 1,
-                                    borderColor: t.accent8?.val,
-                                    flexDirection: 'row',
-                                    alignItems: 'center'
-                                }}
-                            >
-                                <InfoIcon color={t.accent8?.val} size={24}/>
-                                <RNText style={{
-                                    fontSize: 18,
-                                    fontWeight: '500',
-                                    color: t.accent8?.val,
-                                    marginLeft: 12
-                                }}>
-                                    {translate('navigation.aboutUs')}
-                                </RNText>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                onPress={() => navigateAndClose('/sensors')}
-                                style={{
-                                    padding: 16,
-                                    marginBottom: 12,
-                                    borderRadius: 8,
-                                    backgroundColor: t.gray2?.val,
-                                    borderWidth: 1,
-                                    borderColor: t.accent8?.val,
-                                    flexDirection: 'row',
-                                    alignItems: 'center'
-                                }}
-                            >
-                                <LOGO size={24} color={t.accent8?.val}/>
-                                <RNText style={{
-                                    fontSize: 18,
-                                    fontWeight: '500',
-                                    color: t.accent8?.val,
-                                    marginLeft: 12
-                                }}>
-                                    {translate('navigation.sensors')}
-                                </RNText>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                onPress={() => navigateAndClose('/api')}
-                                style={{
-                                    padding: 16,
-                                    marginBottom: 12,
-                                    borderRadius: 8,
-                                    backgroundColor: t.gray2?.val,
-                                    borderWidth: 1,
-                                    borderColor: t.accent8?.val,
-                                    flexDirection: 'row',
-                                    alignItems: 'center'
-                                }}
-                            >
-                                <CloudIcon color={t.accent8?.val} size={24}/>
-                                <RNText style={{
-                                    fontSize: 18,
-                                    fontWeight: '500',
-                                    color: t.accent8?.val,
-                                    marginLeft: 12
-                                }}>
-                                    {translate('navigation.api')}
-                                </RNText>
-                            </TouchableOpacity>
-                        </View>
-
-                        {/* Settings */}
-                        <View style={{
-                            borderTopWidth: 1,
-                            borderTopColor: t.borderColor?.val,
-                            paddingTop: 20,
-                            marginBottom: 30
-                        }}>
-                            <RNText style={{
-                                fontSize: 18,
-                                fontWeight: '600',
-                                color: t.color?.val,
-                                marginBottom: 16
-                            }}>
-                                {translate('navigation.settings')}
-                            </RNText>
-
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                paddingVertical: 8
-                            }}>
-                                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                    <Languages color={t.accent8?.val} size={20}/>
-                                    <RNText style={{
-                                        fontSize: 16,
-                                        color: t.color?.val,
-                                        marginLeft: 12
-                                    }}>
-                                        {translate('navigation.language')}
-                                    </RNText>
-                                </View>
-                                <LanguageSelector/>
-                            </View>
-
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                paddingVertical: 8
-                            }}>
-                                <RNText style={{
-                                    fontSize: 16,
-                                    color: t.color?.val
-                                }}>
-                                    {translate('navigation.theme')}
-                                </RNText>
-                                <TouchableOpacity
-                                    onPress={toggleTheme}
-                                    style={{
-                                        padding: 8,
-                                        borderRadius: 12,
-                                        backgroundColor: t.gray5?.val
-                                    }}
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <YStack padding="$4" gap="$2">
+                            {/* Header */}
+                            <XStack justifyContent="space-between" alignItems="center" paddingBottom="$4"
+                                    borderBottomWidth={1} borderBottomColor="$borderColor">
+                                <Text fontSize="$7" fontWeight="bold" color="$accent8" fontFamily="$oswald">
+                                    Menu
+                                </Text>
+                                <Button
+                                    circular
+                                    size="$3"
+                                    chromeless
+                                    onPress={closeMenu}
                                 >
-                                    {isDark ? (
-                                        <SunFilledIcon size={20} color={t.accent8?.val}/>
-                                    ) : (
-                                        <MoonFilledIcon size={20} color={t.accent8?.val}/>
-                                    )}
-                                </TouchableOpacity>
-                            </View>
-                        </View>
+                                    <Text fontSize="$6" color="$color">✕</Text>
+                                </Button>
+                            </XStack>
 
-                        {/* Auth Buttons */}
-                        <View style={{
-                            borderTopWidth: 1,
-                            borderTopColor: t.borderColor?.val,
-                            paddingTop: 20,
-                            paddingBottom: 20
-                        }}>
-                            {!session ? (
-                                <View>
-                                    <TouchableOpacity
-                                        onPress={() => navigateAndClose('/login')}
-                                        style={{
-                                            backgroundColor: t.accent8?.val,
-                                            padding: 16,
-                                            borderRadius: 8,
-                                            alignItems: 'center',
-                                            marginBottom: 12
+                            {/* Navigation Items */}
+                            <YStack gap="$2" paddingTop="$3">
+                                <Link href={"/map" as Href} onPress={closeMenu} asChild>
+                                    <XStack
+                                        alignItems="center"
+                                        gap="$3"
+                                        padding="$3"
+                                        borderColor={"$borderColor"}
+                                        borderWidth={"$1"}
+                                        borderRadius="$3"
+                                        pressStyle={{
+                                            backgroundColor: "$backgroundPress"
                                         }}
                                     >
-                                        <RNText style={{
-                                            color: 'white',
-                                            fontSize: 16,
-                                            fontWeight: '600'
-                                        }}>
-                                            {translate('auth.login')}
-                                        </RNText>
-                                    </TouchableOpacity>
+                                        <MapIcon color={t.accent8?.val} size={24}/>
+                                        <Text fontSize="$5" fontWeight="500" color="$accent8">
+                                            {translate('navigation.map')}
+                                        </Text>
+                                    </XStack>
+                                </Link>
 
-                                    <TouchableOpacity
-                                        onPress={() => navigateAndClose('/register')}
-                                        style={{
-                                            borderWidth: 1,
-                                            borderColor: t.accent8?.val,
-                                            backgroundColor: 'transparent',
-                                            padding: 16,
-                                            borderRadius: 8,
-                                            alignItems: 'center'
+                                <Link href={"/dashboard/5" as Href} onPress={closeMenu} asChild>
+                                    <XStack
+                                        alignItems="center"
+                                        gap="$3"
+                                        padding="$3"
+                                        borderColor={"$borderColor"}
+                                        borderWidth={"$1"}
+                                        borderRadius="$3"
+                                        pressStyle={{
+                                            backgroundColor: "$backgroundPress"
                                         }}
                                     >
-                                        <RNText style={{
-                                            color: t.accent8?.val,
-                                            fontSize: 16,
-                                            fontWeight: '600'
-                                        }}>
-                                            {translate('auth.register')}
-                                        </RNText>
-                                    </TouchableOpacity>
-                                </View>
-                            ) : (
-                                <TouchableOpacity
-                                    onPress={() => navigateAndClose('/(profile)/profile')}
-                                    style={{
-                                        padding: 16,
-                                        borderRadius: 8,
-                                        borderWidth: 1,
-                                        borderColor: t.accent8?.val,
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}
+                                        <LayoutDashboard color={t.accent8?.val} size={24}/>
+                                        <Text fontSize="$5" fontWeight="500" color="$accent8">
+                                            {translate('dashboard.dashboard')}
+                                        </Text>
+                                    </XStack>
+                                </Link>
+
+                                <XStack
+                                    alignItems={"center"}
+                                    justifyContent="center"
+                                    gap="$4"
+                                    paddingVertical="$2"
                                 >
-                                    <User size={20} color={t.accent8?.val}/>
-                                    <RNText style={{
-                                        color: t.accent8?.val,
-                                        fontSize: 16,
-                                        marginLeft: 8
-                                    }}>
-                                        {translate('navigation.profile')}
-                                    </RNText>
-                                </TouchableOpacity>
+                                    <YStack
+                                        alignItems={"center"}
+                                        justifyContent="center"
+                                        gap="$1"
+                                        paddingVertical="$2"
+                                    >
+                                        <Button
+                                            circular
+                                            size="$4"
+                                            padding={"$2"}
+                                            backgroundColor={"$accent1"}
+                                            chromeless
+                                            onPress={() => navigateAndClose('/(about)/api')}
+                                        >
+                                            <CloudIcon color={t.accent12?.val} size={30}/>
+                                        </Button>
+                                        <Text
+                                            fontSize="$4"
+                                            fontWeight="500"
+                                            color="$accent8"
+                                            textAlign={"center"}
+                                            textOverflow={"ellipsis"}
+                                        >
+                                            API
+                                        </Text>
+                                    </YStack>
+
+                                    <YStack
+                                        alignItems={"center"}
+                                        justifyContent="center"
+                                        gap="$1"
+                                        paddingVertical="$2"
+                                    >
+                                        <Button
+                                            circular
+                                            size="$4"
+                                            padding={"$2"}
+                                            backgroundColor={"$accent1"}
+                                            chromeless
+                                            onPress={() => navigateAndClose('/(about)/sensors')}
+                                        >
+                                            <LOGO color={t.accent12?.val} size={30}/>
+                                        </Button>
+                                        <Text
+                                            fontSize="$4"
+                                            fontWeight="500"
+                                            color="$accent8"
+                                            textAlign={"center"}
+                                            textOverflow={"ellipsis"}
+                                        >
+                                            Sensoren
+                                        </Text>
+                                    </YStack>
+
+                                    <YStack
+                                        alignItems={"center"}
+                                        justifyContent="center"
+                                        gap="$1"
+                                        paddingVertical="$2"
+                                    >
+                                        <Button
+                                            circular
+                                            size="$4"
+                                            padding={"$2"}
+                                            backgroundColor={"$accent1"}
+                                            chromeless
+                                            onPress={() => Linking.openURL('https://projekt.marlin-live.com')}
+                                        >
+                                            <BookOpen color={t.accent12?.val} size={30}/>
+                                        </Button>
+                                        <Text
+                                            fontSize="$4"
+                                            fontWeight="500"
+                                            color="$accent8"
+                                            textAlign={"center"}
+                                            textOverflow={"ellipsis"}
+                                        >
+                                            Projekt
+                                        </Text>
+                                    </YStack>
+                                </XStack>
+                            </YStack>
+
+                            {/* Settings */}
+                            <YStack gap="$3" paddingTop="$4" borderTopWidth={1} borderTopColor="$borderColor">
+                                <YStack gap="$2">
+                                    <XStack gap="$3" padding="$3" alignItems="center" justifyContent="space-between">
+                                        <XStack gap="$2" alignItems="center">
+                                            <Languages color={t.accent8?.val} size={22}/>
+                                            <Text fontSize="$4" fontWeight="500" color="$color">
+                                                {translate('settings.language')}
+                                            </Text>
+                                        </XStack>
+                                        <Text fontSize="$3" color="$color">
+                                            {translate('language.name')}
+                                        </Text>
+                                    </XStack>
+                                    <YStack paddingHorizontal="$3">
+                                        <LanguageSelector/>
+                                    </YStack>
+                                </YStack>
+
+                                <XStack gap="$3" padding="$3" alignItems="center" justifyContent="space-between">
+                                    <XStack gap="$2" alignItems="center">
+                                        <Text fontSize="$4" fontWeight="500" color="$color">
+                                            {translate('settings.theme')}
+                                        </Text>
+                                    </XStack>
+                                    <Button
+                                        size="$3"
+                                        circular
+                                        chromeless
+                                        backgroundColor="$gray5"
+                                        onPress={toggleTheme}
+                                    >
+                                        {isDark ? (
+                                            <SunFilledIcon size={20} color={t.accent8?.val}/>
+                                        ) : (
+                                            <MoonFilledIcon size={20} color={t.accent8?.val}/>
+                                        )}
+                                    </Button>
+                                </XStack>
+                            </YStack>
+
+                            {/* Auth Buttons */}
+                            {!session && (
+                                <YStack gap="$3" paddingTop="$4">
+                                    <Link href={"/login" as Href} onPress={closeMenu} asChild>
+                                        <PrimaryButton width="100%">
+                                            <Text color="#ffffff" fontSize="$5">
+                                                {translate('auth.login')}
+                                            </Text>
+                                        </PrimaryButton>
+                                    </Link>
+                                    <Link href={"/register" as Href} onPress={closeMenu} asChild>
+                                        <SecondaryButton width="100%">
+                                            <Text fontSize="$5">
+                                                {translate('auth.register')}
+                                            </Text>
+                                        </SecondaryButton>
+                                    </Link>
+                                </YStack>
                             )}
-                        </View>
+
+                            {session && (
+                                <YStack gap="$3" paddingTop="$4">
+                                    <Link href={"/(profile)/profile" as Href} onPress={closeMenu} asChild>
+                                        <Button variant="outlined" width="100%">
+                                            <XStack alignItems="center" gap="$2">
+                                                <User size={24} color={"$accent8"}/>
+                                                <Text fontSize="$5">
+                                                    {translate('navigation.profile')}
+                                                </Text>
+                                            </XStack>
+                                        </Button>
+                                    </Link>
+                                    <Button variant="outlined" width="100%" onPress={handleLogout}>
+                                        <XStack alignItems="center" gap="$2">
+                                            <LogOut size={24} color={"$accent8"}/>
+                                            <Text fontSize="$5">
+                                                {translate('auth.logout')}
+                                            </Text>
+                                        </XStack>
+                                    </Button>
+                                </YStack>
+                            )}
+                        </YStack>
                     </ScrollView>
                 </Sheet.Frame>
             </Sheet>
