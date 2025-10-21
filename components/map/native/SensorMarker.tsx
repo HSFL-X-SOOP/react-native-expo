@@ -1,67 +1,65 @@
-import { LocationWithBoxes } from "@/api/models/sensor";
-import { PointAnnotation } from "@maplibre/maplibre-react-native";
-import React, { useState } from "react";
-import { View } from "react-native";
-import { SensorPopup } from "../MapSensorMeasurements";
-import { SensorMarkerContent } from "../MapSensorTemperatureText";
-import { Sheet, Theme } from "tamagui";
-import { useThemeContext } from "@/context/ThemeSwitch";
+import {LocationWithBoxes} from "@/api/models/sensor";
+import {PointAnnotation} from "@maplibre/maplibre-react-native";
+import React, {useState} from "react";
+import {Modal, Pressable, StyleSheet, View} from "react-native";
+import {SensorPopup} from "../MapSensorMeasurements";
+import {SensorMarkerContent} from "../MapSensorTemperatureText";
+import {Theme, YStack} from "tamagui";
+import {useThemeContext} from "@/context/ThemeSwitch";
 
 interface SensorMarkerProps {
     locationWithBoxes: LocationWithBoxes;
     index?: number;
 }
 
-export default function SensorMarker({
-    locationWithBoxes,
-    index,
-}: SensorMarkerProps) {
+export default function SensorMarker({locationWithBoxes}: SensorMarkerProps) {
     const [open, setOpen] = useState(false);
-    const { currentTheme } = useThemeContext();
+    const {currentTheme} = useThemeContext();
 
     return (
         <>
             <PointAnnotation
-                id={`marker-${index}`}
-                key={`marker-${index}`}
+                id={`marker-${locationWithBoxes.location.id}`}
+                key={`marker-${locationWithBoxes.location.id}`}
                 coordinate={[
                     locationWithBoxes.location.coordinates.lon,
                     locationWithBoxes.location.coordinates.lat,
                 ]}
-                title="Sensor"
-                selected={true}
                 onSelected={() => setOpen(true)}
             >
                 <View>
-                    <SensorMarkerContent locationWithBoxes={locationWithBoxes} isHovered={false} />
+                    <SensorMarkerContent locationWithBoxes={locationWithBoxes} isHovered={false}/>
                 </View>
             </PointAnnotation>
 
-            <Sheet
-                modal
-                open={open}
-                onOpenChange={setOpen}
-                snapPoints={[85]}
-                dismissOnSnapToBottom
-                animation="medium"
+            <Modal
+                visible={open}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setOpen(false)}
             >
-                <Sheet.Overlay
-                    backgroundColor="rgba(0,0,0,0.5)"
-                    animation="lazy"
-                    enterStyle={{ opacity: 0 }}
-                    exitStyle={{ opacity: 0 }}
-                />
-                <Sheet.Frame
-                    padding="$4"
-                    backgroundColor={"$colorTransparent"}
-                    alignItems="center"
-                    justifyContent="center"
-                >
-                    <Theme name={currentTheme}>
-                        <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)} />
-                    </Theme>
-                </Sheet.Frame>
-            </Sheet>
+                <Pressable style={styles.overlay} onPress={() => setOpen(false)}>
+                    <Pressable onPress={(e) => e.stopPropagation()}>
+                        <Theme name={currentTheme}>
+                            <YStack>
+                                <SensorPopup
+                                    locationWithBoxes={locationWithBoxes}
+                                    closeOverlay={() => setOpen(false)}
+                                />
+                            </YStack>
+                        </Theme>
+                    </Pressable>
+                </Pressable>
+            </Modal>
         </>
     );
 }
+
+const styles = StyleSheet.create({
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
