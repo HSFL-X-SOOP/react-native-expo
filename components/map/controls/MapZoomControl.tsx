@@ -30,9 +30,7 @@ export default function MapZoomControl({
                     backgroundColor: t.background?.val
                 }]}
                 onPress={() => {
-                    if (zoomLevel < minMaxZoomLevel.max) {
-                        setZoomLevel(zoomLevel + 1);
-                    }
+                    setZoomLevel(prev => Math.min(minMaxZoomLevel.max, Math.round(prev) + 1));
                 }}
                 activeOpacity={0.7}
             >
@@ -76,9 +74,7 @@ export default function MapZoomControl({
                     backgroundColor: t.background?.val
                 }]}
                 onPress={() => {
-                    if (zoomLevel > minMaxZoomLevel.min) {
-                        setZoomLevel(zoomLevel - 1);
-                    }
+                    setZoomLevel(prev => Math.max(minMaxZoomLevel.min, Math.round(prev) - 1));
                 }}
                 activeOpacity={0.7}
             >
