@@ -357,7 +357,7 @@ export function NavbarWeb() {
                                             onPress={() => router.push("/(about)/api")}
                                             cursor="pointer"
                                         >
-                                            <CloudIcon color={t.accent8?.val} size={30}/>
+                                            <CloudIcon color={t.accent12?.val} size={30}/>
                                         </Button>
                                         <Text
                                             fontSize="$4"
@@ -382,7 +382,7 @@ export function NavbarWeb() {
                                             onPress={() => router.push("/(about)/sensors")}
                                             cursor="pointer"
                                         >
-                                            <LOGO color={t.accent8?.val} size={30}/>
+                                            <LOGO color={t.accent12?.val} size={30}/>
                                         </Button>
                                         <Text
                                             fontSize="$4"
@@ -407,7 +407,7 @@ export function NavbarWeb() {
                                             onPress={() => window.open('https://projekt.marlin-live.com', '_blank')}
                                             cursor="pointer"
                                         >
-                                            <BookOpen color={t.accent8?.val} size={30}/>
+                                            <BookOpen color={t.accent12?.val} size={30}/>
                                         </Button>
                                         <Text
                                             fontSize="$4"
