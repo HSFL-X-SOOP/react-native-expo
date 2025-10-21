@@ -1,0 +1,97 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build and upload to TestFlight (Internal Testing)"
+  lane :testflight_internal do
+    ENV['APP_MODE'] = 'test'
+
+    cocoapods(
+      clean_install: true
+    )
+
+    gym(
+      scheme: "Marlin",
+      workspace: "Marlin.xcworkspace",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.marlin.live" => ENV["IOS_PROVISIONING_PROFILE_NAME"]
+        }
+      },
+      output_directory: "./build",
+      output_name: "Marlin.ipa"
+    )
+
+    pilot(
+      skip_waiting_for_build_processing: true,
+      apple_id: ENV["APPLE_ID"],
+      app_identifier: "com.marlin.live",
+      ipa: "./build/Marlin.ipa",
+      distribute_external: false,
+      groups: ["Internal Testers"]
+    )
+  end
+
+  desc "Build and upload to TestFlight (External Testing)"
+  lane :testflight_external do
+    ENV['APP_MODE'] = 'test'
+
+    cocoapods(
+      clean_install: true
+    )
+
+    gym(
+      scheme: "Marlin",
+      workspace: "Marlin.xcworkspace",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.marlin.live" => ENV["IOS_PROVISIONING_PROFILE_NAME"]
+        }
+      },
+      output_directory: "./build",
+      output_name: "Marlin.ipa"
+    )
+
+    pilot(
+      skip_waiting_for_build_processing: false,
+      apple_id: ENV["APPLE_ID"],
+      app_identifier: "com.marlin.live",
+      ipa: "./build/Marlin.ipa",
+      distribute_external: true,
+      groups: ["External Testers"],
+      changelog: "Bug fixes and improvements"
+    )
+  end
+
+  desc "Deploy a new version to the App Store"
+  lane :app_store do
+    ENV['APP_MODE'] = 'prod'
+
+    cocoapods(
+      clean_install: true
+    )
+
+    gym(
+      scheme: "Marlin",
+      workspace: "Marlin.xcworkspace",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.marlin.live" => ENV["IOS_PROVISIONING_PROFILE_NAME"]
+        }
+      },
+      output_directory: "./build",
+      output_name: "Marlin.ipa"
+    )
+
+    deliver(
+      submit_for_review: false,
+      automatic_release: false,
+      skip_metadata: false,
+      skip_screenshots: false,
+      app_identifier: "com.marlin.live",
+      ipa: "./build/Marlin.ipa"
+    )
+  end
+end

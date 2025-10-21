@@ -44,5 +44,8 @@ app-example
 #intellij
 .idea/
 
+#vscode
+.vscode/
+
 #Tamagui
 .tamagui/

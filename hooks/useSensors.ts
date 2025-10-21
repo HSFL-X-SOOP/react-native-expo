@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import {SensorModule, LocationWithBoxes} from '@/api/models/sensor';
 import {useSensorStore} from '@/api/stores/sensors';
+import {useToast} from '@/components/useToast';
 
 /**
  * Hook to fetch sensor data (old API format)
@@ -10,6 +11,7 @@ export function useSensorData() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const sensorStore = useSensorStore();
+    const toast = useToast();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,8 +21,13 @@ export function useSensorData() {
                 setData(result);
                 setError(null);
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to fetch sensor data');
+                const errorMessage = err instanceof Error ? err.message : 'Failed to fetch sensor data';
+                setError(errorMessage);
                 setData([]);
+                toast.error('Sensor Data Error', {
+                    message: errorMessage,
+                    duration: 5000
+                });
             } finally {
                 setLoading(false);
             }
@@ -36,7 +43,12 @@ export function useSensorData() {
             setData(result);
             setError(null);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to fetch sensor data');
+            const errorMessage = err instanceof Error ? err.message : 'Failed to fetch sensor data';
+            setError(errorMessage);
+            toast.error('Sensor Data Error', {
+                message: errorMessage,
+                duration: 5000
+            });
         } finally {
             setLoading(false);
         }
@@ -53,6 +65,7 @@ export function useSensorDataNew() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const sensorStore = useSensorStore();
+    const toast = useToast();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -62,8 +75,13 @@ export function useSensorDataNew() {
                 setData(result);
                 setError(null);
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to fetch sensor data');
+                const errorMessage = err instanceof Error ? err.message : 'Failed to fetch sensor data';
+                setError(errorMessage);
                 setData([]);
+                toast.error('Sensor Data Error', {
+                    message: errorMessage,
+                    duration: 5000
+                });
             } finally {
                 setLoading(false);
             }
@@ -79,7 +97,12 @@ export function useSensorDataNew() {
             setData(result);
             setError(null);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to fetch sensor data');
+            const errorMessage = err instanceof Error ? err.message : 'Failed to fetch sensor data';
+            setError(errorMessage);
+            toast.error('Sensor Data Error', {
+                message: errorMessage,
+                duration: 5000
+            });
         } finally {
             setLoading(false);
         }
@@ -96,7 +119,8 @@ export function useSensorDataTimeRange(id: number | null, timeRange: string = '2
     const [data, setData] = useState<LocationWithBoxes | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const sensorStore = useSensorStore()
+    const sensorStore = useSensorStore();
+    const toast = useToast();
 
     useEffect(() => {
         if (!id) return;
@@ -108,8 +132,13 @@ export function useSensorDataTimeRange(id: number | null, timeRange: string = '2
                 setData(result);
                 setError(null);
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to fetch time range data');
+                const errorMessage = err instanceof Error ? err.message : 'Failed to fetch time range data';
+                setError(errorMessage);
                 setData(null);
+                toast.error('Dashboard Data Error', {
+                    message: errorMessage,
+                    duration: 5000
+                });
             } finally {
                 setLoading(false);
             }
@@ -127,7 +156,12 @@ export function useSensorDataTimeRange(id: number | null, timeRange: string = '2
             setData(result);
             setError(null);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to fetch time range data');
+            const errorMessage = err instanceof Error ? err.message : 'Failed to fetch time range data';
+            setError(errorMessage);
+            toast.error('Dashboard Data Error', {
+                message: errorMessage,
+                duration: 5000
+            });
         } finally {
             setLoading(false);
         }

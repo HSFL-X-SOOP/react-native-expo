@@ -1,7 +1,7 @@
 import { useThemeContext } from "@/context/ThemeSwitch";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Activity } from "@tamagui/lucide-icons";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { Card, H3, Text, useMedia, XStack, YStack } from "tamagui";
 
 export type LineChartCardProps = {
@@ -13,17 +13,37 @@ export type LineChartCardProps = {
 }
 
 export const LineChartCard: React.FC<LineChartCardProps> = ({
-    title,
-    icon,
-    chartData,
-    color = "#4dabf7",
-    currentValue
-}) => {
+                                                                title,
+                                                                icon,
+                                                                chartData,
+                                                                color = "#4dabf7",
+                                                                currentValue
+                                                            }) => {
     const {isDark} = useThemeContext();
     const {t} = useTranslation();
     const media = useMedia();
     const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [chartWidth, setChartWidth] = useState(800);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const updateWidth = () => {
+            if (containerRef.current) {
+                const width = containerRef.current.offsetWidth;
+                setChartWidth(width > 0 ? Math.max(360, width) : 800);
+            }
+        };
+
+        const timeoutId = setTimeout(updateWidth, 0);
+
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
+        return () => {
+            window.removeEventListener('resize', updateWidth);
+            clearTimeout(timeoutId);
+        };
+    }, []);
 
     const {data, displayData, minValue, maxValue} = useMemo(() => {
         if (chartData.length === 0) {
@@ -44,7 +64,6 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
         };
     }, [chartData]);
 
-    const chartWidth = media.md ? 360 : 460;
     const chartHeight = media.md ? 200 : 260;
     const padding = { top: 20, right: 20, bottom: 40, left: 50 };
     const innerWidth = chartWidth - padding.left - padding.right;
@@ -138,13 +157,15 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             </Card.Header>
             <Card.Footer padded paddingTop="$0">
                 {displayData.length > 0 ? (
-                    <YStack position="relative" width="100%">
+                    <YStack position="relative" width="100%" ref={containerRef as any}>
                         <svg
-                            width={chartWidth}
+                            width="100%"
                             height={chartHeight}
+                            viewBox={`0 0 ${chartWidth} ${chartHeight}`}
                             onMouseMove={handleMouseMove}
                             onMouseLeave={() => setHoveredPoint(null)}
-                            style={{ cursor: 'crosshair' }}
+                            style={{ cursor: 'crosshair', maxWidth: '100%' }}
+                            preserveAspectRatio="xMidYMid meet"
                         >
                             <g transform={`translate(${padding.left}, ${padding.top})`}>
                                 {/* Grid lines */}
