@@ -485,7 +485,7 @@ export default function DashboardScreen() {
                             gap="$3"
                             width="100%"
                             justifyContent={media.md ? "center" : "space-between"}
-                            flexWrap={media.md ? "wrap" : "nowrap"}
+                            flexWrap="wrap"
                         >
                             <LineChartCard
                                 title={t('dashboard.charts.waterTemperature')}

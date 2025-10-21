@@ -13,12 +13,12 @@ export type LineChartCardProps = {
 }
 
 export const LineChartCard: React.FC<LineChartCardProps> = ({
-    title,
-    icon,
-    chartData,
-    color = "#4dabf7",
-    currentValue
-}) => {
+                                                                title,
+                                                                icon,
+                                                                chartData,
+                                                                color = "#4dabf7",
+                                                                currentValue
+                                                            }) => {
     const {isDark} = useThemeContext();
     const {t} = useTranslation();
     const media = useMedia();
@@ -31,7 +31,8 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
         const updateWidth = () => {
             if (containerRef.current) {
                 const width = containerRef.current.offsetWidth;
-                setChartWidth(width > 0 ? width : 800);
+                // Minimum 360px for mobile, otherwise use full width
+                setChartWidth(width > 0 ? Math.max(360, width) : 800);
             }
         };
 
