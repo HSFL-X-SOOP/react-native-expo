@@ -1,3 +1,4 @@
+import '@/utils/suppressMapLibreLogs'
 import '@/i18n'
 import {
     Oswald_400Regular,
@@ -7,7 +8,7 @@ import {
     useFonts
 } from '@expo-google-fonts/oswald'
 import {StatusBar} from 'expo-status-bar'
-import {Platform, View} from 'react-native'
+import {Platform, View, LogBox} from 'react-native'
 import {useEffect} from 'react'
 import 'react-native-reanimated'
 import '../global.css'
@@ -129,6 +130,14 @@ function RootContent() {
     useEffect(() => {
         if (Platform.OS === 'web' && typeof document !== 'undefined') {
             document.title = 'MARLIN - Maritime Live Information'
+        }
+        // Silence noisy MapLibre cancel warnings during fast gestures
+        if (Platform.OS !== 'web') {
+            LogBox.ignoreLogs([
+                'Request failed due to a permanent error: Canceled',
+                'Mbgl-HttpRequest',
+                'MapLibre info',
+            ])
         }
     }, [])
 
