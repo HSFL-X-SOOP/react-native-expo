@@ -191,6 +191,32 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                                         stroke={gridColor}
                                     />
 
+                                    {/* X axis labels (time) */}
+                                    {displayData.length > 0 && (() => {
+                                        const maxLabels = 6;
+                                        const showEvery = Math.max(1, Math.ceil(displayData.length / maxLabels));
+                                        return displayData
+                                            .map((item, index) => {
+                                                if (index % showEvery === 0 || index === displayData.length - 1) {
+                                                    const xPos = (index / (displayData.length - 1 || 1)) * innerWidth;
+                                                    return (
+                                                        <SvgText
+                                                            key={`label-${index}`}
+                                                            x={xPos}
+                                                            y={innerHeight + 20}
+                                                            fill={textColor}
+                                                            fontSize="10"
+                                                            textAnchor="middle"
+                                                        >
+                                                            {item.label}
+                                                        </SvgText>
+                                                    );
+                                                }
+                                                return null;
+                                            })
+                                            .filter(Boolean);
+                                    })()}
+
                                     {/* Y axis */}
                                     <Line
                                         x1={0}

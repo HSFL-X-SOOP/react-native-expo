@@ -102,14 +102,25 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
     }, [displayData, innerWidth, innerHeight, minValue, maxValue]);
 
     const handleMouseMove = (event: React.MouseEvent<SVGElement>) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        const x = event.clientX - rect.left - padding.left;
-        const y = event.clientY - rect.top - padding.top;
+        const svg = event.currentTarget;
+        const rect = svg.getBoundingClientRect();
+
+        // Calculate the scale factor between viewBox and actual size
+        const scaleX = rect.width / chartWidth;
+        const scaleY = rect.height / chartHeight;
+
+        // Get mouse position relative to SVG
+        const mouseX = (event.clientX - rect.left) / scaleX;
+        const mouseY = (event.clientY - rect.top) / scaleY;
+
+        // Adjust for padding
+        const x = mouseX - padding.left;
+        const y = mouseY - padding.top;
 
         if (x >= 0 && x <= innerWidth && y >= 0 && y <= innerHeight) {
             const pointIndex = Math.round((x / innerWidth) * (displayData.length - 1));
             setHoveredPoint(Math.min(Math.max(0, pointIndex), displayData.length - 1));
-            setMousePosition({ x: event.clientX - rect.left, y: event.clientY - rect.top });
+            setMousePosition({ x: mouseX, y: mouseY });
         } else {
             setHoveredPoint(null);
         }
@@ -201,6 +212,32 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                                     y2={innerHeight}
                                     stroke={gridColor}
                                 />
+
+                                {/* X axis labels (time) */}
+                                {displayData.length > 0 && (() => {
+                                    const maxLabels = 6;
+                                    const showEvery = Math.max(1, Math.ceil(displayData.length / maxLabels));
+                                    return displayData
+                                        .map((item, index) => {
+                                            if (index % showEvery === 0 || index === displayData.length - 1) {
+                                                const xPos = (index / (displayData.length - 1 || 1)) * innerWidth;
+                                                return (
+                                                    <text
+                                                        key={`label-${index}`}
+                                                        x={xPos}
+                                                        y={innerHeight + 20}
+                                                        fill={textColor}
+                                                        fontSize="10"
+                                                        textAnchor="middle"
+                                                    >
+                                                        {item.label}
+                                                    </text>
+                                                );
+                                            }
+                                            return null;
+                                        })
+                                        .filter(Boolean);
+                                })()}
 
                                 {/* Y axis */}
                                 <line
