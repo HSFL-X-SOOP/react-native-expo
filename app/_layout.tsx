@@ -1,4 +1,3 @@
-import '@/utils/suppressMapLibreLogs'
 import '@/i18n'
 import {
     Oswald_400Regular,
@@ -131,7 +130,7 @@ function RootContent() {
         if (Platform.OS === 'web' && typeof document !== 'undefined') {
             document.title = 'MARLIN - Maritime Live Information'
         }
-        // Silence noisy MapLibre cancel warnings during fast gestures
+
         if (Platform.OS !== 'web') {
             LogBox.ignoreLogs([
                 'Request failed due to a permanent error: Canceled',
