@@ -64,14 +64,14 @@ export const SecondaryButton = styled(Button, {
     shadowRadius: 2,
     elevation: 1,
     hoverStyle: {
-        backgroundColor: '$accent2',
+        backgroundColor: '$accent1',
         borderColor: '$accent8',
         shadowOpacity: 0.2,
         scale: 1.02,
     },
 
     pressStyle: {
-        backgroundColor: '$accent3',
+        backgroundColor: '$accent1',
         borderColor: '$accent6',
         scale: 0.98,
     },

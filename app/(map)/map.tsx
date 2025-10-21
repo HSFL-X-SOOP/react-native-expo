@@ -1,5 +1,5 @@
 import MapWrapper from '@/components/Map';
-import MapFilterButton from "@/components/map/MapFilterButton.tsx";
+import MapFilterButton from "@/components/map/controls/MapFilterButton";
 import {View} from "tamagui";
 import {useState} from "react";
 import {useThemeContext} from '@/context/ThemeSwitch';

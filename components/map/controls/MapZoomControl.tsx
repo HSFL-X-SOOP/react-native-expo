@@ -1,16 +1,13 @@
-import {Home, Minus, Navigation, Plus} from "@tamagui/lucide-icons";
 import {StyleSheet, TouchableOpacity, View} from "react-native";
+import {Plus, Minus, Navigation, Home} from "@tamagui/lucide-icons";
 import {useTheme} from "tamagui";
 
 type MapZoomControlProps = {
     zoomLevel: number;
     minMaxZoomLevel: { min: number; max: number };
-    setZoomLevel: (level: number) => void;
+    setZoomLevel: (level: number | ((prev: number) => number)) => void;
     setCurrentCoordinate: (coord: [number, number]) => void;
     homeCoordinate: [number, number];
-    setBearing: (bearing: number) => void;
-    setPitch: (pitch: number) => void;
-    bearing: number;
 };
 
 export default function MapZoomControl({
@@ -18,13 +15,9 @@ export default function MapZoomControl({
                                            minMaxZoomLevel,
                                            setZoomLevel,
                                            setCurrentCoordinate,
-                                           homeCoordinate,
-                                           setBearing,
-                                           setPitch,
-                                           bearing
+                                           homeCoordinate
                                        }: MapZoomControlProps) {
     const t = useTheme();
-    const NAVIGATION_ICON_ROTATION_OFFSET = 45; // Adjust this value based on the icon design
 
     return (
         <View style={styles.container}>
@@ -37,9 +30,7 @@ export default function MapZoomControl({
                     backgroundColor: t.background?.val
                 }]}
                 onPress={() => {
-                    if (zoomLevel < minMaxZoomLevel.max) {
-                        setZoomLevel(zoomLevel + 1);
-                    }
+                    setZoomLevel(prev => Math.min(minMaxZoomLevel.max, Math.round(prev) + 1));
                 }}
                 activeOpacity={0.7}
             >
@@ -52,15 +43,11 @@ export default function MapZoomControl({
             {/* Navigation/Kompass */}
             <TouchableOpacity
                 style={[styles.button, {backgroundColor: t.background?.val}]}
-                onPress={() => {
-                    setBearing(0);
-                    setPitch(0);
+                onPress={() => {/* z.B. auf Norden ausrichten */
                 }}
                 activeOpacity={0.7}
             >
-                <View style={{transform: [{rotate: `${bearing - NAVIGATION_ICON_ROTATION_OFFSET}deg`}]}}>
-                    <Navigation color={t.color?.val} size={20}/>
-                </View>
+                <Navigation color={t.color?.val} size={20}/>
             </TouchableOpacity>
 
             {/* Linie */}
@@ -87,9 +74,7 @@ export default function MapZoomControl({
                     backgroundColor: t.background?.val
                 }]}
                 onPress={() => {
-                    if (zoomLevel > minMaxZoomLevel.min) {
-                        setZoomLevel(zoomLevel - 1);
-                    }
+                    setZoomLevel(prev => Math.max(minMaxZoomLevel.min, Math.round(prev) - 1));
                 }}
                 activeOpacity={0.7}
             >

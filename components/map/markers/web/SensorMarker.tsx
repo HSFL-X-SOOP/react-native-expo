@@ -1,9 +1,10 @@
 import {LocationWithBoxes} from "@/api/models/sensor";
 import {Marker} from "@vis.gl/react-maplibre";
-import {SensorMarkerContent} from "../MapSensorTemperatureText";
-import {Popover, useMedia, Dialog, YStack} from "tamagui";
-import {SensorPopup} from "../MapSensorMeasurements";
+import {SensorMarkerContent} from "../../sensors/MapSensorTemperatureText";
+import {Popover, Dialog, YStack} from "tamagui";
+import {SensorPopup} from "../../sensors/MapSensorMeasurements";
 import {useState} from "react";
+import {useIsMobileWeb} from "@/hooks/useIsMobileWeb";
 
 interface SensorMarkerProps {
     locationWithBoxes: LocationWithBoxes;
@@ -11,16 +12,16 @@ interface SensorMarkerProps {
 
 export default function SensorMarker({locationWithBoxes}: SensorMarkerProps) {
     const [open, setOpen] = useState(false);
-    const media = useMedia();
+    const isMobileWeb = useIsMobileWeb();
 
-    if (!media.gtMd) {
+    if (isMobileWeb) {
         return (
             <>
                 <Marker
                     key={locationWithBoxes.location.id}
                     longitude={locationWithBoxes.location.coordinates.lon}
                     latitude={locationWithBoxes.location.coordinates.lat}
-                    anchor="bottom"
+                    anchor="center"
                 >
                     <YStack
                         onPress={(e) => {
@@ -109,7 +110,7 @@ export default function SensorMarker({locationWithBoxes}: SensorMarkerProps) {
                         },
                     ]}
                 >
-                    <Popover.Arrow borderWidth={1} borderColor="$borderColor"/>
+                    <Popover.Arrow borderWidth={1} backgroundColor={"$content4"}/>
                     <SensorPopup locationWithBoxes={locationWithBoxes} closeOverlay={() => setOpen(false)}/>
                 </Popover.Content>
             </Popover>

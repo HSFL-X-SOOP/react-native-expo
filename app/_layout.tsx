@@ -7,7 +7,7 @@ import {
     useFonts
 } from '@expo-google-fonts/oswald'
 import {StatusBar} from 'expo-status-bar'
-import {Platform, View} from 'react-native'
+import {Platform, View, LogBox} from 'react-native'
 import {useEffect} from 'react'
 import 'react-native-reanimated'
 import '../global.css'
@@ -85,13 +85,22 @@ function CurrentToast() {
             backgroundColor={styles.backgroundColor}
             borderWidth={1}
             borderColor={styles.borderColor}
+            padding="$3"
+            borderRadius="$4"
+            elevate
+            minWidth={300}
+            maxWidth={500}
         >
-            <XStack gap="$3" alignItems="center">
-                <IconComponent size={20} color={styles.iconColor}/>
-                <YStack flex={1}>
-                    <Toast.Title color="$color">{currentToast.title}</Toast.Title>
+            <XStack gap="$3" alignItems="center" width="100%">
+                <IconComponent size={24} color={styles.iconColor}/>
+                <YStack flex={1} gap="$1">
+                    <Toast.Title fontSize="$5" fontWeight="600" color="$color" lineHeight="$1">
+                        {currentToast.title}
+                    </Toast.Title>
                     {!!currentToast.message && (
-                        <Toast.Description color="$color" opacity={0.8}>{currentToast.message}</Toast.Description>
+                        <Toast.Description fontSize="$3" color="$color" opacity={0.8} lineHeight="$1">
+                            {currentToast.message}
+                        </Toast.Description>
                     )}
                 </YStack>
             </XStack>
@@ -120,6 +129,14 @@ function RootContent() {
     useEffect(() => {
         if (Platform.OS === 'web' && typeof document !== 'undefined') {
             document.title = 'MARLIN - Maritime Live Information'
+        }
+
+        if (Platform.OS !== 'web') {
+            LogBox.ignoreLogs([
+                'Request failed due to a permanent error: Canceled',
+                'Mbgl-HttpRequest',
+                'MapLibre info',
+            ])
         }
     }, [])
 
