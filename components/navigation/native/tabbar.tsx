@@ -9,7 +9,6 @@ import React, {useState} from 'react';
 import {ScrollView, Linking} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Sheet, Text, useTheme, XStack, YStack, Button} from 'tamagui';
-import {PrimaryButton, SecondaryButton} from '@/types/button';
 
 export function TabBarNative() {
     const router = useRouter();
@@ -298,39 +297,49 @@ export function TabBarNative() {
                             {/* Auth Buttons */}
                             {!session && (
                                 <YStack gap="$3" paddingTop="$4">
-                                    <Link href={"/login" as Href} onPress={closeMenu} asChild>
-                                        <PrimaryButton width="100%">
-                                            <Text color="#ffffff" fontSize="$5">
-                                                {translate('auth.login')}
-                                            </Text>
-                                        </PrimaryButton>
-                                    </Link>
-                                    <Link href={"/register" as Href} onPress={closeMenu} asChild>
-                                        <SecondaryButton width="100%">
-                                            <Text fontSize="$5">
-                                                {translate('auth.register')}
-                                            </Text>
-                                        </SecondaryButton>
-                                    </Link>
+                                    <Button
+                                        size="$5"
+                                        backgroundColor="$accent7"
+                                        onPress={() => navigateAndClose('/login')}
+                                    >
+                                        <Text color="#ffffff" fontSize="$5" fontWeight="600">
+                                            {translate('auth.login')}
+                                        </Text>
+                                    </Button>
+                                    <Button
+                                        size="$5"
+                                        variant="outlined"
+                                        onPress={() => navigateAndClose('/register')}
+                                    >
+                                        <Text fontSize="$5" fontWeight="600">
+                                            {translate('auth.register')}
+                                        </Text>
+                                    </Button>
                                 </YStack>
                             )}
 
                             {session && (
                                 <YStack gap="$3" paddingTop="$4">
-                                    <Link href={"/(profile)/profile" as Href} onPress={closeMenu} asChild>
-                                        <Button variant="outlined" width="100%">
-                                            <XStack alignItems="center" gap="$2">
-                                                <User size={24} color={"$accent8"}/>
-                                                <Text fontSize="$5">
-                                                    {translate('navigation.profile')}
-                                                </Text>
-                                            </XStack>
-                                        </Button>
-                                    </Link>
-                                    <Button variant="outlined" width="100%" onPress={handleLogout}>
+                                    <Button
+                                        size="$5"
+                                        variant="outlined"
+                                        onPress={() => navigateAndClose('/(profile)/profile')}
+                                    >
                                         <XStack alignItems="center" gap="$2">
-                                            <LogOut size={24} color={"$accent8"}/>
-                                            <Text fontSize="$5">
+                                            <User size={20} color={"$accent8"}/>
+                                            <Text fontSize="$5" fontWeight="600">
+                                                {translate('navigation.profile')}
+                                            </Text>
+                                        </XStack>
+                                    </Button>
+                                    <Button
+                                        size="$5"
+                                        variant="outlined"
+                                        onPress={handleLogout}
+                                    >
+                                        <XStack alignItems="center" gap="$2">
+                                            <LogOut size={20} color={"$accent8"}/>
+                                            <Text fontSize="$5" fontWeight="600">
                                                 {translate('auth.logout')}
                                             </Text>
                                         </XStack>
