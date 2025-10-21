@@ -38,8 +38,10 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
     const cardWidth = 350;
 
     const handleNavigateToDashboard = () => {
-        closeOverlay?.();
         router.push(`/dashboard/${locationWithBoxes.location.id}`);
+        setTimeout(() => {
+            closeOverlay?.();
+        }, 100);
     };
 
     return (
@@ -147,6 +149,7 @@ export const SensorPopup: React.FC<SensorPopupProps> = ({
                     }}
                     borderRadius="$3"
                     fontWeight="600"
+                    userSelect="none"
                     fontSize="$4"
                 >
                     {t('sensor.viewDashboard')}
@@ -294,7 +297,7 @@ function MeasurementCard({measurementType, value}: MeasurementCardProps) {
                 >
                     {icon}
                 </YStack>
-                <Text fontSize="$2" color="$color" fontWeight="500" numberOfLines={2}
+                <Text fontSize="$5" color="$color" fontWeight="500" numberOfLines={2}
                       lineHeight="$1">
                     {getMeasurementLabel(measurementType, t)}
                 </Text>

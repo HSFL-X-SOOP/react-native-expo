@@ -12,7 +12,6 @@ export const MeasurementCard: React.FC<MeasurementCardProps> = ({measurementType
 
     return (
         <Card
-            elevate
             bordered
             animation="quick"
             scale={0.99}
