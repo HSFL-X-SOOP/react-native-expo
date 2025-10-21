@@ -5,7 +5,7 @@ import {useTheme} from "tamagui";
 type MapZoomControlProps = {
     zoomLevel: number;
     minMaxZoomLevel: { min: number; max: number };
-    setZoomLevel: (level: number) => void;
+    setZoomLevel: (level: number | ((prev: number) => number)) => void;
     setCurrentCoordinate: (coord: [number, number]) => void;
     homeCoordinate: [number, number];
 };
