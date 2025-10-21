@@ -481,11 +481,9 @@ export default function DashboardScreen() {
                             />
                         </XStack>
 
-                        <XStack
+                        <YStack
                             gap="$3"
                             width="100%"
-                            justifyContent={media.md ? "center" : "space-between"}
-                            flexWrap="wrap"
                         >
                             <LineChartCard
                                 title={t('dashboard.charts.waterTemperature')}
@@ -508,7 +506,7 @@ export default function DashboardScreen() {
                                 color="#10B981"
                                 currentValue={currentWaveHeight}
                             />
-                        </XStack>
+                        </YStack>
                     </YStack>
                 </YStack>
             </ScrollView>
