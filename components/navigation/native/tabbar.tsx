@@ -167,7 +167,7 @@ export function TabBarNative() {
                                 <XStack
                                     alignItems={"center"}
                                     justifyContent="center"
-                                    gap="$4"
+                                    gap="$6"
                                     paddingVertical="$2"
                                 >
                                     <YStack
@@ -189,7 +189,6 @@ export function TabBarNative() {
                                         <Text
                                             fontSize="$4"
                                             fontWeight="500"
-                                            color="$accent8"
                                             textAlign={"center"}
                                             textOverflow={"ellipsis"}
                                         >
@@ -216,7 +215,6 @@ export function TabBarNative() {
                                         <Text
                                             fontSize="$4"
                                             fontWeight="500"
-                                            color="$accent8"
                                             textAlign={"center"}
                                             textOverflow={"ellipsis"}
                                         >
@@ -243,7 +241,6 @@ export function TabBarNative() {
                                         <Text
                                             fontSize="$4"
                                             fontWeight="500"
-                                            color="$accent8"
                                             textAlign={"center"}
                                             textOverflow={"ellipsis"}
                                         >
@@ -353,3 +350,5 @@ export function TabBarNative() {
         </>
     );
 }
+
+

@@ -279,9 +279,9 @@ export default function DashboardScreen() {
                             color="white"
                             fontSize={media.lg ? "$10" : "$8"}
                             fontWeight="700"
-                            textShadowColor="rgba(0,0,0,0.5)"
-                            textShadowOffset={{width: 0, height: 2}}
-                            textShadowRadius={4}
+                            textShadowColor="rgba(0,0,0,0.2)"
+                            textShadowOffset={{width: 0, height: 1}}
+                            textShadowRadius={2}
                         >
                             {name || t('dashboard.loading')}
                         </H1>
@@ -306,7 +306,6 @@ export default function DashboardScreen() {
                 >
 
                     <Card
-                        elevate
                         bordered
                         animation="quick"
                         backgroundColor={isDark ? '$gray1' : '$background'}
@@ -390,7 +389,6 @@ export default function DashboardScreen() {
                                 .map((measurement, index) => (
                                     <Card
                                         key={index}
-                                        elevate
                                         bordered
                                         backgroundColor={isDark ? '$gray1' : '$background'}
                                         flex={media.md ? undefined : 1}
