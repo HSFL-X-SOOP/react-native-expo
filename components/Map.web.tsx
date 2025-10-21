@@ -6,14 +6,14 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
 import {useMemo, useState, useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
-import ClusterMarker from './map/web/ClusterMarker';
-import MapZoomControl from './map/MapZoomControl';
-import SensorMarker from './map/web/SensorMarker';
+import ClusterMarker from './map/markers/web/ClusterMarker';
+import MapZoomControl from './map/controls/MapZoomControl';
+import SensorMarker from './map/markers/web/SensorMarker';
 import {BoxType, LocationWithBoxes} from '@/api/models/sensor';
-import MapSensorDrawer from './map/MapSensorDrawer';
-import SensorList from './map/SensorList';
-import MapDrawerToggle from './map/MapDrawerToggle';
-import MapSensorBottomSheet, {MapSensorBottomSheetRef} from './map/MapSensorBottomSheet';
+import MapSensorDrawer from './map/drawers/MapSensorDrawer';
+import SensorList from './map/sensors/SensorList';
+import MapDrawerToggle from './map/controls/MapDrawerToggle';
+import MapSensorBottomSheet, {MapSensorBottomSheetRef} from './map/controls/MapSensorBottomSheet';
 import {useIsMobileWeb, useIsMobile} from '@/hooks/useIsMobileWeb';
 
 interface MapProps {

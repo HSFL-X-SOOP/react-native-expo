@@ -1,8 +1,8 @@
 import {LocationWithBoxes} from "@/api/models/sensor";
 import {Marker} from "@vis.gl/react-maplibre";
-import {SensorMarkerContent} from "../MapSensorTemperatureText";
+import {SensorMarkerContent} from "../../sensors/MapSensorTemperatureText";
 import {Popover, Dialog, YStack} from "tamagui";
-import {SensorPopup} from "../MapSensorMeasurements";
+import {SensorPopup} from "../../sensors/MapSensorMeasurements";
 import {useState} from "react";
 import {useIsMobileWeb} from "@/hooks/useIsMobileWeb";
 

@@ -1,7 +1,8 @@
 import {useTranslation} from "@/hooks/useTranslation";
 import {ChevronDown} from "@tamagui/lucide-icons";
 import {useMemo} from "react";
-import {Adapt, Select, Sheet, YStack} from "tamagui";
+import {SelectWithSheet} from "@/components/ui/SelectWithSheet";
+import type {SelectItem} from "@/types/select";
 
 export type ChartTimeRange =
     "today"
@@ -22,7 +23,7 @@ export function TimeRangeDropdown(props: TimeRangeDropdownProps) {
     const {selectedTimeRange, setTimeRange, isDark} = props;
     const {t} = useTranslation();
 
-    const timeRangeOptions: { value: ChartTimeRange; label: string }[] = useMemo(() => [
+    const timeRangeOptions: SelectItem<ChartTimeRange>[] = useMemo(() => [
         {value: "today", label: t('dashboard.timeRange.todayButton')},
         {value: "yesterday", label: t('dashboard.timeRange.yesterdayButton')},
         {value: "last7days", label: t('dashboard.timeRange.last7daysButton')},
@@ -33,62 +34,19 @@ export function TimeRangeDropdown(props: TimeRangeDropdownProps) {
     ], [t]);
 
     return (
-        <Select
+        <SelectWithSheet
+            id="time-range-select"
+            name="timeRange"
+            items={timeRangeOptions}
             value={selectedTimeRange}
-            onValueChange={(value) => setTimeRange(value as ChartTimeRange)}
-        >
-            <Select.Trigger
-                width={180}
-                iconAfter={ChevronDown}
-                backgroundColor={isDark ? '$gray8' : '$gray2'}
-                borderColor={isDark ? '$gray7' : '$gray4'}
-            >
-                <Select.Value placeholder={t('dashboard.timeRange.selectRange')}/>
-            </Select.Trigger>
-
-            <Adapt when="sm" platform="touch">
-                <Sheet
-                    native
-                    modal
-                    dismissOnSnapToBottom
-                    animationConfig={{
-                        type: 'spring',
-                        damping: 20,
-                        mass: 1.2,
-                        stiffness: 250,
-                    }}
-                >
-                    <Sheet.Frame>
-                        <Sheet.ScrollView>
-                            <Adapt.Contents/>
-                        </Sheet.ScrollView>
-                    </Sheet.Frame>
-                    <Sheet.Overlay
-                        animation="lazy"
-                        enterStyle={{opacity: 0}}
-                        exitStyle={{opacity: 0}}
-                    />
-                </Sheet>
-            </Adapt>
-
-            <Select.Content zIndex={200000}>
-                <Select.ScrollUpButton/>
-                <Select.Viewport minWidth={200}>
-                    <YStack>
-                        {timeRangeOptions.map((option, index) => (
-                            <Select.Item
-                                key={option.value}
-                                index={index}
-                                value={option.value}
-                            >
-                                <Select.ItemText>{option.label}</Select.ItemText>
-                                <Select.ItemIndicator marginLeft="auto"/>
-                            </Select.Item>
-                        ))}
-                    </YStack>
-                </Select.Viewport>
-                <Select.ScrollDownButton/>
-            </Select.Content>
-        </Select>
+            onValueChange={setTimeRange}
+            placeholder={t('dashboard.timeRange.selectRange')}
+            triggerProps={{
+                width: 180,
+                iconAfter: ChevronDown,
+                backgroundColor: isDark ? '$gray8' : '$gray2',
+                borderColor: isDark ? '$gray7' : '$gray4',
+            }}
+        />
     );
 }
