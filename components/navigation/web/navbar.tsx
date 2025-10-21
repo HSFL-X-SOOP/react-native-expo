@@ -62,24 +62,6 @@ export function NavbarWeb() {
                             </Text>
                         </XStack>
                     </Link>
-
-                    <Link href={"/sensors" as Href}>
-                        <XStack alignItems="center" gap="$3">
-                            <LOGO color={t.accent8?.val} size={26}/>
-                            <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
-                                {translate('navigation.sensors')}
-                            </Text>
-                        </XStack>
-                    </Link>
-
-                    <Link href={"/api" as Href}>
-                        <XStack alignItems="center" gap="$3">
-                            <CloudIcon color={t.accent8?.val} size={26}/>
-                            <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
-                                {translate('navigation.api')}
-                            </Text>
-                        </XStack>
-                    </Link>
                 </XStack>
             )}
 
@@ -115,6 +97,72 @@ export function NavbarWeb() {
                         >
                             <Tooltip.Arrow/>
                             <Text fontSize="$3">{translate('navigation.projectWebsite')}</Text>
+                        </Tooltip.Content>
+                    </Tooltip>
+
+                    <Tooltip placement="bottom" delay={200}>
+                        <Tooltip.Trigger>
+                            <Button
+                                circular
+                                size="$3"
+                                chromeless
+                                onPress={() => router.push("/(about)/api")}
+                                cursor="pointer"
+                            >
+                                <CloudIcon color={t.accent8?.val} size={26}/>
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content
+                            enterStyle={{x: 0, y: -5, opacity: 0, scale: 0.9}}
+                            exitStyle={{x: 0, y: -5, opacity: 0, scale: 0.9}}
+                            scale={1}
+                            x={0}
+                            y={0}
+                            opacity={1}
+                            animation={[
+                                'quick',
+                                {
+                                    opacity: {
+                                        overshootClamping: true,
+                                    },
+                                },
+                            ]}
+                        >
+                            <Tooltip.Arrow/>
+                            <Text fontSize="$3">{translate('navigation.api')}</Text>
+                        </Tooltip.Content>
+                    </Tooltip>
+
+                    <Tooltip placement="bottom" delay={200}>
+                        <Tooltip.Trigger>
+                            <Button
+                                circular
+                                size="$3"
+                                chromeless
+                                onPress={() => router.push("/(about)/sensors")}
+                                cursor="pointer"
+                            >
+                                <LOGO color={t.accent8?.val} size={26}/>
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content
+                            enterStyle={{x: 0, y: -5, opacity: 0, scale: 0.9}}
+                            exitStyle={{x: 0, y: -5, opacity: 0, scale: 0.9}}
+                            scale={1}
+                            x={0}
+                            y={0}
+                            opacity={1}
+                            animation={[
+                                'quick',
+                                {
+                                    opacity: {
+                                        overshootClamping: true,
+                                    },
+                                },
+                            ]}
+                        >
+                            <Tooltip.Arrow/>
+                            <Text fontSize="$3">{translate('navigation.sensors')}</Text>
                         </Tooltip.Content>
                     </Tooltip>
 

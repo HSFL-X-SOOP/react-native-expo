@@ -1,5 +1,5 @@
 import {LocationWithBoxes, BoxType} from "@/api/models/sensor";
-import {SensorMarkerSvg} from "./SensorMarkerSvg";
+import {SensorMarkerSvg} from "../markers/SensorMarkerSvg";
 import {useThemeContext} from "@/context/ThemeSwitch.tsx";
 
 type SensorMarkerContentProps = {

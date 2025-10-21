@@ -54,13 +54,26 @@ const MapSensorBottomSheet = forwardRef<MapSensorBottomSheetRef, MapSensorBottom
                                                                                              }, ref) => {
     const [position, setPosition] = useState(1);
     const imperativeHandleRef = useRef<MapSensorBottomSheetRef | null>(null);
+    const pendingSnapRef = useRef(false);
 
     const registerImperativeHandle = useCallback((handle: MapSensorBottomSheetRef | null) => {
         imperativeHandleRef.current = handle;
+
+        if (handle && pendingSnapRef.current) {
+            pendingSnapRef.current = false;
+            handle.snapToPeek();
+        }
     }, []);
 
     const runSnapToPeek = useCallback(() => {
-        imperativeHandleRef.current?.snapToPeek();
+        const handle = imperativeHandleRef.current;
+
+        if (!handle) {
+            pendingSnapRef.current = true;
+            return;
+        }
+
+        handle.snapToPeek();
     }, []);
 
     useImperativeHandle(ref, () => ({
@@ -70,6 +83,8 @@ const MapSensorBottomSheet = forwardRef<MapSensorBottomSheetRef, MapSensorBottom
     useEffect(() => {
         if (isOpen) {
             runSnapToPeek();
+        } else {
+            pendingSnapRef.current = false;
         }
     }, [isOpen, runSnapToPeek]);
 

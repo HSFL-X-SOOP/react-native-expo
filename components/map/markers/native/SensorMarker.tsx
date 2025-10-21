@@ -2,8 +2,8 @@ import {LocationWithBoxes} from "@/api/models/sensor";
 import {PointAnnotation} from "@maplibre/maplibre-react-native";
 import React, {useState} from "react";
 import {Modal, Pressable, StyleSheet, View} from "react-native";
-import {SensorPopup} from "../MapSensorMeasurements";
-import {SensorMarkerContent} from "../MapSensorTemperatureText";
+import {SensorPopup} from "../../sensors/MapSensorMeasurements";
+import {SensorMarkerContent} from "../../sensors/MapSensorTemperatureText";
 import {Theme, YStack} from "tamagui";
 import {useThemeContext} from "@/context/ThemeSwitch";
 

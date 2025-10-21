@@ -3,13 +3,13 @@ import {useSupercluster} from "@/hooks/useSupercluster";
 import {Camera, MapView} from "@maplibre/maplibre-react-native";
 import {useMemo, useState, useRef} from "react";
 import {View} from "react-native";
-import SensorMarker from "./map/native/SensorMarker";
-import ClusterMarker from "./map/native/ClusterMarker";
-import MapZoomControl from "./map/MapZoomControl";
+import SensorMarker from "./map/markers/native/SensorMarker";
+import ClusterMarker from "./map/markers/native/ClusterMarker";
+import MapZoomControl from "./map/controls/MapZoomControl";
 import {BoxType, LocationWithBoxes} from "@/api/models/sensor";
-import MapSensorBottomSheet, {MapSensorBottomSheetRef} from "./map/MapSensorBottomSheet";
-import SensorList from "./map/SensorList";
-import MapDrawerToggle from "./map/MapDrawerToggle";
+import MapSensorBottomSheet, {MapSensorBottomSheetRef} from "./map/controls/MapSensorBottomSheet";
+import SensorList from "./map/sensors/SensorList";
+import MapDrawerToggle from "./map/controls/MapDrawerToggle";
 
 interface MapProps {
     module1Visible?: boolean;
