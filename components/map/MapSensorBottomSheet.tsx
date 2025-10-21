@@ -1,5 +1,14 @@
 import {Sheet, YStack} from 'tamagui';
-import {ReactNode, useState, useImperativeHandle, forwardRef, useEffect} from 'react';
+import {useSheet} from '@tamagui/sheet';
+import {
+    ReactNode,
+    useState,
+    useImperativeHandle,
+    forwardRef,
+    useEffect,
+    useRef,
+    useCallback
+} from 'react';
 
 interface MapSensorBottomSheetProps {
     isOpen: boolean;
@@ -11,25 +20,58 @@ export interface MapSensorBottomSheetRef {
     snapToPeek: () => void;
 }
 
+interface SheetImperativeBridgeProps {
+    setLocalPosition: (updater: number | ((prev: number) => number)) => void;
+    register: (handle: MapSensorBottomSheetRef | null) => void;
+}
+
+const SheetImperativeBridge = ({setLocalPosition, register}: SheetImperativeBridgeProps) => {
+    const sheet = useSheet();
+
+    const snapToPeek = useCallback(() => {
+        setLocalPosition(prev => (prev === 1 ? prev : 1));
+
+        sheet?.setPositionImmediate?.(1);
+        sheet?.setPosition?.(1);
+    }, [setLocalPosition, sheet]);
+
+    useEffect(() => {
+        const handle: MapSensorBottomSheetRef = {
+            snapToPeek
+        };
+
+        register(handle);
+        return () => register(null);
+    }, [register, snapToPeek]);
+
+    return null;
+};
+
 const MapSensorBottomSheet = forwardRef<MapSensorBottomSheetRef, MapSensorBottomSheetProps>(({
                                                                                                  isOpen,
                                                                                                  onOpenChange,
                                                                                                  children
                                                                                              }, ref) => {
     const [position, setPosition] = useState(1);
+    const imperativeHandleRef = useRef<MapSensorBottomSheetRef | null>(null);
+
+    const registerImperativeHandle = useCallback((handle: MapSensorBottomSheetRef | null) => {
+        imperativeHandleRef.current = handle;
+    }, []);
+
+    const runSnapToPeek = useCallback(() => {
+        imperativeHandleRef.current?.snapToPeek();
+    }, []);
 
     useImperativeHandle(ref, () => ({
-        snapToPeek: () => {
-            setPosition(1);
-        }
-    }));
+        snapToPeek: runSnapToPeek
+    }), [runSnapToPeek]);
 
-    // Ensure position resets to peek when sheet is opened
     useEffect(() => {
         if (isOpen) {
-            setPosition(1);
+            runSnapToPeek();
         }
-    }, [isOpen]);
+    }, [isOpen, runSnapToPeek]);
 
     return (
         <Sheet
@@ -42,10 +84,14 @@ const MapSensorBottomSheet = forwardRef<MapSensorBottomSheetRef, MapSensorBottom
             dismissOnOverlayPress={false}
             animation="medium"
             zIndex={100000}
-            position={position}
+            defaultPosition={1}
             onPositionChange={setPosition}
             forceRemoveScrollEnabled={false}
         >
+            <SheetImperativeBridge
+                setLocalPosition={setPosition}
+                register={registerImperativeHandle}
+            />
             <Sheet.Overlay
                 animation="lazy"
                 enterStyle={{opacity: 0}}
