@@ -342,39 +342,80 @@ export function NavbarWeb() {
                                     gap="$4"
                                     paddingVertical="$2"
                                 >
-                                    <Button
-                                        circular
-                                        size="$3"
-                                        padding={"$2"}
-                                        backgroundColor={"$accent1"}
-                                        chromeless
-                                        onPress={() => router.push("/(about)/api")}
-                                        cursor="pointer"
+                                    <YStack
+                                        alignItems={"center"}
+                                        justifyContent="center"
+                                        gap="$1"
+                                        paddingVertical="$2"
                                     >
-                                        <CloudIcon color={t.accent8?.val} size={26}/>
-                                    </Button>
-                                    <Button
-                                        circular
-                                        size="$3"
-                                        padding={"$2"}
-                                        backgroundColor={"$accent1"}
-                                        chromeless
-                                        onPress={() => router.push("/(about)/sensors")}
-                                        cursor="pointer"
+                                        <Button
+                                            circular
+                                            size="$4"
+                                            padding={"$2"}
+                                            backgroundColor={"$accent1"}
+                                            chromeless
+                                            onPress={() => router.push("/(about)/api")}
+                                            cursor="pointer"
+                                        >
+                                            <CloudIcon color={t.accent8?.val} size={30}/>
+                                        </Button>
+                                        <Text
+                                            fontSize="$4"
+                                            fontWeight="500"
+                                            color="$accent8"
+                                            textAlign={"center"}
+                                            textOverflow={"ellipsis"}>API</Text>
+                                    </YStack>
+
+                                    <YStack
+                                        alignItems={"center"}
+                                        justifyContent="center"
+                                        gap="$1"
+                                        paddingVertical="$2"
                                     >
-                                        <LOGO color={t.accent8?.val} size={26}/>
-                                    </Button>
-                                    <Button
-                                        circular
-                                        size="$3"
-                                        padding={"$2"}
-                                        backgroundColor={"$accent1"}
-                                        chromeless
-                                        onPress={() => window.open('https://projekt.marlin-live.com', '_blank')}
-                                        cursor="pointer"
+                                        <Button
+                                            circular
+                                            size="$4"
+                                            padding={"$2"}
+                                            backgroundColor={"$accent1"}
+                                            chromeless
+                                            onPress={() => router.push("/(about)/sensors")}
+                                            cursor="pointer"
+                                        >
+                                            <LOGO color={t.accent8?.val} size={30}/>
+                                        </Button>
+                                        <Text
+                                            fontSize="$4"
+                                            fontWeight="500"
+                                            color="$accent8"
+                                            textAlign={"center"}
+                                            textOverflow={"ellipsis"}>Sensoren</Text>
+                                    </YStack>
+
+                                    <YStack
+                                        alignItems={"center"}
+                                        justifyContent="center"
+                                        gap="$1"
+                                        paddingVertical="$2"
                                     >
-                                        <BookOpen color={t.accent8?.val} size={26}/>
-                                    </Button>
+                                        <Button
+                                            circular
+                                            size="$4"
+                                            padding={"$2"}
+                                            backgroundColor={"$accent1"}
+                                            chromeless
+                                            onPress={() => window.open('https://projekt.marlin-live.com', '_blank')}
+                                            cursor="pointer"
+                                        >
+                                            <BookOpen color={t.accent8?.val} size={30}/>
+                                        </Button>
+                                        <Text
+                                            fontSize="$4"
+                                            fontWeight="500"
+                                            color="$accent8"
+                                            textAlign={"center"}
+                                            textOverflow={"ellipsis"}>Projekt</Text>
+                                    </YStack>
                                 </XStack>
                             </YStack>
 
