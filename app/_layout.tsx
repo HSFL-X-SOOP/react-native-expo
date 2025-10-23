@@ -26,7 +26,14 @@ import {ThemeProvider, useThemeContext} from '@/context/ThemeSwitch.tsx'
 import {usePathname, Slot} from 'expo-router'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import type {ToastType} from '@/components/useToast'
+import firebase from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging';
+import { AppRegistry } from 'react-native';
+import { expo as appName } from '../app.json';
+import {PermissionsAndroid} from 'react-native';
 
+//Wird für die Push Notifications benötigt
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 function CurrentToast() {
     const currentToast = useToastState()
@@ -167,6 +174,12 @@ export default function RootLayout() {
         Oswald_600SemiBold,
         Oswald_700Bold,
     })
+
+    async function checkFCM() {
+    const token = await messaging().getToken();
+        console.log('🔥 FCM Token:', token);
+    }
+    checkFCM();
 
     if (!loaded) return null
 
