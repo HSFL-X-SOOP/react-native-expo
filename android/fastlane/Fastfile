@@ -5,10 +5,6 @@ platform :android do
   lane :internal_testing do
     ENV['APP_MODE'] = 'test'
 
-    increment_version_code(
-      gradle_file_path: "app/build.gradle"
-    )
-
     gradle(
       task: "bundle",
       build_type: "Release",
@@ -35,10 +31,6 @@ platform :android do
   lane :closed_testing do
     ENV['APP_MODE'] = 'test'
 
-    increment_version_code(
-      gradle_file_path: "app/build.gradle"
-    )
-
     gradle(
       task: "bundle",
       build_type: "Release",
@@ -51,7 +43,7 @@ platform :android do
     )
 
     upload_to_play_store(
-      track: 'beta',
+      track: 'Marlin',
       aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH],
       json_key_data: ENV['PLAY_STORE_JSON_KEY'],
       skip_upload_metadata: true,
@@ -64,10 +56,6 @@ platform :android do
   desc "Deploy a new version to the Google Play production track"
   lane :production do
     ENV['APP_MODE'] = 'prod'
-
-    increment_version_code(
-      gradle_file_path: "app/build.gradle"
-    )
 
     gradle(
       task: "bundle",

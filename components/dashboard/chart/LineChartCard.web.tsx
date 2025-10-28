@@ -1,8 +1,8 @@
-import { useThemeContext } from "@/context/ThemeSwitch";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Activity } from "@tamagui/lucide-icons";
-import { useMemo, useState } from "react";
-import { Card, H3, Text, useMedia, XStack, YStack } from "tamagui";
+import {useThemeContext} from "@/context/ThemeSwitch";
+import {useTranslation} from "@/hooks/useTranslation";
+import {Activity} from "@tamagui/lucide-icons";
+import {useMemo, useState, useRef, useEffect, useLayoutEffect} from "react";
+import {Card, H3, Text, useMedia, XStack, YStack} from "tamagui";
 
 export type LineChartCardProps = {
     title: string,
@@ -13,17 +13,47 @@ export type LineChartCardProps = {
 }
 
 export const LineChartCard: React.FC<LineChartCardProps> = ({
-    title,
-    icon,
-    chartData,
-    color = "#4dabf7",
-    currentValue
-}) => {
+                                                                title,
+                                                                icon,
+                                                                chartData,
+                                                                color = "#4dabf7",
+                                                                currentValue
+                                                            }) => {
     const {isDark} = useThemeContext();
     const {t} = useTranslation();
     const media = useMedia();
     const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [mousePosition, setMousePosition] = useState({x: 0, y: 0});
+    const [chartWidth, setChartWidth] = useState(800);
+
+    const containerRef = (node: HTMLDivElement | null) => {
+        if (node) {
+            const width = node.offsetWidth;
+            if (width > 0) {
+                setChartWidth(Math.max(360, width));
+            }
+        }
+    };
+
+    useEffect(() => {
+        const element = document.querySelector('[data-chart-container="true"]') as HTMLElement;
+        if (!element) return;
+
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const width = entry.contentRect.width;
+                if (width > 0) {
+                    setChartWidth(Math.max(360, width));
+                }
+            }
+        });
+
+        resizeObserver.observe(element);
+
+        return () => {
+            resizeObserver.disconnect();
+        };
+    }, []);
 
     const {data, displayData, minValue, maxValue} = useMemo(() => {
         if (chartData.length === 0) {
@@ -44,9 +74,8 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
         };
     }, [chartData]);
 
-    const chartWidth = media.md ? 360 : 460;
     const chartHeight = media.md ? 200 : 260;
-    const padding = { top: 20, right: 20, bottom: 40, left: 50 };
+    const padding = {top: 20, right: 20, bottom: 40, left: 50};
     const innerWidth = chartWidth - padding.left - padding.right;
     const innerHeight = chartHeight - padding.top - padding.bottom;
 
@@ -79,18 +108,29 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             path += ` Q ${cpx} ${points[i].y} ${points[i].x} ${points[i].y}`;
         }
 
-        return { path, points };
+        return {path, points};
     }, [displayData, innerWidth, innerHeight, minValue, maxValue]);
 
     const handleMouseMove = (event: React.MouseEvent<SVGElement>) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        const x = event.clientX - rect.left - padding.left;
-        const y = event.clientY - rect.top - padding.top;
+        const svg = event.currentTarget;
+        const rect = svg.getBoundingClientRect();
+
+        // Calculate the scale factor between viewBox and actual size
+        const scaleX = rect.width / chartWidth;
+        const scaleY = rect.height / chartHeight;
+
+        // Get mouse position relative to SVG
+        const mouseX = (event.clientX - rect.left) / scaleX;
+        const mouseY = (event.clientY - rect.top) / scaleY;
+
+        // Adjust for padding
+        const x = mouseX - padding.left;
+        const y = mouseY - padding.top;
 
         if (x >= 0 && x <= innerWidth && y >= 0 && y <= innerHeight) {
             const pointIndex = Math.round((x / innerWidth) * (displayData.length - 1));
             setHoveredPoint(Math.min(Math.max(0, pointIndex), displayData.length - 1));
-            setMousePosition({ x: event.clientX - rect.left, y: event.clientY - rect.top });
+            setMousePosition({x: mouseX, y: mouseY});
         } else {
             setHoveredPoint(null);
         }
@@ -101,10 +141,8 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             elevate
             bordered
             backgroundColor={isDark ? '$gray1' : '$background'}
-            flex={media.md ? undefined : 1}
-            width={media.md ? "100%" : undefined}
+            width="100%"
             minWidth={280}
-            marginBottom={media.md ? "$3" : 0}
         >
             <Card.Header padded>
                 <XStack gap="$2" alignItems="center" justifyContent="space-between">
@@ -138,13 +176,15 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
             </Card.Header>
             <Card.Footer padded paddingTop="$0">
                 {displayData.length > 0 ? (
-                    <YStack position="relative" width="100%">
+                    <YStack position="relative" width="100%" ref={containerRef} data-chart-container="true">
                         <svg
-                            width={chartWidth}
+                            width="100%"
                             height={chartHeight}
+                            viewBox={`0 0 ${chartWidth} ${chartHeight}`}
                             onMouseMove={handleMouseMove}
                             onMouseLeave={() => setHoveredPoint(null)}
-                            style={{ cursor: 'crosshair' }}
+                            style={{cursor: 'crosshair', maxWidth: '100%'}}
+                            preserveAspectRatio="xMidYMid meet"
                         >
                             <g transform={`translate(${padding.left}, ${padding.top})`}>
                                 {/* Grid lines */}
@@ -183,6 +223,32 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                                     stroke={gridColor}
                                 />
 
+                                {/* X axis labels (time) */}
+                                {displayData.length > 0 && (() => {
+                                    const maxLabels = 6;
+                                    const showEvery = Math.max(1, Math.ceil(displayData.length / maxLabels));
+                                    return displayData
+                                        .map((item, index) => {
+                                            if (index % showEvery === 0 || index === displayData.length - 1) {
+                                                const xPos = (index / (displayData.length - 1 || 1)) * innerWidth;
+                                                return (
+                                                    <text
+                                                        key={`label-${index}`}
+                                                        x={xPos}
+                                                        y={innerHeight + 20}
+                                                        fill={textColor}
+                                                        fontSize="10"
+                                                        textAnchor="middle"
+                                                    >
+                                                        {item.label}
+                                                    </text>
+                                                );
+                                            }
+                                            return null;
+                                        })
+                                        .filter(Boolean);
+                                })()}
+
                                 {/* Y axis */}
                                 <line
                                     x1={0}
@@ -212,7 +278,7 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
                                         fill={color}
                                         stroke={isDark ? '#fff' : '#fff'}
                                         strokeWidth={hoveredPoint === index ? 2 : 0}
-                                        style={{ transition: 'all 0.2s' }}
+                                        style={{transition: 'all 0.2s'}}
                                     />
                                 ))}
 

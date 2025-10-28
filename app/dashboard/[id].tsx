@@ -30,8 +30,9 @@ import {
 } from '@tamagui/lucide-icons';
 import {LinearGradient} from 'expo-linear-gradient';
 import {useLocalSearchParams, useRouter} from 'expo-router';
-import {useEffect, useMemo, useRef, useState} from 'react';
-import {Animated, SafeAreaView, ScrollView, View} from 'react-native';
+import {useEffect, useMemo, useCallback, useRef, useState} from 'react';
+import type {ComponentProps} from 'react';
+import {Animated, LayoutChangeEvent, SafeAreaView, ScrollView, View} from 'react-native';
 import {
     Button,
     Card,
@@ -53,13 +54,13 @@ export default function DashboardScreen() {
     const {t} = useTranslation();
     const {isDark} = useThemeContext();
     const [showInfo, setShowInfo] = useState(false);
+    const [infoContentHeight, setInfoContentHeight] = useState(0);
     const infoHeight = useRef(new Animated.Value(0)).current;
     let {id} = useLocalSearchParams();
 
     if (!id) {
         id = "4";
     }
-
     const [timeRange, setTimeRange] = useState<ChartTimeRange>('today');
 
     const {data: allSensorData} = useSensorDataNew();
@@ -177,10 +178,69 @@ export default function DashboardScreen() {
         return measurement?.value;
     }, [filteredMeasurements]);
 
+    const infoItemWidth = media.md ? '48%' : '100%';
+
+    const renderHarborInfoContent = useCallback((extraProps?: Partial<ComponentProps<typeof Card.Footer>>) => (
+        <Card.Footer
+            padded
+            backgroundColor="$gray1"
+            borderTopWidth={1}
+            borderTopColor="$borderColor"
+            {...extraProps}
+        >
+            <XStack flexWrap="wrap" gap="$4" width="100%">
+                <XStack
+                    gap="$2"
+                    alignItems="center"
+                    flexGrow={1}
+                    flexShrink={1}
+                    style={{flexBasis: infoItemWidth, minWidth: 0}}
+                >
+                    <MapPin size={18} color="$gray10"/>
+                    <YStack>
+                        <Text fontSize="$1" color="$gray11">{t('dashboard.address')}</Text>
+                        <Text fontSize="$3">{t('dashboard.addressValue')}</Text>
+                    </YStack>
+                </XStack>
+                <XStack
+                    gap="$2"
+                    alignItems="center"
+                    flexGrow={1}
+                    flexShrink={1}
+                    style={{flexBasis: infoItemWidth, minWidth: 0}}
+                >
+                    <Clock size={18} color="$gray10"/>
+                    <YStack>
+                        <Text fontSize="$1" color="$gray11">{t('dashboard.openingHours')}</Text>
+                        <Text fontSize="$3">{t('dashboard.openingHoursValue')}</Text>
+                    </YStack>
+                </XStack>
+            </XStack>
+        </Card.Footer>
+    ), [infoItemWidth, t]);
+
+    const handleInfoLayout = useCallback((event: LayoutChangeEvent) => {
+        const {height} = event.nativeEvent.layout;
+        if (height <= 0 || height === infoContentHeight) {
+            return;
+        }
+
+        setInfoContentHeight(height);
+
+        if (showInfo) {
+            Animated.timing(infoHeight, {
+                toValue: height,
+                duration: 200,
+                useNativeDriver: false,
+            }).start();
+        }
+    }, [infoContentHeight, infoHeight, showInfo]);
+
     const toggleInfo = () => {
-        setShowInfo((prev) => !prev);
+        const nextShow = !showInfo;
+        setShowInfo(nextShow);
         Animated.timing(infoHeight, {
-            toValue: showInfo ? 0 : 100,
+            toValue: nextShow ? infoContentHeight : 0,
             duration: 300,
             useNativeDriver: false,
         }).start();
@@ -219,9 +279,9 @@ export default function DashboardScreen() {
                             color="white"
                             fontSize={media.lg ? "$10" : "$8"}
                             fontWeight="700"
-                            textShadowColor="rgba(0,0,0,0.5)"
-                            textShadowOffset={{width: 0, height: 2}}
-                            textShadowRadius={4}
+                            textShadowColor="rgba(0,0,0,0.2)"
+                            textShadowOffset={{width: 0, height: 1}}
+                            textShadowRadius={2}
                         >
                             {name || t('dashboard.loading')}
                         </H1>
@@ -246,7 +306,6 @@ export default function DashboardScreen() {
                 >
 
                     <Card
-                        elevate
                         bordered
                         animation="quick"
                         backgroundColor={isDark ? '$gray1' : '$background'}
@@ -281,33 +340,31 @@ export default function DashboardScreen() {
                             </XStack>
                         </Card.Header>
 
+                        <View
+                            style={{
+                                position: 'absolute',
+                                opacity: 0,
+                                pointerEvents: 'none',
+                                width: '100%',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                            }}
+                            onLayout={handleInfoLayout}
+                        >
+                            {renderHarborInfoContent()}
+                        </View>
+
                         <Animated.View
                             style={{
                                 overflow: "hidden",
                                 height: infoHeight,
                             }}
                         >
-                            {showInfo && (
-                                <Card.Footer padded backgroundColor="$gray1" borderTopWidth={1}
-                                             borderTopColor="$borderColor">
-                                    <XStack flexWrap="wrap" gap="$4">
-                                        <XStack gap="$2" alignItems="center" minWidth={200}>
-                                            <MapPin size={18} color="$gray10"/>
-                                            <YStack>
-                                                <Text fontSize="$1" color="$gray11">{t('dashboard.address')}</Text>
-                                                <Text fontSize="$3">{t('dashboard.addressValue')}</Text>
-                                            </YStack>
-                                        </XStack>
-                                        <XStack gap="$2" alignItems="center" minWidth={200}>
-                                            <Clock size={18} color="$gray10"/>
-                                            <YStack>
-                                                <Text fontSize="$1" color="$gray11">{t('dashboard.openingHours')}</Text>
-                                                <Text fontSize="$3">{t('dashboard.openingHoursValue')}</Text>
-                                            </YStack>
-                                        </XStack>
-                                    </XStack>
-                                </Card.Footer>
-                            )}
+                            {renderHarborInfoContent({
+                                pointerEvents: showInfo ? 'auto' : 'none',
+                                style: {opacity: showInfo ? 1 : 0},
+                            })}
                         </Animated.View>
                     </Card>
 
@@ -316,8 +373,9 @@ export default function DashboardScreen() {
                             <H3 fontSize="$5" fontWeight="600">{t('dashboard.currentMeasurements')}</H3>
                             <XStack gap="$1" alignItems="center">
                                 <Stack width={6} height={6} borderRadius="$5" backgroundColor="$green9"/>
-                                <Text fontSize="$2"
-                                      color="$gray11">{t('dashboard.live')} {formatTimeToLocal(latestTime)}</Text>
+                                <Text fontSize="$2" color="$gray11">
+                                    {(timeRange === 'today' || timeRange === 'yesterday') ? t('dashboard.live') : t('last.measurement')} {formatTimeToLocal(latestTime)}
+                                </Text>
                             </XStack>
                         </XStack>
                         <XStack
@@ -331,7 +389,6 @@ export default function DashboardScreen() {
                                 .map((measurement, index) => (
                                     <Card
                                         key={index}
-                                        elevate
                                         bordered
                                         backgroundColor={isDark ? '$gray1' : '$background'}
                                         flex={media.md ? undefined : 1}
@@ -424,11 +481,9 @@ export default function DashboardScreen() {
                             />
                         </XStack>
 
-                        <XStack
+                        <YStack
                             gap="$3"
                             width="100%"
-                            justifyContent={media.md ? "center" : "space-between"}
-                            flexWrap={media.md ? "wrap" : "nowrap"}
                         >
                             <LineChartCard
                                 title={t('dashboard.charts.waterTemperature')}
@@ -451,11 +506,10 @@ export default function DashboardScreen() {
                                 color="#10B981"
                                 currentValue={currentWaveHeight}
                             />
-                        </XStack>
+                        </YStack>
                     </YStack>
                 </YStack>
             </ScrollView>
         </SafeAreaView>
     );
 }
-

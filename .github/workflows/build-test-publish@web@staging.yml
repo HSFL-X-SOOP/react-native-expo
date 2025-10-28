@@ -1,9 +1,9 @@
-name: CI – Build & Deploy Frontend to Test Server
+name: Web – Build & Deploy Frontend to Test Server
 
 on:
   push:
     branches:
-      - staging
+      - 'staging@web'
 
 jobs:
   build-and-publish:
