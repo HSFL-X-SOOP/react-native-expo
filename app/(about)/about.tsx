@@ -76,7 +76,7 @@ export default function AboutScreen() {
             icon: TrendingUp,
             title: t('features.dashboard'),
             description: t('features.dashboardDesc'),
-            link: '/dashboard/5'
+            link: '/harbour/Stadthafen Flensburg "Im Jaich"'
         },
         {
             icon: Database,
