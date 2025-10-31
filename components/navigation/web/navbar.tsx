@@ -54,7 +54,7 @@ export function NavbarWeb() {
                         </XStack>
                     </Link>
 
-                    <Link href={'/harbour/Stadthafen Flensburg "Im Jaich"' as Href}>
+                    <Link href={'/marina/Stadthafen Flensburg "Im Jaich"' as Href}>
                         <XStack alignItems="center" gap="$3">
                             <LayoutDashboard color={t.accent8?.val} size={26}/>
                             <Text fontSize="$6" fontWeight={"500"} alignSelf={"center"} color={"$accent8"}>
@@ -314,7 +314,7 @@ export function NavbarWeb() {
                                     </XStack>
                                 </Link>
 
-                                <Link href={'/harbour/Stadthafen Flensburg "Im Jaich"' as Href} onPress={() => setIsMenuOpen(false)}>
+                                <Link href={'/marina/Stadthafen Flensburg "Im Jaich"' as Href} onPress={() => setIsMenuOpen(false)}>
                                     <XStack
                                         alignItems="center"
                                         gap="$3"
