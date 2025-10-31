@@ -16,7 +16,7 @@ export function NavigateDashboardDropdownMenu(props: NavigateDashboardDropdownMe
     const {router, isDark, sensorLocations, selectedMarina} = props;
 
     const handleValueChange = (value: string) => {
-        router.push({ pathname: '/(dashboard)/harbour/[name]', params: { name: value } });
+        router.push({ pathname: '/(dashboard)/marina/[name]', params: { name: value } });
     };
 
     const locationOptions: SelectItem<string>[] = useMemo(() =>

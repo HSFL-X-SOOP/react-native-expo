@@ -57,7 +57,7 @@ export default function DashboardScreen() {
     const [infoContentHeight, setInfoContentHeight] = useState(0);
     const infoHeight = useRef(new Animated.Value(0)).current;
     let {name} = useLocalSearchParams();
-    let [harbourID, setHarbourID] = useState<number | null>(null);
+    let [marinaID, setMarinaID] = useState<number | null>(null);
 
     if (!name) {
         name = 'Stadthafen Flensburg "Im Jaich"';
@@ -87,7 +87,7 @@ export default function DashboardScreen() {
         [allSensorData]
     );
 
-    const GetHarbourID = (name: string, sensorLocations: MarinaNameWithId[]): number | null => {
+    const GetMarinaID = (name: string, sensorLocations: MarinaNameWithId[]): number | null => {
         for (const location of sensorLocations) {
             if (location.name === name) {
                 return location.id;
@@ -97,8 +97,8 @@ export default function DashboardScreen() {
     }
 
     useEffect(() => {
-        const id = GetHarbourID(name as string, sensorLocations);
-        setHarbourID(id);
+        const id = GetMarinaID(name as string, sensorLocations);
+        setMarinaID(id);
     }, [sensorLocations]);
 
 
@@ -136,7 +136,7 @@ export default function DashboardScreen() {
         }
     }, [timeRange]);
 
-    const {data: timeRangeData} = useSensorDataTimeRange(Number(harbourID), apiTimeRange);
+    const {data: timeRangeData} = useSensorDataTimeRange(Number(marinaID), apiTimeRange);
 
     const harbourName = useMemo(() => timeRangeData?.location.name || "", [timeRangeData]);
 
