@@ -155,6 +155,11 @@ function BoxMeasurements({box}: BoxMeasurementsProps) {
 
     if (!box.measurementTimes[0]) return null;
 
+    // TODO - Entfernen wenn Anomalieerkennung im Backend implementiert ist - vorerst nur für WTemp, da hier die meisten fehlerhaften Werte auftreten
+    if (box.type === BoxType.WaterBox && box.measurementTimes[0].measurements.waterTemperature > 40) {
+        box.measurementTimes[0].measurements.waterTemperature = 0;
+    }
+
     return (
         <YStack gap="$2.5">
             <XStack
