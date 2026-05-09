@@ -383,6 +383,25 @@ export default function DashboardScreen({selectedMarinaName = 'Stadthafen Flensb
         </Card.Footer>
     ), [infoItemWidth, t, detailedLocation]);
 
+    // TODO - Entfernen wenn Anomalieerkennung im Backend implementiert ist - vorerst nur für WTemp, da hier die meisten fehlerhaften Werte auftreten
+    filteredMeasurements.forEach(m => {
+        if (m.measurementType === "Temperature, water" && m.value !== null && m.value > 40) {
+            m.value = 0;
+        }
+    });
+
+    // TODO - Entfernen wenn Anomalieerkennung im Backend implementiert ist - vorerst nur für WTemp, da hier die meisten fehlerhaften Werte auftreten
+    timeRangeData?.boxes[0]?.measurementTimes.forEach((entry: any, index: number, arr: any[]) => {
+        if (entry.measurements?.waterTemperature) {
+            if (entry.measurements.waterTemperature > 40) {
+                const previousEntry = arr[index - 1];
+
+                entry.measurements.waterTemperature =
+                    previousEntry?.measurements?.waterTemperature ?? 0;
+            }
+        }
+    });
+
     // Render
     return (
         <View style={{flex: 1}}>
