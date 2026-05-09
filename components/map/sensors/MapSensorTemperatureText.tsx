@@ -26,6 +26,10 @@ export const SensorMarkerContent: React.FC<SensorMarkerContentProps> = ({locatio
             } else {
                 valueToShow = box?.measurementTimes.find(measurement => measurement.measurements.waterTemperature)?.measurements.waterTemperature ?? -0;
             }
+            // TODO - Entfernen wenn Anomalieerkennung im Backend implementiert ist - vorerst nur für WTemp, da hier die meisten fehlerhaften Werte auftreten
+            if (valueToShow > 40) {
+                valueToShow = 0;
+            }
             metricSymbol = "°C";
             break;
         case "waterLevel":
