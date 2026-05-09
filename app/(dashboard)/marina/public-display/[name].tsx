@@ -193,6 +193,13 @@ export default function PublicDisplayScreen({selectedMarinaName = 'Stadthafen Fl
 
     const leftHandSideFlexSize = 0.5;
     const rightHandSideFlexSize = 1;
+
+    // TODO - Entfernen wenn Anomalieerkennung im Backend implementiert ist - vorerst nur für WTemp, da hier die meisten fehlerhaften Werte auftreten
+    filteredMeasurements.forEach(m => {
+        if (m.measurementType === "Temperature, water" && m.value !== null && m.value > 40) {
+            m.value = 0;
+        }
+    });
     return (
         <View style={{flex: 1}}>
             <XStack flex={1} flexBasis={0} backgroundColor="$content1" flexWrap='nowrap'>
