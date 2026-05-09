@@ -153,6 +153,13 @@ export default function DashboardScreen({selectedMarinaName = 'Stadthafen Flensb
 
     const filteredMeasurements = useMemo(() => getFilteredMeasurements(timeRangeData), [timeRangeData]);
 
+    // TODO - Entfernen wenn Anomalieerkennung im Backend implementiert ist - vorerst nur für WTemp, da hier die meisten fehlerhaften Werte auftreten
+    filteredMeasurements.forEach(m => {
+        if (m.measurementType === "Temperature, water" && m.value !== null && m.value > 40) {
+            m.value = 0;
+        }
+    });
+
     const currentValues = useMemo(() => getCurrentValues(filteredMeasurements), [filteredMeasurements]);
 
     const latestTime = timeRangeData?.boxes[0]?.measurementTimes[0]?.time || new Date().toISOString();
@@ -383,12 +390,7 @@ export default function DashboardScreen({selectedMarinaName = 'Stadthafen Flensb
         </Card.Footer>
     ), [infoItemWidth, t, detailedLocation]);
 
-    // TODO - Entfernen wenn Anomalieerkennung im Backend implementiert ist - vorerst nur für WTemp, da hier die meisten fehlerhaften Werte auftreten
-    filteredMeasurements.forEach(m => {
-        if (m.measurementType === "Temperature, water" && m.value !== null && m.value > 40) {
-            m.value = 0;
-        }
-    });
+
 
     // TODO - Entfernen wenn Anomalieerkennung im Backend implementiert ist - vorerst nur für WTemp, da hier die meisten fehlerhaften Werte auftreten
     timeRangeData?.boxes[0]?.measurementTimes.forEach((entry: any, index: number, arr: any[]) => {
