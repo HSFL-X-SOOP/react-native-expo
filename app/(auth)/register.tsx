@@ -3,7 +3,7 @@ import {useAuth, useGoogleSignIn} from '@/hooks/auth';
 import {AuthorityRole} from '@/api/models/profile';
 import {Link, useRouter, Href} from 'expo-router';
 import {useEffect, useState} from 'react';
-import {Platform, Linking} from 'react-native';
+import {Platform} from 'react-native';
 import {Checkbox, Text, View, YStack, XStack, Separator, Spinner, ScrollView} from 'tamagui';
 import {User} from '@tamagui/lucide-icons';
 import {useTranslation, useToast, usePasswordValidation, useEmailValidation} from '@/hooks/ui';
@@ -41,10 +41,6 @@ export default function RegisterScreen() {
     const toast = useToast();
     const userDeviceStore = useUserDeviceStore();
 
-    const privacyPolicyUrl = currentLanguage === 'en'
-        ? 'https://hs-flensburg.de/en/datenschutzerklaerung'
-        : 'https://hs-flensburg.de/datenschutzerklaerung';
-    
     const {
         validation: passwordValidation,
         strength: passwordStrength,
@@ -230,7 +226,7 @@ export default function RegisterScreen() {
                                 <Text
                                     color="$accent7"
                                     textDecorationLine="underline"
-                                    onPress={() => Linking.openURL(privacyPolicyUrl)}
+                                    onPress={() => router.push('/privacy')}
                                     cursor="pointer"
                                 >
                                     {t('auth.privacyPolicy')}

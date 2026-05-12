@@ -32,7 +32,7 @@ export function Footer() {
                         </Text>
                     </Link>
                     <Text fontSize="$2" color="$gray9">•</Text>
-                    <Link href="https://hs-flensburg.de/datenschutzerklaerung" target="_blank">
+                    <Link href="/privacy">
                         <Text fontSize="$2" color="$gray11" hoverStyle={{ color: '$accent8' }}>
                             {t('footer.privacyPolicy')}
                         </Text>
